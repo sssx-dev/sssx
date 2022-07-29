@@ -1,0 +1,21 @@
+.DS_Store
+
+node_modules
+/build
+/package
+/dist
+.env
+.env.*
+!.env.example
+
+packages/**/dist/**
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

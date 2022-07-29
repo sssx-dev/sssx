@@ -1,0 +1,41 @@
+{
+  "name": "sssx",
+  "version": "0.0.1",
+  "description": "Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": "v18.x"
+  },
+  "keywords": [
+    "SSG",
+    "SSR",
+    "Svelte",
+    "SEO",
+    "Hydration",
+    "Performance",
+    "JAM",
+    "JAMstack"
+  ],
+  "author": "Eugene Hauptmann <eugene@sssx.dev>",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "devDependencies": {
+    "@sssx/eslint-config-sssx": "*",
+    "eslint": "^8.20.0",
+    "prettier": "^2.7.1",
+    "prettier-plugin-svelte": "^2.7.0",
+    "turbo": "latest"
+  }
+}

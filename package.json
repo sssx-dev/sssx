@@ -10,7 +10,10 @@
     "test": "turbo run test",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=example-blog^... && changeset publish"
   },
   "engines": {
     "node": "v18.x"
@@ -32,6 +35,7 @@
     "apps/*"
   ],
   "devDependencies": {
+    "@changesets/cli": "^2.24.1",
     "@sssx/eslint-config-sssx": "*",
     "eslint": "^8.20.0",
     "prettier": "^2.7.1",

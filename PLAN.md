@@ -24,6 +24,8 @@
 - [ ] start preparing foundation for the unit tests
 - [ ] on the start, show configuration of CPUs and RAM available
 
+- [ ] add linter to all packages and apps
+
 - [x] add incremental function to the data file
 - [x] process incremental removals
 - [x] hash CSS and JS files

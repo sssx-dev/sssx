@@ -29,6 +29,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.6.0",
-    "sssx": "*"
+    "sssx": "0.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -1,5 +1,6 @@
 {
     "name": "@sssx/eslint-config-sssx",
+    "description": "SSSX specific linting configuration for TypeScript and Svelte",
     "version": "0.0.0",
     "main": "index.js",
     "license": "MIT",

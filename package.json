@@ -41,5 +41,12 @@
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.7.0",
     "turbo": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sssx-dev/sssx"
+  },
+  "bugs": {
+    "url": "https://github.com/sssx-dev/sssx/issues"
   }
 }

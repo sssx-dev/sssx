@@ -116,7 +116,7 @@ const clean = (options: Options, config: Config) => {
 const plugin = (inputOptions: Partial<Options> = defaultOptions) => {
   const options = Object.assign({}, inputOptions, defaultOptions);
 
-  const fn: Plugin = async (config: Config, builder: Builder) => {
+  const sitemapPlugin: Plugin = async (config: Config, builder: Builder) => {
     if (options.forceClean) {
       clean(options, config);
     }
@@ -130,7 +130,7 @@ const plugin = (inputOptions: Partial<Options> = defaultOptions) => {
     const { origin, outDir } = config;
 
     paths.map((o) => {
-      const template = o.template.replace(`/index.js`, ``).split(`/`).pop();
+      const template = o.template.replace(`/index.js`, ``).split(`/`).pop() || '';
       const path = origin + o.path.split(outDir).pop();
 
       if (!map[template]) map[template] = [];
@@ -170,7 +170,7 @@ const plugin = (inputOptions: Partial<Options> = defaultOptions) => {
     }
   };
 
-  return fn;
+  return sitemapPlugin;
 };
 
 export default plugin;

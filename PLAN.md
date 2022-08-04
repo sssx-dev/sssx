@@ -25,6 +25,8 @@
 - [ ] on the start, show configuration of CPUs and RAM available
 
 - [ ] add linter to all packages and apps
+- [ ] add redirect feature on the route level (via S3 metadata)
+- [ ] add redirect for entire website level (via CloudFront)
 
 - [x] add incremental function to the data file
 - [x] process incremental removals

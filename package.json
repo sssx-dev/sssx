@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --filter=example-blog^... && changeset publish"
+    "release": "turbo run build --filter=@sssx/example-blog^... --filter=@sssx/docs && changeset publish"
   },
   "engines": {
     "node": "v18.x"

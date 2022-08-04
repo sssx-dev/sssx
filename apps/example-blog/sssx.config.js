@@ -1,4 +1,5 @@
 import sitemapPlugin from '@sssx/sitemap-plugin'
+import s3adapter from '@sssx/aws-s3-cloudfront-adapter'
 
 const origin = `https://sssx.github.io`
 
@@ -13,7 +14,8 @@ const config = {
         sitemapPlugin({
             origin,
             exclude: []
-        })
+        }),
+        s3adapter({})
     ]
 }
 

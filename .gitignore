@@ -3,8 +3,8 @@
 build/**
 dist/**
 
-packages/**/dist
-apps/**/dist
+packages/**/dist/**
+apps/**/dist/**
 
 node_modules
 

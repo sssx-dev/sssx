@@ -6,6 +6,8 @@ import path from 'path'
 import glob from 'tiny-glob'
 import fs from 'fs';
 import stream from 'stream'
+import cliProgress from 'cli-progress'
+import colors from 'ansi-colors'
 
 dotenv.config({
     path: path.resolve(process.cwd(), `.env.local`)
@@ -91,13 +93,32 @@ const plugin = (_options:Partial<Options>) => {
         const base = path.resolve(process.cwd(), config.outDir)
         
         const paths = await glob(`${base}/**/*.*`)
+
+        const multibar = new cliProgress.MultiBar({
+            clearOnComplete: false,
+            hideCursor: true
+        
+        }, cliProgress.Presets.shades_grey);
+
+        const barS3 = multibar.create(paths.length, 0, {}, {
+            format: colors.cyan('{bar}') + '| S3 | {percentage}% | {value}/{total} | {route}'
+        });
+        const MAX_CLOUDFRONT_SECONDS = 100
+        const barCloudfront = multibar.create(MAX_CLOUDFRONT_SECONDS, 0, {status: 'waiting'}, {
+            format: colors.yellow('{bar}') + '| CloudFront | {seconds} | {status}',
+        });
         
         // uploading everything
         for(let i=0;i<paths.length;i++){
             const localPath = paths[i]
+            const route = localPath.split(config.outDir).pop() || ''
             await uploadToS3(s3, localPath, Bucket, config.outDir)
-            console.log(i, localPath)
+            // console.log(i, localPath)
+            barS3.update(i+1, {route})
         }
+
+        barS3.update(barS3.getTotal(), {route: 'done'})
+        barS3.stop()
         
         // https://github.com/aws/aws-sdk-js/issues/3983#issuecomment-990786567
         if(
@@ -122,22 +143,26 @@ const plugin = (_options:Partial<Options>) => {
                 }
             }
 
-            console.log(request)
+            // console.log(request)
 
             const res = await cloudfront.createInvalidation(request).promise()
-            console.log(res)
+            // console.log(res)
 
             const Id = res.Invalidation?.Id
             let status = res.Invalidation?.Status
 
-            let ms = 0
-            
+            let cfCounter = 0;
             while(Id && status === 'InProgress'){
                 const s = await cloudfront.getInvalidation({DistributionId, Id}).promise()
-                console.log(s)
+                // console.log(s)
                 status = s.Invalidation?.Status
-                await delay(ms+=1000)
+                await delay()
+
+                barCloudfront.update(cfCounter++, { status, seconds: `${cfCounter} seconds` })
             }
+
+            barCloudfront.update(MAX_CLOUDFRONT_SECONDS)
+            barCloudfront.stop()
         }
     }
 

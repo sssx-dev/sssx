@@ -37,9 +37,19 @@ const uploadToS3 = async (S3:AWS.S3, localPath:string, Bucket:string, outDir:str
 
     const uploadStream = () => {
         const passT = new stream.PassThrough();
+        const cp = {
+            'Content-Type': localPath.endsWith(`.html`) ? 'text/html' : ''
+        }
         return {
             writeStream: passT,
-            promise: S3.upload({ Bucket, ACL, Key, Body: passT }).promise(),
+            promise: S3.upload({
+                ...cp,
+                Body: passT,
+                Bucket,
+                ACL,
+                Key,
+                ContentDisposition: 'inline'
+            }).promise(),
         };
     }
 
@@ -119,12 +129,14 @@ const plugin = (_options:Partial<Options>) => {
 
             const Id = res.Invalidation?.Id
             let status = res.Invalidation?.Status
+
+            let ms = 0
             
             while(Id && status === 'InProgress'){
                 const s = await cloudfront.getInvalidation({DistributionId, Id}).promise()
                 console.log(s)
                 status = s.Invalidation?.Status
-                await delay()
+                await delay(ms+=1000)
             }
         }
     }

@@ -1,24 +1,13 @@
 <script type="ts">
-    import First from "../../components/first.svelte";
-    import Second from "../../components/second.svelte";
-    export let answer:string = '';
+    export let title:string = '';
 </script>
 
 <svelte:head>
-    <title>Test page</title>
+    <title>{title}</title>
 </svelte:head>
 
-<h1>Hello, your answer is {answer}</h1>
+<h1>{title}</h1>
 
-<Second hydrate-options={{preload:true}} hello="static variable"/>
+<h2>Welcome to the main page</h2>
 
-<hr/>
-<First hello="static first world">
-    Static slot
-</First>
-<hr/>
-
-<h2>Second section</h2>
-<Second hydrate-options={{preload:true}} hello="static variable #2">
-    <p>This is slot's content</p>
-</Second>
+<footer>Made with <a href="https://github.com/sssx-dev/sssx" target="_blank">SSSX</a></footer>

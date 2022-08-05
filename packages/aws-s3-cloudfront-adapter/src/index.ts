@@ -39,17 +39,14 @@ const uploadToS3 = async (S3:AWS.S3, localPath:string, Bucket:string, outDir:str
 
     const uploadStream = () => {
         const passT = new stream.PassThrough();
-        const cp = {
-            'Content-Type': localPath.endsWith(`.html`) ? 'text/html' : ''
-        }
         return {
             writeStream: passT,
             promise: S3.upload({
-                ...cp,
                 Body: passT,
                 Bucket,
                 ACL,
                 Key,
+                ContentType: localPath.endsWith(`.html`) ? 'text/html' : '',
                 ContentDisposition: 'inline'
             }).promise(),
         };
@@ -104,7 +101,7 @@ const plugin = (_options:Partial<Options>) => {
             format: colors.cyan('{bar}') + '| S3 | {percentage}% | {value}/{total} | {route}'
         });
         const MAX_CLOUDFRONT_SECONDS = 100
-        const barCloudfront = multibar.create(MAX_CLOUDFRONT_SECONDS, 0, {status: 'waiting'}, {
+        const barCloudfront = multibar.create(MAX_CLOUDFRONT_SECONDS, 0, {status: 'waiting', seconds: '-'}, {
             format: colors.yellow('{bar}') + '| CloudFront | {seconds} | {status}',
         });
         
@@ -163,6 +160,7 @@ const plugin = (_options:Partial<Options>) => {
 
             barCloudfront.update(MAX_CLOUDFRONT_SECONDS)
             barCloudfront.stop()
+            multibar.stop()
         }
     }
 

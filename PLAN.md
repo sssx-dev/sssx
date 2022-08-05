@@ -5,7 +5,7 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
-- [ ] add progress bar for S3 adapter
+- [x] add progress bar for S3 adapter
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
 

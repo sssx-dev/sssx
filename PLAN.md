@@ -11,8 +11,12 @@
 
 ## Rest
 
+- [ ] Access all routes from the helper function
+- [ ] Slug generation should include title, description, tags (what else?)
+- [ ] dynamic.ts should import svelte components and execute mounting function, script will be deferred
+- [ ] social image generation
+
 - [ ] cache `all()` requests
-- [ ] migrate to lerna or nx
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 - [ ] lazy loading (async, defer, observer, better web vitals)
 - [ ] validate if the internal link exists or not, use <Link> to do automatic verification
@@ -29,9 +33,9 @@
 - [ ] add perf with `node_perf`
 - [ ] fix import typescript module/file in the component, it is not passed to `outDir`
 - [ ] example boilerplate (should it be a generated one via CLI?)
-- [ ] add typescript linter
 - [ ] start preparing foundation for the unit tests
 - [ ] on the start, show configuration of CPUs and RAM available
+- [ ] add typescript linter
 - [ ] add linter to all packages and apps
 - [ ] documentation
 

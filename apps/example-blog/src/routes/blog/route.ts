@@ -2,21 +2,20 @@ import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentPro
 import type Page from './index.svelte'
 import { hello } from '../../bar.js'
 
-type PageProps = SvelteComponentProps<typeof Page>
-type Item = UnwrapRouteAll<typeof getAll>
+export type PageProps = SvelteComponentProps<typeof Page>
+export type Request = UnwrapRouteAll<typeof getAll>
 
-export const permalink:RoutePermalinkFn<Item> = `/blog/:slug/`
+export const permalink:RoutePermalinkFn<Request> = `/blog/:slug/`
 
 export const getAll = async () => {
-    
     return [
         { slug: `hello`, bar: hello() },
         { slug: `world` }
     ]
 }
 
-export const getProps:RoutePropsFn<Item, PageProps> = async item => {
+export const getProps:RoutePropsFn<Request, PageProps> = async request => {
     return {
-        title: `Hello ${item.slug}`
+        title: `Hello ${request.slug}`
     }
 }

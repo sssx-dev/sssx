@@ -2,10 +2,10 @@ import dayjs from 'dayjs'
 import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx'
 import type Page from './index.svelte'
 
-type PageProps = SvelteComponentProps<typeof Page>
-type Item = UnwrapRouteAll<typeof getAll>
+export type PageProps = SvelteComponentProps<typeof Page>
+export type Request = UnwrapRouteAll<typeof getAll>
 
-export const permalink:RoutePermalinkFn<Item> = `/:slug/`
+export const permalink:RoutePermalinkFn<Request> = `/:slug/`
 
 /**
  * Get all slugs for this route
@@ -41,8 +41,8 @@ export const getRemovals = async () => {
     ]
 }
 
-export const getProps:RoutePropsFn<Item, PageProps> = async item => {
+export const getProps:RoutePropsFn<Request, PageProps> = async request => {
     return {
-        answer: `Hello ${item.slug} on ${item.time}`
+        answer: `Hello ${request.slug} on ${request.time}`
     }
 }

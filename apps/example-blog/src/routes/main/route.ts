@@ -1,10 +1,10 @@
 import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx'
 import type Page from './index.svelte'
 
-type PageProps = SvelteComponentProps<typeof Page>
-type Item = UnwrapRouteAll<typeof getAll>
+export type PageProps = SvelteComponentProps<typeof Page>
+export type Request = UnwrapRouteAll<typeof getAll>
 
-export const permalink:RoutePermalinkFn<Item> = `/`
+export const permalink:RoutePermalinkFn<Request> = `/`
 
 /**
  * Get all slugs for this route
@@ -15,8 +15,8 @@ export const getAll = async () => [
 ]
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getProps:RoutePropsFn<Item, PageProps> = async item => {
+export const getProps:RoutePropsFn<Request, PageProps> = async request => {
     return {
-        answer: `Example SSSX Blog`
+        title: `Example SSSX Blog`
     }
 }

@@ -29,7 +29,7 @@ const getTarget = (prefix) => {
 // TODO: generate CSS file from svelte pieces
 const getScript = (filesMap:FilesMap, {name, prefix, props}:VirtualComponentData) => {
     const COMPONENT_NAME = name
-    const COMPONENT_PATH = `${ROOT_DIR}/${config.componentsPat}/${name.toLowerCase()}.js` // absolute
+    // const COMPONENT_PATH = `${ROOT_DIR}/${config.componentsPat}/${name.toLowerCase()}.js` // absolute
 
     const originalComponentsPath = [config.sourceRoot, config.componentsPath, `${name.toLowerCase()}.js`].join(`/`)
     const absoluteComponentsPath = filesMap[originalComponentsPath].filter(a => a.includes(`/${config.compiledRoot}/`)).pop()!

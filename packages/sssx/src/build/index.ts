@@ -25,6 +25,7 @@ import {
 } from '../config/index.js'
 import { sliceArray } from '../utils/sliceArray.js'
 import type { FilesMap } from '../types/index.js'
+import { ensureDirExists } from '../utils/ensureDirExists.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -134,6 +135,24 @@ export class Builder {
         }
     }
 
+    public generateAllPaths = async (updatesOnly = false) => {
+        const templates = Object.keys(this.routeModules)
+
+        // @example template='.sssx/ssr/routes/blog/index.js'
+        await Promise.all(
+            templates.map(async (template) => {
+                const modules = this.routeModules[template]
+                const array = await prepareRoute(template, modules, updatesOnly ? 'updates' : 'all')
+                const paths = array.map(({path}) => path.replace(`${process.cwd()}/${config.outDir}`,``))
+
+                const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`)
+                ensureDirExists(dir)
+                const filename = template.split(`/`)[3] + `.txt`
+                fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), {encoding: 'utf8'})
+            })
+        )
+    }
+
     public generatePaths = async (updatesOnly = false) => {
         const templates = Object.keys(this.routeModules)
 
@@ -146,6 +165,10 @@ export class Builder {
         )
     }
 
+    /**
+     * In the incremental updates mode, some of the routes could become outdated
+     * we call `processRemovals` to remove these folders
+     */
     public processRemovals = async () => {
         const templates = Object.keys(this.routeModules)
 
@@ -189,6 +212,7 @@ export class Builder {
     // TODO: change back to multi-core rendering before the release
     public renderPool = async (updatesOnly = false) => {
         await this.prepareRoutes()
+        await this.generateAllPaths()
         await this.generatePaths(updatesOnly)
         await this.render(this.paths)
     }

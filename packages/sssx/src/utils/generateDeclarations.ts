@@ -36,7 +36,7 @@ export const generateDeclarations = () => {
     script += `export const Routes = {\n`
 
     names.map(name =>
-        script += `\t'${name}': (request:${name}) => getPermalink(request, permalink${capitalize(name)}),\n`
+        script += `\t'${name}': (request:${name}) => getPermalink('${name}', request, permalink${capitalize(name)}),\n`
     )
 
     script += `}\n`

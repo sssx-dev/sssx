@@ -49,8 +49,8 @@ export const prepareRoute = async (template:string, modules:RouteModules, mode:P
         items = await modules.data.getAll()
 
     const array:ItemPathTemplate[] = items.map((item:AbstractItem) => {
-        const relative = false // absolute in local file system
-        const path = getPermalink(item, modules.data.permalink, relative)
+        const routeName = template.split(`/`)[3]
+        const path = getPermalink(routeName, item, modules.data.permalink, {relative: false, checkExistingRoutes: false})
         return {
             item,
             path,

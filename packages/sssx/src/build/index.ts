@@ -135,15 +135,15 @@ export class Builder {
         }
     }
 
-    public generateAllPaths = async (updatesOnly = false) => {
+    public generateAllPaths = async () => {
         const templates = Object.keys(this.routeModules)
 
         // @example template='.sssx/ssr/routes/blog/index.js'
         await Promise.all(
             templates.map(async (template) => {
                 const modules = this.routeModules[template]
-                const array = await prepareRoute(template, modules, updatesOnly ? 'updates' : 'all')
-                const paths = array.map(({path}) => path.replace(`${process.cwd()}/${config.outDir}`,``))
+                const array = await prepareRoute(template, modules, 'all')
+                const paths = array.map(({path}) => path.replace(`${process.cwd()}/${config.outDir}`,``).toLowerCase())
 
                 const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`)
                 ensureDirExists(dir)

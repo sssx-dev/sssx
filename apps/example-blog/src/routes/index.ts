@@ -24,7 +24,7 @@ type main = Omit<mainT, 'type'>
 * @example SSSX.Routes['blog']({slug:'123'})
 */
 export const Routes = {
-	'blog': (request:blog) => getPermalink(request, permalinkBlog),
-	'dates': (request:dates) => getPermalink(request, permalinkDates),
-	'main': (request:main) => getPermalink(request, permalinkMain),
+	'blog': (request:blog) => getPermalink('blog', request, permalinkBlog),
+	'dates': (request:dates) => getPermalink('dates', request, permalinkDates),
+	'main': (request:main) => getPermalink('main', request, permalinkMain),
 }

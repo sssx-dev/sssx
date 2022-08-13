@@ -17,7 +17,11 @@ export const getAll = async () => [
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProps:RoutePropsFn<Request, PageProps> = async request => {
-    const testBlogSlug = Routes['blog']({slug:`123`}) // can't be generated in the root scope
+    // breaks
+    // const testBlogSlug = Routes['blog']({slug:`123`}) // can't be generated in the root scope
+    
+    // works
+    const testBlogSlug = Routes['blog']({slug:`hello`}) // can't be generated in the root scope
 
     return {
         title: `Example SSSX Blog`,

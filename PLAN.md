@@ -6,11 +6,13 @@
 ## @sssx/aws-s3-cloudfront-adapter
 
 - [x] add progress bar for S3 adapter
+- [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
 
 ## Rest
 
+- [x] Added route generation, route check via permalink
 - [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)
 - [ ] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like script.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?

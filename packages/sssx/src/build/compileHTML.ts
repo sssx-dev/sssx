@@ -46,7 +46,7 @@ const getScript = (filesMap:FilesMap, {name, prefix, props}:VirtualComponentData
     `
 }
 
-const composeHTMLFile = (head:string[], html:string[], lang:string = 'en') => {
+const composeHTMLFile = (head:string[], html:string[], lang = 'en') => {
 return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>

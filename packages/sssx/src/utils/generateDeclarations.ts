@@ -2,7 +2,7 @@ import fs from 'fs'
 import { config } from '../config/index.js'
 import { capitalize} from './capitalize.js'
 
-const filename = `sssx.d.ts`
+const filename = `index.ts`
 export const generateDeclarations = () => {
     const base = `${process.cwd()}/${config.sourceRoot}/${config.routesPath}`
     const names = fs.readdirSync(base, {withFileTypes: true}).filter(a => !a.isFile()).map(a => a.name)
@@ -27,20 +27,20 @@ export const generateDeclarations = () => {
     )
 
     script += `\n`
-    script += `declare module 'sssx' {\n`
+    // script += `declare module 'sssx' {\n`
 
-    script += `\t/**\n`
-    script += `\t* Routes helper to generate link within a given route.\n`
-    script += `\t* @example SSSX.Routes['blog']({slug:'123'})\n`
-    script += `\t*/\n`
-    script += `\texport const Routes = {\n`
+    script += `/**\n`
+    script += `* Routes helper to generate link within a given route.\n`
+    script += `* @example SSSX.Routes['blog']({slug:'123'})\n`
+    script += `*/\n`
+    script += `export const Routes = {\n`
 
     names.map(name =>
-        script += `\t\t'${name}': (request:${name}) => getPermalink(request, permalink${capitalize(name)}),\n`
+        script += `\t'${name}': (request:${name}) => getPermalink(request, permalink${capitalize(name)}),\n`
     )
 
-    script += `\t}\n`
     script += `}\n`
+    // script += `}\n`
 
     script = `// generated automatically using \`npx sssx generate\`\n` + script
 

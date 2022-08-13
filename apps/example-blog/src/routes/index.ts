@@ -19,14 +19,12 @@ type mainT = RequestMain & {type: 'main'}
 type main = Omit<mainT, 'type'>
 
 
-declare module 'sssx' {
-	/**
-	* Routes helper to generate link within a given route.
-	* @example SSSX.Routes['blog']({slug:'123'})
-	*/
-	export const Routes = {
-		'blog': (request:blog) => getPermalink(request, permalinkBlog),
-		'dates': (request:dates) => getPermalink(request, permalinkDates),
-		'main': (request:main) => getPermalink(request, permalinkMain),
-	}
+/**
+* Routes helper to generate link within a given route.
+* @example SSSX.Routes['blog']({slug:'123'})
+*/
+export const Routes = {
+	'blog': (request:blog) => getPermalink(request, permalinkBlog),
+	'dates': (request:dates) => getPermalink(request, permalinkDates),
+	'main': (request:main) => getPermalink(request, permalinkMain),
 }

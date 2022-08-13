@@ -7,7 +7,7 @@ import type { RoutePermalinkFn } from "../types/Route"
  * @param permalink – function or string defined in your `route.ts` file inside `routes`, @example `/blog/:slug/`
  * @returns route's path like `/blog/route1/`
  */
-export const getPermalink = <T>(o:T, permalink:RoutePermalinkFn<T>):string => {
+export const getPermalink = <T>(o:T, permalink:RoutePermalinkFn<T>, relative = true):string => {
     if(typeof permalink === 'string'){
         const array = permalink.split(`/`)
         const suffix = array.map((param:string) => {
@@ -15,7 +15,7 @@ export const getPermalink = <T>(o:T, permalink:RoutePermalinkFn<T>):string => {
                 return (o as any)[param.slice(1)]
             return param
         }).join(`/`)
-        return `${OUTDIR}${suffix}`
+        return relative ? suffix : `${OUTDIR}${suffix}`
     }else{
         return `${OUTDIR}${permalink(o)}`
     }

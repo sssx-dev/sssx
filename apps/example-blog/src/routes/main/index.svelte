@@ -1,8 +1,6 @@
 <script type="ts">
-    import SSSX from 'sssx'
     export let title:string = '';
-
-    const testBlogSlug = SSSX.Routes['blog']({slug:`123`})
+    export let testBlogSlug:string = '';
 </script>
 
 <svelte:head>

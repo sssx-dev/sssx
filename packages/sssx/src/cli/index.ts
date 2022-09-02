@@ -46,12 +46,13 @@ yargs(hideBin(process.argv))
 
     // could have been a serve function, but if the `route` is not generated, then we need to build in the runtime
 })
-.command('build', 'Start building the static site',  {routes}, async () => {
+.command('build', 'Start building the static site', {routes}, async (args) => {
+    const routes = checkRoutes(args);
     const builder = new Builder()
     clean()
     generateDeclarations()
     await builder.setup()
-    await builder.renderPool()
+    await builder.renderPool(routes)
     await builder.runPlugins()
 })
 .command('update', 'Start updating the static site', {routes}, async (args) => {

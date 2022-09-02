@@ -153,11 +153,15 @@ export class Builder {
         )
     }
 
-    public generatePaths = async (updatesOnly = false) => {
+    public generatePaths = async (routes = ['*'], updatesOnly = false) => {
         const templates = Object.keys(this.routeModules)
 
+        const filteredTemplates = routes.includes('*') 
+        ? templates
+        : templates.filter(path => routes.includes(path.split(`/`).slice(-2)[0]))
+
         await Promise.all(
-            templates.map(async (template) => {
+            filteredTemplates.map(async (template) => {
                 const modules = this.routeModules[template]
                 const array = await prepareRoute(template, modules, updatesOnly ? 'updates' : 'all')
                 this.paths = this.paths.concat(array)
@@ -213,11 +217,11 @@ export class Builder {
     public renderPool = async (routes = ['*'], updatesOnly = false) => {
         await this.prepareRoutes()
         await this.generateAllPaths()
-        await this.generatePaths(updatesOnly)
+        await this.generatePaths(routes, updatesOnly)
         await this.render(this.paths)
     }
 
-    public _renderPool = async (updatesOnly = false) => {
+    public _renderPool = async (routes = ['*'], updatesOnly = false) => {
         const numberOfWorkers = os.cpus().length
 
         const pool = workerpool.pool(
@@ -230,7 +234,7 @@ export class Builder {
         );
 
         await this.prepareRoutes()
-        await this.generatePaths(updatesOnly)
+        await this.generatePaths(routes, updatesOnly)
         
         const LENGTH = this.paths.length
         const batchSize = Math.ceil(LENGTH / numberOfWorkers)

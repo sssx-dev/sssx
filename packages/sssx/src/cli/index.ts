@@ -6,9 +6,32 @@ import { hideBin } from 'yargs/helpers'
 import { Builder } from '../index.js'
 import { clean } from '../build/clean.js'
 import { generateDeclarations } from '../utils/generateDeclarations.js'
+import { checkIfRoutesExist } from '../utils/checkIfRoutesExist.js'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {}
+
+///////////////////////////
+const routes = {
+    description: 'Specify which route has to be updated. Serparate with comma for muliple routes',
+    default: '*'
+}
+
+const checkRoutes = (args:{routes:string}) => {
+    const routes = args.routes.split(`,`).map(a => a.trim())
+    const routesExist = checkIfRoutesExist(routes)
+
+    // if routes do not exist, show error information
+    if(!routesExist.reduce((previous, current) => current && previous)){
+        let output = `Looks like a route you've specified does not exist:\n`
+        routes.map((r,i) => output += `${r} – ${routesExist[i] ? 'exists' : 'not found'}\n`)
+        console.error(output);
+        process.exit(1)
+    }
+
+    return routes
+}
+///////////////////////////
 
 yargs(hideBin(process.argv))
 .command('dev', 'Start development server with SSR', noop, async () => {
@@ -23,7 +46,7 @@ yargs(hideBin(process.argv))
 
     // could have been a serve function, but if the `route` is not generated, then we need to build in the runtime
 })
-.command('build', 'Start building the static site', noop, async () => {
+.command('build', 'Start building the static site',  {routes}, async () => {
     const builder = new Builder()
     clean()
     generateDeclarations()
@@ -31,12 +54,14 @@ yargs(hideBin(process.argv))
     await builder.renderPool()
     await builder.runPlugins()
 })
-.command('update', 'Start updating the static site', noop, async () => {
+.command('update', 'Start updating the static site', {routes}, async (args) => {
+    const routes = checkRoutes(args);
+
     generateDeclarations()
     const updatesOnly = true
     const builder = new Builder()
     await builder.setup()
-    await builder.renderPool(updatesOnly)
+    await builder.renderPool(routes, updatesOnly)
     await builder.runPlugins()
     await builder.processRemovals()
 })

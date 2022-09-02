@@ -71,7 +71,7 @@ const replaceImportsToHashedImports = (entry:string, file:string, options:Option
         try{
             const newSourcePath = options.filesMap[originalSourcePath]
             // TODO: check if first component is the one we want
-            const newFilename = newSourcePath[0].split(`/`).pop()!
+            const newFilename = newSourcePath[0].split(`/`).pop() || ''
             const newRelativePath = relativePath.replace(filename, newFilename)
             // console.log(`replaceImports`, {relativePath, newRelativePath})
             code = code.replaceAll(`"${relativePath}"`, `"${newRelativePath}"`)

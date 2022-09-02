@@ -210,7 +210,7 @@ export class Builder {
     }
 
     // TODO: change back to multi-core rendering before the release
-    public renderPool = async (updatesOnly = false) => {
+    public renderPool = async (routes = ['*'], updatesOnly = false) => {
         await this.prepareRoutes()
         await this.generateAllPaths()
         await this.generatePaths(updatesOnly)

@@ -41,6 +41,8 @@
 - [ ] add linter to all packages and apps
 - [ ] documentation
 
+- [ ] create plugin to generate podcast RSS feed and pages
+
 ## Done
 
 - [x] add incremental function to the data file

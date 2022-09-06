@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import glob from 'tiny-glob';
 import os from 'os';
 import path from 'path';
@@ -8,6 +7,7 @@ import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
 // import { performance, PerformanceObserver} from 'node:perf_hooks'
 
+import fs from '../lib/fs.js';
 import { buildTypeScript } from './buildTypeScript.js';
 import { buildSvelte } from './buildSvelte.js';
 import { buildSvelteCore } from './buildSvelteCore.js';
@@ -27,6 +27,7 @@ import { SEPARATOR } from '../utils/resolve.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const SVELTEJS = `svelte.js`;
 const nanoid = customAlphabet(`0123456789abcdef`, 5);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
 const noop = (...args: any[]) => {};
@@ -43,7 +44,7 @@ const defaultOptions: Options = {
 
 export class Builder {
   private id: string;
-  private svelteLib = `${__dirname}/../patches/svelte.js`;
+  private svelteLib = `${__dirname}/../patches/${SVELTEJS}`;
 
   private svelteWildcard = `${process.cwd()}/${config.sourceRoot}/**/*.svelte`;
   private typescriptWildcard = `${process.cwd()}/${config.sourceRoot}/**/*.ts`;
@@ -75,11 +76,10 @@ export class Builder {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private log = (...args: any[]) =>
     console.log(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`, ...args);
-  // private log = noop
 
   private prepareSvelteCore = async () => {
     const hashedSvelteCorePath = await buildSvelteCore([this.svelteLib], OUTDIR_SSSX);
-    this.filesMap['svelte.js'] = [hashedSvelteCorePath];
+    this.filesMap[SVELTEJS] = [hashedSvelteCorePath];
 
     const filename = hashedSvelteCorePath.split(`/`).pop() || '';
     const svelteCorePath = path.resolve(PREFIX, config.compiledRoot, filename);

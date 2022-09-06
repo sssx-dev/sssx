@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from '../lib/fs.js';
 import { build } from 'esbuild';
 import { BASE } from './base.js';
 import { config, PREFIX } from '../config/index.js';

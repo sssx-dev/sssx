@@ -157,7 +157,7 @@ const plugin = (_options: Partial<Options>) => {
     barS3.update(barS3.getTotal(), { route: 'done' });
     barS3.stop();
 
-    console.log(OUTPUT);
+    // console.log(OUTPUT);
 
     // https://github.com/aws/aws-sdk-js/issues/3983#issuecomment-990786567
     if (cloudfront && options.AWS_CLOUDFRONT_DISTRIBUTION_ID) {

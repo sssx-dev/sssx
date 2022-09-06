@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from '../lib/fs.js';
 import { build } from 'esbuild';
 import sveltePreprocess from 'svelte-preprocess';
 import autoprefixer from 'autoprefixer';

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from '../lib/fs.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

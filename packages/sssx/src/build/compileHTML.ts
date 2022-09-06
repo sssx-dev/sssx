@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from '../lib/fs.js';
 import path from 'path';
 import { config, ROOT_DIR } from '../config/index.js';
 import type { FilesMap } from '../types/index.js';

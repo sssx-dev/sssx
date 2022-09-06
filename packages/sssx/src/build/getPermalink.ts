@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import fs from 'fs';
+import fs from '../lib/fs.js';
 import { config, OUTDIR } from '../config/index.js';
 import type { RoutePermalinkFn } from '../types/Route';
 import { RouteErrors } from '../types/Errors.js';

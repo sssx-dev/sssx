@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from '../lib/fs.js';
 import glob from 'tiny-glob';
 import { SEPARATOR } from '../utils/resolve.js';
 import { config } from '../config/index.js';

@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from '../lib/fs.js';
 import path from 'path';
 import postcss from 'postcss';
 import postcssrc from 'postcss-load-config';

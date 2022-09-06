@@ -1,6 +1,7 @@
 # Plan:
 
 ## create-sssx
+
 - [ ] create-sssx to install a template
 
 ## @sssx/aws-s3-cloudfront-adapter
@@ -15,7 +16,7 @@
 - [x] Added route generation, route check via permalink
 - [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)
-- [ ] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like script.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?
+- [x] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like script.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 
 - [ ] cache `all()` requests
@@ -60,4 +61,3 @@
 - [x] start with a basic build structure and island hydration
 - [x] link CSS
 - [x] build adapter to deploy to S3 to CloudFront (invalidate)
-

@@ -48,7 +48,6 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
   return `import ${COMPONENT_NAME} from "${componentsPath}";
-
         (function(){
             const target = getTarget('${prefix}')
             const params = ${componentParams}
@@ -73,7 +72,7 @@ const composeHTMLFile = (head: string[], html: string[], lang = 'en') => {
 };
 
 const getSvelteURL = (filesMap: FilesMap) => {
-  const filename = filesMap[`svelte.js`][0].split(`/`).pop()!;
+  const filename = filesMap[`svelte.js`][0].split(`/`).pop() || '';
   return `${ROOT_DIR}/${filename}`;
 };
 

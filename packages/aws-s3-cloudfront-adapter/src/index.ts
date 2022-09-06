@@ -64,6 +64,7 @@ const uploadToS3 = async (
     // we will upload root files `/` placed in `/<folder>` with the content of `index.html`
     if (Key !== 'index.html' && Key.endsWith(`index.html`)) {
       Key = Key.split(`/`).slice(0, -1).join(`/`);
+      console.log(Key);
     }
 
     const uploadStream = () => {

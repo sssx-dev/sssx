@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import glob from 'tiny-glob';
+import { SEPARATOR } from '../utils/resolve.js';
 import { config } from '../config/index.js';
 import type { FilesMap } from '../types/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
@@ -76,9 +77,7 @@ const replaceImportsToHashedImports = (
       .replaceAll(`/./`, `/`); // convert /src/routes/./blog/ into /src/routes/blog/
     // console.log(`replaceImportsToHashedImports`, originalSourcePath);
     try {
-      const newSourcePath = options.filesMap[originalSourcePath].slice(-1)[0]; // get last one
-      // TODO: check if first component is the one we want
-      const newFilename = newSourcePath.split(`/`).pop() || '';
+      const newFilename = getFilenameFromOptions(originalSourcePath, options.filesMap);
       const newRelativePath = relativePath.replace(filename, newFilename);
       // console.log(`replaceImports`, {relativePath, newRelativePath})
       code = code.replaceAll(`"${relativePath}"`, `"${newRelativePath}"`);
@@ -88,6 +87,21 @@ const replaceImportsToHashedImports = (
   }
 
   return code;
+};
+
+/**
+ * A helper function to get hashed name of a compiled typescript file
+ * @param originalSourcePath existing path from the import statement, like `../components/header.js`
+ * @param filesMap map of source files and compiled and hashed files
+ * @returns name of a matching file like `../components/sssx-header-ABCDEF.js`
+ */
+const getFilenameFromOptions = (originalSourcePath: string, filesMap: FilesMap) => {
+  const originalFilename = originalSourcePath.split(SEPARATOR).slice(-1)[0];
+  const array = filesMap[originalSourcePath]
+    .map((a) => a.split(SEPARATOR).slice(-1)[0])
+    .filter((a) => a !== originalFilename);
+
+  return array[0];
 };
 
 const replaceFile = async (file: string, options: Options) => {
@@ -113,14 +127,6 @@ const replaceFile = async (file: string, options: Options) => {
         code = replaceImportsToHashedImports(entry, file, options, code);
       }
     });
-
-  // if (file.includes(`-dynamic-`)) {
-  //   console.log(`replaceFile`, file);
-  //   console.log(options.filesMap);
-  //   console.log(`======================`);
-  //   console.log(code);
-  //   console.log(`======================`);
-  // }
 
   if (options.dst.length > 0) {
     const suffix = file.split(`/${config.compiledRoot}/`)[1];

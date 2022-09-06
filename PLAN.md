@@ -10,15 +10,14 @@
 - [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
+- [ ] delete old files, that were removed by the system
 
 ## Rest
 
-- [x] Added route generation, route check via permalink
+- [ ] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)
-- [x] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like script.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
-
 - [ ] cache `all()` requests
 - [ ] social image generation
 - [ ] lazy loading (async, defer, observer, better web vitals)
@@ -46,6 +45,8 @@
 
 ## Done
 
+- [x] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like dynamic.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?
+- [x] Added route generation, route check via permalink
 - [x] add incremental function to the data file
 - [x] process incremental removals
 - [x] hash CSS and JS files

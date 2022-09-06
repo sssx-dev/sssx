@@ -1,12 +1,12 @@
-import AWS from 'aws-sdk';
-import type { Builder, Plugin, Config } from 'sssx';
-import * as dotenv from 'dotenv';
-import path from 'path';
-import glob from 'tiny-glob';
 import fs from 'fs';
+import path from 'path';
+import AWS from 'aws-sdk';
+import glob from 'tiny-glob';
 import stream from 'stream';
-import cliProgress from 'cli-progress';
 import colors from 'ansi-colors';
+import * as dotenv from 'dotenv';
+import cliProgress from 'cli-progress';
+import type { Builder, Plugin, Config } from 'sssx';
 
 dotenv.config({
   path: path.resolve(process.cwd(), `.env.local`)
@@ -40,6 +40,7 @@ const getContentType = (extension: string) => {
   return 'application/octet-stream';
 };
 
+let OUTPUT = '';
 const uploadToS3 = async (
   S3: AWS.S3,
   localPath: string,
@@ -63,8 +64,8 @@ const uploadToS3 = async (
     // instead of uploading /<folder>/index.html
     // we will upload root files `/` placed in `/<folder>` with the content of `index.html`
     if (Key !== 'index.html' && Key.endsWith(`index.html`)) {
-      Key = Key.split(`/`).slice(0, -1).join(`/`);
-      console.log(Key);
+      Key = Key.split(`/`).slice(0, -1).join(`/`) + '/';
+      OUTPUT += Key + `\n`;
     }
 
     const uploadStream = () => {
@@ -73,6 +74,7 @@ const uploadToS3 = async (
         writeStream: passT,
         promise: S3.upload({
           ...partial,
+          Key,
           Body: passT
         }).promise()
       };
@@ -154,6 +156,8 @@ const plugin = (_options: Partial<Options>) => {
 
     barS3.update(barS3.getTotal(), { route: 'done' });
     barS3.stop();
+
+    console.log(OUTPUT);
 
     // https://github.com/aws/aws-sdk-js/issues/3983#issuecomment-990786567
     if (cloudfront && options.AWS_CLOUDFRONT_DISTRIBUTION_ID) {

@@ -42,6 +42,7 @@ export const buildSvelte = async (
         preprocess: [
           sveltePreprocess({
             // TODO: should we import postcss.config.js here?
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             postcss: [autoprefixer]
           })

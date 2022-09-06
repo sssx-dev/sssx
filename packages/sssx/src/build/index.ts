@@ -135,8 +135,8 @@ export class Builder {
       const dir = to.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
       ensureDirExists(dir);
 
-      //   console.log('copyDynamicFiles', { from, to, dir });
       fs.copyFile(from, to);
+      this.filesMap[key].push(to);
     });
   };
 
@@ -157,11 +157,12 @@ export class Builder {
     await Promise.all(
       templates.map(async (template) => {
         const modules = this.routeModules[template];
-        const array = await prepareRoute(template, modules, 'all');
+        const array = await prepareRoute(this.filesMap, template, modules, 'all');
         const paths = array.map(({ path }) =>
           path.replace(`${process.cwd()}/${config.outDir}`, ``).toLowerCase()
         );
 
+        // saving to file route-name.txt
         const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`);
         ensureDirExists(dir);
         const filename = template.split(`/`)[3] + `.txt`;
@@ -180,7 +181,12 @@ export class Builder {
     await Promise.all(
       filteredTemplates.map(async (template) => {
         const modules = this.routeModules[template];
-        const array = await prepareRoute(template, modules, updatesOnly ? 'updates' : 'all');
+        const array = await prepareRoute(
+          this.filesMap,
+          template,
+          modules,
+          updatesOnly ? 'updates' : 'all'
+        );
         this.paths = this.paths.concat(array);
       })
     );
@@ -196,7 +202,7 @@ export class Builder {
     const all: string[][] = await Promise.all(
       templates.map(async (template) => {
         const modules = this.routeModules[template];
-        const array = await prepareRoute(template, modules, 'removals');
+        const array = await prepareRoute(this.filesMap, template, modules, 'removals');
         return array.map((a) => a.path);
       })
     );
@@ -215,7 +221,7 @@ export class Builder {
     this.log(`render`, { pathsLength: paths.length });
 
     for (let i = 0; i < paths.length; i++) {
-      const { item, path, template } = paths[i];
+      const { item, path, template, dynamic } = paths[i];
       const { ssr, data } = this.routeModules[template];
 
       await compileHTML({
@@ -223,7 +229,8 @@ export class Builder {
         outdir: path,
         ssrModule: ssr,
         dataModule: data,
-        filesMap: this.filesMap
+        filesMap: this.filesMap,
+        dynamic
       });
     }
 

@@ -52,6 +52,7 @@ export class Builder {
   private compiledWildcard = `${PREFIX}/${config.compiledRoot}/**/*.js`;
   private componentsWildcard = `${PREFIX}/${config.compiledRoot}/components/**/*.js`;
   private routesWildcard = `${PREFIX}/${config.compiledRoot}/routes/**/*.js`;
+  private routesDynamicWildcard = `${PREFIX}/${config.compiledRoot}/routes/**/*-dynamic-*.js`;
   private ssrRoutesWildcard = `${PREFIX}/${config.ssrRoot}/${config.routesPath}/**/*.js`;
 
   private ssrRouteTemplates: string[] = [];
@@ -114,9 +115,20 @@ export class Builder {
 
     await Promise.all([
       replaceImports(this.componentsWildcard, { ...o, overwriteOriginal: true, dst: OUTDIR_SSSX }),
-      replaceImports(this.routesWildcard, { ...o, dst }),
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
+
+    await replaceImports(this.routesWildcard, {
+      ...o,
+      dst
+    });
+
+    await replaceImports(this.routesDynamicWildcard, {
+      ...o,
+      dst,
+      overwriteOriginal: true,
+      matchHashesImports: true
+    });
 
     await this.copyDynamicFiles();
   };
@@ -128,16 +140,18 @@ export class Builder {
         a.endsWith(`${SEPARATOR}dynamic.js`)
     );
 
-    dynamicFiles.map((key) => {
-      const from = this.filesMap[key][0] || '';
-      const path = from.split(`/${config.distDir}/${config.compiledRoot}/`)[1];
-      const to = `${OUTDIR_SSSX}/${path}`;
-      const dir = to.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
-      ensureDirExists(dir);
+    await Promise.all(
+      dynamicFiles.map((key) => {
+        const from = this.filesMap[key][0] || '';
+        const path = from.split(`/${config.distDir}/${config.compiledRoot}/`)[1];
+        const to = `${OUTDIR_SSSX}/${path}`;
+        const dir = to.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
+        ensureDirExists(dir);
 
-      fs.copyFile(from, to);
-      this.filesMap[key].push(to);
-    });
+        this.filesMap[key].push(to);
+        return fs.copyFile(from, to);
+      })
+    );
   };
 
   public prepareRoutes = async () => {

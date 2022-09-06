@@ -1,6 +1,9 @@
 import Header from '../../components/header.svelte';
 
-const target = document.createElement('div');
-const header = new Header({ target, hello: 'san francisco' });
+window.onload = function () {
+  console.log('Dynamic has been loaded', new Date());
+  const target = document.createElement('div');
+  const header = new Header({ target, hello: 'san francisco' });
 
-document.insertBefore(document.body.firstChild!, target);
+  if (document.body.firstChild) document.insertBefore(target, document.body.firstChild);
+};

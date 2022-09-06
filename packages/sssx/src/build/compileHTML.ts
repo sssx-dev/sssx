@@ -20,6 +20,17 @@ const getTarget = (prefix) => {
 }
 `.trim();
 
+const LOAD_DYNAMIC_JS = (url: string) =>
+  `
+const script = document.createElement('script');
+script.onload = function () {
+    //do stuff with the script
+};
+const timestamp = new Date().getTime()
+script.src = "${url}?"+timestamp;
+document.head.appendChild(script);
+`.trim();
+
 // TODO: preload components
 // TODO: merge code
 // TODO: offload data to files if bigger than x
@@ -34,13 +45,13 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
     config.componentsPath,
     `${name.toLowerCase()}.js`
   ].join(`/`);
-  const absoluteComponentsPath = filesMap[originalComponentsPath]
-    .filter((a) => a.includes(`/${config.compiledRoot}/`))
-    .pop()!;
+  const absoluteComponentsPath =
+    filesMap[originalComponentsPath].filter((a) => a.includes(`/${config.compiledRoot}/`)).pop() ||
+    '';
   const componentsPath = [
     ROOT_DIR,
     config.componentsPath,
-    absoluteComponentsPath.split(`/`).pop()!
+    absoluteComponentsPath.split(`/`).pop() || ''
   ].join(`/`);
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
@@ -117,7 +128,9 @@ export const compileHTML = async (args: Args) => {
 
   // console.log(`compileHTML`, result.head)
 
-  const dynamicHeadScript = dynamic ? `<link rel="modulepreload" href="${dynamic}">` : ``;
+  const dynamicHeadScript = dynamic
+    ? `<script rel="module">${LOAD_DYNAMIC_JS(dynamic)}</script>`
+    : ``;
 
   let head: string[] = mapCSSFiles(result.head.split(`\n`), filesMap);
   const html: string[] = [result.html];

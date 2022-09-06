@@ -1,17 +1,17 @@
-import type { create_ssr_component } from "svelte/internal"
-import type { VirtualComponentData } from "../types/svelteExtension.js"
+import type { create_ssr_component } from 'svelte/internal';
+import type { VirtualComponentData } from '../types/svelteExtension.js';
 
-type OriginalSSRModule = ReturnType<typeof create_ssr_component>
-export type HydratableComponentsFn = (...args:any[])=>VirtualComponentData[]
+type OriginalSSRModule = ReturnType<typeof create_ssr_component>;
+export type HydratableComponentsFn = (...args: any[]) => VirtualComponentData[];
 
 export type SSRModule = OriginalSSRModule & {
-    getHydratableComponents:HydratableComponentsFn
-}
+  getHydratableComponents: HydratableComponentsFn;
+};
 
-export const loadSSRModule = async (path:string) => {
-    // console.log(`loadSSRModule`, path)
-    path = `${process.cwd()}/${path}`
-    const Module = await import(path)
+export const loadSSRModule = async (path: string) => {
+  // console.log(`loadSSRModule`, path)
+  path = `${process.cwd()}/${path}`;
+  const Module = await import(path);
 
-    return Module.default as SSRModule
-}
+  return Module.default as SSRModule;
+};

@@ -21,15 +21,7 @@ const getTarget = (prefix) => {
 `.trim();
 
 const LOAD_DYNAMIC_JS = (url: string) =>
-  `
-const script = document.createElement('script');
-script.onload = function () {
-    //do stuff with the script
-};
-const timestamp = new Date().getTime()
-script.src = "${url}?"+timestamp;
-document.head.appendChild(script);
-`.trim();
+  `const newURL = "${url}?"+new Date().getTime(); import(newURL);`; // dynamic load
 
 // TODO: preload components
 // TODO: merge code

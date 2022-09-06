@@ -76,9 +76,9 @@ const replaceImportsToHashedImports = (
       .replaceAll(`/./`, `/`); // convert /src/routes/./blog/ into /src/routes/blog/
     // console.log(`replaceImportsToHashedImports`, originalSourcePath);
     try {
-      const newSourcePath = options.filesMap[originalSourcePath];
+      const newSourcePath = options.filesMap[originalSourcePath].slice(-1)[0]; // get last one
       // TODO: check if first component is the one we want
-      const newFilename = newSourcePath[0].split(`/`).pop() || '';
+      const newFilename = newSourcePath.split(`/`).pop() || '';
       const newRelativePath = relativePath.replace(filename, newFilename);
       // console.log(`replaceImports`, {relativePath, newRelativePath})
       code = code.replaceAll(`"${relativePath}"`, `"${newRelativePath}"`);
@@ -113,6 +113,14 @@ const replaceFile = async (file: string, options: Options) => {
         code = replaceImportsToHashedImports(entry, file, options, code);
       }
     });
+
+  // if (file.includes(`-dynamic-`)) {
+  //   console.log(`replaceFile`, file);
+  //   console.log(options.filesMap);
+  //   console.log(`======================`);
+  //   console.log(code);
+  //   console.log(`======================`);
+  // }
 
   if (options.dst.length > 0) {
     const suffix = file.split(`/${config.compiledRoot}/`)[1];

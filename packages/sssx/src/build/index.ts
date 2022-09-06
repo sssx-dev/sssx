@@ -115,18 +115,16 @@ export class Builder {
 
     await Promise.all([
       replaceImports(this.componentsWildcard, { ...o, overwriteOriginal: true, dst: OUTDIR_SSSX }),
+      replaceImports(this.routesWildcard, { ...o, dst }),
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
 
-    await replaceImports(this.routesWildcard, {
-      ...o,
-      dst
-    });
+    // console.log(`setup`, this.filesMap);
 
     await replaceImports(this.routesDynamicWildcard, {
       ...o,
       dst,
-      overwriteOriginal: true,
+      // overwriteOriginal: true,
       matchHashesImports: true
     });
 

@@ -14,6 +14,8 @@
 
 ## Rest
 
+- [ ] have a way to generate a single url update
+- [ ] update removal process to remove all files that are not part of the generated folders
 - [ ] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)

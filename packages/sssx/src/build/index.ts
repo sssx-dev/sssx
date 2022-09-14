@@ -6,7 +6,6 @@ import chalk from 'chalk';
 
 import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
-// import { performance, PerformanceObserver} from 'node:perf_hooks'
 
 import fs from '../lib/fs.js';
 import { buildTypeScript } from './buildTypeScript.js';
@@ -15,16 +14,14 @@ import { buildSvelteCore } from './buildSvelteCore.js';
 import { replaceImports } from '../plugins/replaceImports.js';
 import { processCSSFiles } from './processCSSFiles.js';
 import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
-
-import type { RouteModules, ItemPathTemplate } from './prepareRoute.js';
 import { compileHTML } from './compileHTML.js';
-
 import { PREFIX, OUTDIR_SSSX, config } from '../config/index.js';
 import { sliceArray } from '../utils/sliceArray.js';
-import type { FilesMap } from '../types/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
-import { SEPARATOR } from '../utils/resolve.js';
-import { SVELTEJS } from '../constants.js';
+import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
+
+import type { RouteModules, ItemPathTemplate } from './prepareRoute.js';
+import type { FilesMap } from '../types/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,12 +29,10 @@ const __dirname = path.dirname(__filename);
 const nanoid = customAlphabet(`0123456789abcdef`, 5);
 
 type Options = {
-  isDev: boolean;
   isWorker: boolean;
 };
 
 const defaultOptions: Options = {
-  isDev: false,
   isWorker: false
 };
 
@@ -141,7 +136,7 @@ export class Builder {
     const dynamicFiles = Object.keys(this.filesMap).filter(
       (a) =>
         a.startsWith([config.sourceRoot, config.routesPath].join(SEPARATOR)) &&
-        a.endsWith(`${SEPARATOR}dynamic.js`)
+        a.endsWith(`${SEPARATOR}${DYNAMIC_NAME}.js`)
     );
 
     await Promise.all(
@@ -173,15 +168,19 @@ export class Builder {
     const modules = this.routeModules[template];
     const array = await prepareRoute(this.filesMap, template, modules, 'all');
     const paths = array
-      .map(({ path }) => path.replace(`${process.cwd()}/${config.outDir}`, ``).toLowerCase())
+      .map(({ path }) =>
+        path.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase()
+      )
       .sort();
 
     // saving to file route-name.txt
-    const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`);
+    const dir = [process.cwd(), config.distDir, config.routesPath].join(SEPARATOR);
     ensureDirExists(dir);
 
-    const filename = template.split(`/`)[3] + `.txt`;
-    await fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), { encoding: 'utf8' });
+    const filename = template.split(SEPARATOR)[3] + `.txt`;
+    await fs.writeFile([dir, filename].join(SEPARATOR), paths.sort().join(`\n`), {
+      encoding: 'utf8'
+    });
   };
 
   /**

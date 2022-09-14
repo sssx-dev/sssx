@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
-import readline from 'readline';
 import chalk from 'chalk';
+import yargs from 'yargs';
+import readline from 'readline';
+import { hideBin } from 'yargs/helpers';
 
+import fs from '../lib/fs.js';
 import { Builder } from '../index.js';
 import { clean } from '../build/clean.js';
-import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { checkRoutes } from './checkRoutes.js';
 import { noop } from '../utils/noop.js';
-import fs from '../lib/fs.js';
 import { config } from '../config/index.js';
+import { generateDeclarations } from '../utils/generateDeclarations.js';
 
 const askQuestion = (query: string) => {
   const rl = readline.createInterface({

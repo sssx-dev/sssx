@@ -7,8 +7,8 @@ import type { AbstractItem } from './loadDataModule.js';
 import type { SSRModule } from './loadSSRModule';
 import type { DataModule } from './loadDataModule.js';
 import type { FilesMap } from '../types/index.js';
-import { SEPARATOR } from '../utils/resolve.js';
 import { config, OUTDIR } from '../config/index.js';
+import { SEPARATOR, DYNAMIC_NAME } from 'src/constants.js';
 
 export type RouteModules = {
   data: DataModule;
@@ -38,7 +38,6 @@ export const prepareRouteModules = async (template: string, filesMap: FilesMap) 
 };
 
 type PrepareRouteMode = 'all' | 'updates' | 'removals';
-const DYNAMIC_NAME = 'dynamic';
 
 export const prepareRoute = async (
   filesMap: FilesMap,

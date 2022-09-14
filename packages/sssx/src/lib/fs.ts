@@ -1,13 +1,16 @@
 import fsSync, { type PathOrFileDescriptor, type RmOptions, type WriteFileOptions } from 'fs';
 import fs from 'fs/promises';
 import dayjs from 'dayjs';
+
 import type { Stream } from 'stream';
 import type { Abortable } from 'events';
 import type { Mode, ObjectEncodingOptions, OpenMode, PathLike } from 'fs';
 import type { FileHandle } from 'fs/promises';
+
 import { config } from '../config/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { uniqueFilter } from '../utils/uniqueFilter.js';
+import { SEPARATOR } from '../constants.js';
 
 const timestamp = dayjs().format(`YYYY-MM-DD-HH-mm-ss`);
 
@@ -49,7 +52,11 @@ const sortOneFile = (name: FileType = 'added') => {
   const lines = fsSync
     .readFileSync(filename, { encoding: 'utf-8' })
     .split(`\n`)
-    .map((a) => a.replaceAll(`//`, `/`).replaceAll(`${process.cwd()}/`, ``)) // TODO: check this on Windows
+    .map((a) =>
+      a
+        .replaceAll(`${SEPARATOR}${SEPARATOR}`, SEPARATOR)
+        .replaceAll(`${process.cwd()}${SEPARATOR}`, ``)
+    )
     .sort()
     .filter((a) => a.trim().length > 0)
     .filter(uniqueFilter);

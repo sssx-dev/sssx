@@ -1,10 +1,7 @@
-import fs from '../lib/fs.js';
-import path from 'path';
 import { config } from '../config/index.js';
-import type { FilesMap } from '../types/index.js';
 import type { RoutePermalinkFn, RoutePropsFn } from '../types/Route.js';
+import type { AbstractItem, FilesMap } from './types.js';
 
-export type AbstractItem = any;
 export type DataModule = Awaited<ReturnType<typeof loadDataModule>>;
 
 const normalizeToSourcePath = async (input: string) => {
@@ -20,10 +17,10 @@ export const loadDataModule = async (template: string, filesMap: FilesMap) => {
   // console.log(`loadDataModule`, {sourcePath, dataFile})
 
   const dataModule = await import(dataFile);
-  const getAll: (...args: any[]) => AbstractItem = dataModule.getAll;
-  const getUpdates: (...args: any[]) => AbstractItem = dataModule.getUpdates;
-  const getRemovals: (...args: any[]) => AbstractItem = dataModule.getRemovals;
-  const getProps: RoutePropsFn<AbstractItem, any> = dataModule.getProps;
+  const getAll: (...args: unknown[]) => AbstractItem[] = dataModule.getAll;
+  const getUpdates: (...args: unknown[]) => AbstractItem[] = dataModule.getUpdates;
+  const getRemovals: (...args: unknown[]) => AbstractItem[] = dataModule.getRemovals;
+  const getProps: RoutePropsFn<AbstractItem, unknown> = dataModule.getProps;
   const permalink: RoutePermalinkFn<AbstractItem> = dataModule.permalink;
 
   return {

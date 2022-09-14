@@ -1,7 +1,7 @@
 import fs from '../lib/fs.js';
 import glob from 'tiny-glob';
 import { config } from '../config/index.js';
-import type { FilesMap } from '../types/index.js';
+import type { FilesMap } from '../build/types.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR } from '../constants.js';
 

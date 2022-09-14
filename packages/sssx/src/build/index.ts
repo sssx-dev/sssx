@@ -20,8 +20,7 @@ import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
 
-import type { RouteModules, ItemPathTemplate } from './prepareRoute.js';
-import type { FilesMap } from '../types/index.js';
+import type { FilesMap, RouteModules, ItemPathTemplate } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -115,7 +114,7 @@ export class Builder {
     ]);
 
     const o = { filesMap: this.filesMap };
-    const dst = `${PREFIX}/${config.compiledRoot}`;
+    const dst = [PREFIX, config.compiledRoot].join(SEPARATOR);
 
     await Promise.all([
       replaceImports(this.componentsWildcard, { ...o, overwriteOriginal: true, dst: OUTDIR_SSSX }),
@@ -143,7 +142,7 @@ export class Builder {
       dynamicFiles.map((key) => {
         const from = this.filesMap[key][0] || '';
         const path = from.split(`/${config.distDir}/${config.compiledRoot}/`)[1];
-        const to = `${OUTDIR_SSSX}/${path}`;
+        const to = [OUTDIR_SSSX, path].join(SEPARATOR);
         const dir = to.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
         ensureDirExists(dir);
 
@@ -185,12 +184,11 @@ export class Builder {
 
   /**
    * stores all routes into .sssx/routes/<route_name>.txt
+   * runs in parallel
+   * @example template='.sssx/ssr/routes/blog/index.js'
    */
   public generateAllPaths = async () => {
     const templates = Object.keys(this.routeModules);
-
-    // runs in parallel
-    // @example template='.sssx/ssr/routes/blog/index.js'
     await Promise.all(templates.map(this.getRoutePaths));
   };
 
@@ -213,6 +211,8 @@ export class Builder {
         this.paths = this.paths.concat(array);
       })
     );
+
+    console.log('generatePaths', this.paths);
   };
 
   /**

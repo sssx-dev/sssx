@@ -7,6 +7,7 @@ import colors from 'ansi-colors';
 import * as dotenv from 'dotenv';
 import cliProgress from 'cli-progress';
 import type { Builder, Plugin, Config } from 'sssx';
+import { getContentType } from './getContentType.js';
 
 dotenv.config({
   path: path.resolve(process.cwd(), `.env.local`)
@@ -32,15 +33,6 @@ const defaultOptions: Options = {
 
 const delay = (miliseconds = 1000) => new Promise((resolve) => setTimeout(resolve, miliseconds));
 
-const getContentType = (extension: string) => {
-  if (extension === 'html') return 'text/html';
-  else if (extension === 'js') return 'text/javascript';
-  else if (extension === 'json') return 'application/json';
-  else if (extension === 'txt') return 'text/plain';
-  return 'application/octet-stream';
-};
-
-let OUTPUT = '';
 const uploadToS3 = async (
   S3: AWS.S3,
   localPath: string,
@@ -65,7 +57,6 @@ const uploadToS3 = async (
     // we will upload root files `/` placed in `/<folder>` with the content of `index.html`
     if (Key !== 'index.html' && Key.endsWith(`index.html`)) {
       Key = Key.split(`/`).slice(0, -1).join(`/`) + '/';
-      OUTPUT += Key + `\n`;
     }
 
     const uploadStream = () => {
@@ -156,8 +147,6 @@ const plugin = (_options: Partial<Options>) => {
 
     barS3.update(barS3.getTotal(), { route: 'done' });
     barS3.stop();
-
-    // console.log(OUTPUT);
 
     // https://github.com/aws/aws-sdk-js/issues/3983#issuecomment-990786567
     if (cloudfront && options.AWS_CLOUDFRONT_DISTRIBUTION_ID) {

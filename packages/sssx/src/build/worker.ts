@@ -1,7 +1,7 @@
 import workerpool from 'workerpool';
 
 import { Builder } from './index.js';
-import type { ItemPathTemplate } from './prepareRoute.js';
+import type { ItemPathTemplate } from './types.js';
 
 const render = async (paths: ItemPathTemplate[]) => {
   const builder = new Builder({ isWorker: true });

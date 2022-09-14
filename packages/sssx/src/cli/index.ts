@@ -11,7 +11,7 @@ import { checkRoutes } from './checkRoutes.js';
 import { noop } from '../utils/noop.js';
 import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
-import { askQuestion } from './askQuestion';
+import { askQuestion } from './askQuestion.js';
 
 ///////////////////////////
 const routes = {

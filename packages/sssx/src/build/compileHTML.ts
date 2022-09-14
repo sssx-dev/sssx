@@ -1,11 +1,11 @@
 import fs from '../lib/fs.js';
 import path from 'path';
 import { config, ROOT_DIR } from '../config/index.js';
-import type { FilesMap } from '../types/index.js';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
-import type { AbstractItem, DataModule } from './loadDataModule.js';
+import type { DataModule } from './loadDataModule.js';
 import type { SSRModule } from './loadSSRModule.js';
+import type { AbstractItem, FilesMap } from './types.js';
 
 // get all nodes between two nodes start and end
 const GET_TARGET_FN = `
@@ -48,6 +48,7 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
   return `import ${COMPONENT_NAME} from "${componentsPath}";
+import { AbstractItem, FilesMap } from './types';
         (function(){
             const target = getTarget('${prefix}')
             const params = ${componentParams}
@@ -105,7 +106,7 @@ export const compileHTML = async (args: Args) => {
   ensureDirExists(outdir);
 
   const props = await dataModule.getProps(item);
-  const result = ssrModule.render(props);
+  const result = ssrModule.render(props as never);
   const components = ssrModule.getHydratableComponents();
   const svelteURL = getSvelteURL(filesMap);
 

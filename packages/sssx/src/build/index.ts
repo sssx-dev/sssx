@@ -307,4 +307,8 @@ export class Builder {
       plugin && (await plugin(config, this));
     }
   };
+
+  public finalize = async () => {
+    fs.sortFile();
+  };
 }

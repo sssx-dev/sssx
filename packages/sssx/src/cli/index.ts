@@ -40,6 +40,7 @@ yargs(hideBin(process.argv))
     await builder.setup();
     await builder.renderPool(routes);
     await builder.runPlugins();
+    await builder.finalize();
   })
   .command('update', 'Start updating the static site', { routes }, async (args) => {
     const routes = checkRoutes(args);
@@ -51,6 +52,7 @@ yargs(hideBin(process.argv))
     await builder.renderPool(routes, updatesOnly);
     await builder.runPlugins();
     await builder.processRemovals();
+    await builder.finalize();
   })
   .command('dynamic', 'Update only dynamic files', {}, async () => {
     generateDeclarations();
@@ -58,6 +60,7 @@ yargs(hideBin(process.argv))
     await builder.setup();
     await builder.runPlugins();
     await builder.processRemovals();
+    await builder.finalize();
   })
   .command('clean', 'Remove generated folders', noop, async () => {
     clean({ createNewFolder: false });

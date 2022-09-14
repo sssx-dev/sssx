@@ -10,12 +10,34 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 const timestamp = dayjs().format(`YYYY-MM-DD-HH-mm-ss`);
 
-const append = (line: string) => {
+const getFileName = () => {
   const base = `${process.cwd()}/${config.distDir}/files`;
   ensureDirExists(base);
   const filename = `${base}/files-${timestamp}.txt`;
+
+  return filename;
+};
+
+const append = (line: string) => {
+  const filename = getFileName();
   fs.appendFile(filename, `${line}\n`);
 };
+
+const unique = <T>(value: T, index: number, array: T[]) => array.indexOf(value) === index;
+
+const sortFile = () => {
+  const filename = getFileName();
+  const lines = fsSync
+    .readFileSync(filename, { encoding: 'utf-8' })
+    .split(`\n`)
+    .sort()
+    .filter(unique)
+    .map((a) => a.replaceAll(`//`, `/`)); // TODO: check this on Windows
+
+  fsSync.writeFileSync(filename, lines.join(`\n`), { encoding: 'utf-8' });
+};
+
+//////////// stubs for origina fs functions below
 
 export const copyFile = (src: PathLike, dest: PathLike, mode?: number) => {
   append(dest.toString());
@@ -59,8 +81,11 @@ export default {
   writeFile,
   writeFileSync,
 
-  // sync stuff
+  // sync fs stubs
   existsSync,
   readFileSync,
-  readdirSync
+  readdirSync,
+
+  // sssx specific functions
+  sortFile
 };

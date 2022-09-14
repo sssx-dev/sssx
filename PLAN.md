@@ -12,12 +12,17 @@
 - [ ] add redirect for entire website level (via CloudFront)
 - [ ] delete old files, that were removed by the system
 
+# Documentation
+
+- [ ] prepare basic documentation (internal + external)
+- [ ] generate basic documentation website
+
 ## Rest
 
 - [ ] Send a list of paths changed to S3 plugin
 - [ ] have a way to generate a single url update
 - [ ] update removal process to remove all files that are not part of the generated folders
-- [ ] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
+- [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
@@ -42,8 +47,6 @@
 - [ ] on the start, show configuration of CPUs and RAM available
 - [ ] add typescript linter
 - [ ] add linter to all packages and apps
-- [ ] documentation
-
 - [ ] create plugin to generate podcast RSS feed and pages
 
 ## Done

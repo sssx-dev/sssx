@@ -69,8 +69,6 @@ export class Builder {
   private paths: ItemPathTemplate[] = [];
 
   private filesMap: FilesMap = {};
-
-  private isDev = process.env.NODE_ENV !== 'production';
   private isWorker;
 
   constructor(options: Partial<Options> = defaultOptions) {

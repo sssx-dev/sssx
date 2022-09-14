@@ -1,4 +1,4 @@
-import fsSync, { type PathOrFileDescriptor, type WriteFileOptions } from 'fs';
+import fsSync, { type PathOrFileDescriptor, type RmOptions, type WriteFileOptions } from 'fs';
 import fs from 'fs/promises';
 import dayjs from 'dayjs';
 import type { Stream } from 'stream';
@@ -10,29 +10,50 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 const timestamp = dayjs().format(`YYYY-MM-DD-HH-mm-ss`);
 
-const getFileName = () => {
-  const base = `${process.cwd()}/${config.distDir}/files`;
+type FileType = 'added' | 'removed';
+
+const getFileName = (name: FileType) => {
+  const base = `${process.cwd()}/${config.distDir}/files/${timestamp}`;
   ensureDirExists(base);
-  const filename = `${base}/files-${timestamp}.txt`;
+  const filename = `${base}/${name}.txt`;
 
   return filename;
 };
 
-const append = (line: string) => {
-  const filename = getFileName();
+const append = (line: string, name: FileType = 'added') => {
+  const filename = getFileName(name);
   fs.appendFile(filename, `${line}\n`);
+};
+
+const rmSync = (path: string, options?: RmOptions) => {
+  append(path, 'removed');
+  fsSync.rmSync(path, options);
+};
+
+const rm = (path: string, options?: RmOptions) => {
+  append(path, 'removed');
+  fsSync.rmSync(path, options);
 };
 
 const unique = <T>(value: T, index: number, array: T[]) => array.indexOf(value) === index;
 
 const sortFile = () => {
-  const filename = getFileName();
+  sortOneFile('added');
+  sortOneFile('removed');
+};
+
+const sortOneFile = (name: FileType = 'added') => {
+  const filename = getFileName(name);
+
+  if (!existsSync(filename)) return;
+
   const lines = fsSync
     .readFileSync(filename, { encoding: 'utf-8' })
     .split(`\n`)
+    .map((a) => a.replaceAll(`//`, `/`).replaceAll(`${process.cwd()}/`, ``)) // TODO: check this on Windows
     .sort()
-    .filter(unique)
-    .map((a) => a.replaceAll(`//`, `/`)); // TODO: check this on Windows
+    .filter((a) => a.trim().length > 0)
+    .filter(unique);
 
   fsSync.writeFileSync(filename, lines.join(`\n`), { encoding: 'utf-8' });
 };
@@ -73,19 +94,20 @@ export const writeFileSync = (
   return fsSync.writeFileSync(file, data, options);
 };
 
-const { existsSync, readFileSync, readdirSync, rmSync, mkdirSync } = fsSync;
+const { existsSync, readFileSync, readdirSync, mkdirSync } = fsSync;
 
 export default {
   ...fs,
   copyFile,
   writeFile,
   writeFileSync,
+  rm,
+  rmSync,
 
   // sync fs stubs
   existsSync,
   readFileSync,
   readdirSync,
-  rmSync,
   mkdirSync,
 
   // sssx specific functions

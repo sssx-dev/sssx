@@ -194,7 +194,7 @@ export class Builder {
         const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`);
         ensureDirExists(dir);
         const filename = template.split(`/`)[3] + `.txt`;
-        fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), { encoding: 'utf8' });
+        await fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), { encoding: 'utf8' });
       })
     );
   };

@@ -43,6 +43,15 @@ const defaultOptions: Options = {
   isWorker: false
 };
 
+type RenderOptions = {
+  routes: string[];
+  updatesOnly?: boolean;
+};
+
+const defaultRenderOptions: RenderOptions = {
+  routes: [`*`]
+};
+
 export class Builder {
   private id: string;
   private svelteLib = `${__dirname}/../patches/${SVELTEJS}`;
@@ -92,6 +101,12 @@ export class Builder {
     this.filesMap[key].push(value);
   };
 
+  /**
+   * Compiles source code from svelte and typescript to javascript, creates SSR version for each route,
+   * and client side compiled version of everything else:
+   * - components
+   * - dynamic scripts
+   */
   public setup = async () => {
     await this.prepareSvelteCore();
 
@@ -223,20 +238,33 @@ export class Builder {
     const paths = all.flat();
 
     let didPrint = false;
-    paths.map(async (dir) => {
-      if (fs.existsSync(dir)) {
-        await fs.rm(dir, { recursive: true });
-        if (!didPrint) {
-          didPrint = true;
-          this.log(chalk.red(`Processing removals:`));
-        }
-        console.log(`removed ${dir}`);
+    let counter = 0;
+
+    const printIntro = () => {
+      if (!didPrint) {
+        didPrint = true;
+        this.log(chalk.red(`Processing removals:`));
       }
-    });
+    };
+
+    await Promise.all(
+      paths.map(async (dir) => {
+        if (fs.existsSync(dir)) {
+          await fs.rm(dir, { recursive: true });
+          printIntro();
+          console.log(chalk.red(`removed`), dir);
+          counter++;
+        }
+      })
+    );
+
+    if (counter > 0) {
+      console.log(chalk.bgRed(`Removed ${counter} routes`));
+    }
   };
 
-  public render = async (paths: ItemPathTemplate[]) => {
-    this.log(`render`, { pathsLength: paths.length });
+  public compileAllHTML = async (paths: ItemPathTemplate[]) => {
+    this.log(`compileAllHTML`, { pathsLength: paths.length });
 
     for (let i = 0; i < paths.length; i++) {
       const { item, path, template, dynamic } = paths[i];
@@ -256,14 +284,16 @@ export class Builder {
   };
 
   // TODO: change back to multi-core rendering before the release
-  public renderPool = async (routes = ['*'], updatesOnly = false) => {
+  public renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
+    const options = Object.assign({}, defaultRenderOptions, renderOptions);
     await this.prepareRoutes();
     await this.generateAllPaths();
-    await this.generatePaths(routes, updatesOnly);
-    await this.render(this.paths);
+    await this.generatePaths(options.routes, options.updatesOnly);
+    await this.compileAllHTML(this.paths);
   };
 
-  public _renderPool = async (routes = ['*'], updatesOnly = false) => {
+  public _renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
+    const options = Object.assign({}, defaultRenderOptions, renderOptions);
     const numberOfWorkers = os.cpus().length;
 
     const pool = workerpool.pool(path.resolve(__dirname, 'worker.js'), {
@@ -273,7 +303,7 @@ export class Builder {
     });
 
     await this.prepareRoutes();
-    await this.generatePaths(routes, updatesOnly);
+    await this.generatePaths(options.routes, options.updatesOnly);
 
     const LENGTH = this.paths.length;
     const batchSize = Math.ceil(LENGTH / numberOfWorkers);

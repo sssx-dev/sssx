@@ -38,7 +38,7 @@ yargs(hideBin(process.argv))
     generateDeclarations();
 
     await builder.setup();
-    await builder.renderPool(routes);
+    await builder.renderPool({ routes });
     await builder.runPlugins();
     await builder.finalize();
   })
@@ -46,10 +46,9 @@ yargs(hideBin(process.argv))
     const routes = checkRoutes(args);
 
     generateDeclarations();
-    const updatesOnly = true;
     const builder = new Builder();
     await builder.setup();
-    await builder.renderPool(routes, updatesOnly);
+    await builder.renderPool({ routes, updatesOnly: true });
     await builder.runPlugins();
     await builder.processRemovals();
     await builder.finalize();

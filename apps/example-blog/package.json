@@ -29,7 +29,7 @@
     "@fullhuman/postcss-purgecss": "^4.1.3",
     "dayjs": "^1.11.4",
     "dotenv": "^16.0.1",
-    "sssx": "*",
+    "sssx": "^0.0.0",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

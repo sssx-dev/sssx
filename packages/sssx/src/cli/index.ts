@@ -2,7 +2,6 @@
 
 import chalk from 'chalk';
 import yargs from 'yargs';
-import readline from 'readline';
 import { hideBin } from 'yargs/helpers';
 
 import fs from '../lib/fs.js';
@@ -12,21 +11,7 @@ import { checkRoutes } from './checkRoutes.js';
 import { noop } from '../utils/noop.js';
 import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
-
-const askQuestion = (query: string) => {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  return new Promise((resolve) =>
-    rl.question(`${query} yN\n`, (answer: string) => {
-      rl.close();
-      const flag = ['y', 'yes'].includes(answer.toLowerCase().trim());
-      resolve(flag);
-    })
-  );
-};
+import { askQuestion } from './askQuestion';
 
 ///////////////////////////
 const routes = {

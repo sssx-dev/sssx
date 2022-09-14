@@ -7,6 +7,7 @@ import type { Mode, ObjectEncodingOptions, OpenMode, PathLike } from 'fs';
 import type { FileHandle } from 'fs/promises';
 import { config } from '../config/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
+import { uniqueFilter } from '../utils/uniqueFilter.js';
 
 const timestamp = dayjs().format(`YYYY-MM-DD-HH-mm-ss`);
 
@@ -35,8 +36,6 @@ const rm = (path: string, options?: RmOptions) => {
   fsSync.rmSync(path, options);
 };
 
-const unique = <T>(value: T, index: number, array: T[]) => array.indexOf(value) === index;
-
 const sortFile = () => {
   sortOneFile('added');
   sortOneFile('removed');
@@ -53,7 +52,7 @@ const sortOneFile = (name: FileType = 'added') => {
     .map((a) => a.replaceAll(`//`, `/`).replaceAll(`${process.cwd()}/`, ``)) // TODO: check this on Windows
     .sort()
     .filter((a) => a.trim().length > 0)
-    .filter(unique);
+    .filter(uniqueFilter);
 
   fsSync.writeFileSync(filename, lines.join(`\n`), { encoding: 'utf-8' });
 };

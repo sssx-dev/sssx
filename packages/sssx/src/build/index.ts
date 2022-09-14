@@ -119,8 +119,6 @@ export class Builder {
       buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom' })
     ]);
 
-    // this.log(`FilesMap`, this.filesMap);
-
     const o = { filesMap: this.filesMap };
     const dst = `${PREFIX}/${config.compiledRoot}`;
 
@@ -130,12 +128,9 @@ export class Builder {
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
 
-    // console.log(`setup`, this.filesMap);
-
     await replaceImports(this.routesDynamicWildcard, {
       ...o,
       dst,
-      // overwriteOriginal: true,
       matchHashesImports: true
     });
 
@@ -174,25 +169,30 @@ export class Builder {
     }
   };
 
+  private getRoutePaths = async (template: string) => {
+    const modules = this.routeModules[template];
+    const array = await prepareRoute(this.filesMap, template, modules, 'all');
+    const paths = array
+      .map(({ path }) => path.replace(`${process.cwd()}/${config.outDir}`, ``).toLowerCase())
+      .sort();
+
+    // saving to file route-name.txt
+    const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`);
+    ensureDirExists(dir);
+
+    const filename = template.split(`/`)[3] + `.txt`;
+    await fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), { encoding: 'utf8' });
+  };
+
+  /**
+   * stores all routes into .sssx/routes/<route_name>.txt
+   */
   public generateAllPaths = async () => {
     const templates = Object.keys(this.routeModules);
 
+    // runs in parallel
     // @example template='.sssx/ssr/routes/blog/index.js'
-    await Promise.all(
-      templates.map(async (template) => {
-        const modules = this.routeModules[template];
-        const array = await prepareRoute(this.filesMap, template, modules, 'all');
-        const paths = array.map(({ path }) =>
-          path.replace(`${process.cwd()}/${config.outDir}`, ``).toLowerCase()
-        );
-
-        // saving to file route-name.txt
-        const dir = [process.cwd(), config.distDir, config.routesPath].join(`/`);
-        ensureDirExists(dir);
-        const filename = template.split(`/`)[3] + `.txt`;
-        await fs.writeFile(`${dir}/${filename}`, paths.sort().join(`\n`), { encoding: 'utf8' });
-      })
-    );
+    await Promise.all(templates.map(this.getRoutePaths));
   };
 
   public generatePaths = async (routes = ['*'], updatesOnly = false) => {

@@ -1,4 +1,5 @@
 // generated automatically using `npx sssx generate`
+// do not edit
 import { getPermalink } from 'sssx'
 
 import type { Request as RequestBlog } from './blog/route.js'
@@ -17,7 +18,6 @@ type dates = Omit<datesT, 'type'>
 
 type mainT = RequestMain & {type: 'main'}
 type main = Omit<mainT, 'type'>
-
 
 /**
 * Routes helper to generate link within a given route.

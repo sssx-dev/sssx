@@ -6,7 +6,6 @@ import { hideBin } from 'yargs/helpers';
 import { Builder } from '../index.js';
 import { clean } from '../build/clean.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
-import { checkIfRoutesExist } from '../utils/checkIfRoutesExist.js';
 import { checkRoutes } from './checkRoutes.js';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -37,6 +36,7 @@ yargs(hideBin(process.argv))
     const builder = new Builder();
     clean();
     generateDeclarations();
+
     await builder.setup();
     await builder.renderPool(routes);
     await builder.runPlugins();
@@ -60,8 +60,7 @@ yargs(hideBin(process.argv))
     await builder.processRemovals();
   })
   .command('clean', 'Remove generated folders', noop, async () => {
-    const createNewFolder = false;
-    clean(createNewFolder);
+    clean({ createNewFolder: false });
   })
   .command('generate', 'Generate declaration based on your routes', noop, () => {
     generateDeclarations();

@@ -7,9 +7,13 @@ const cleanDist = (target = `./dist/`, createNewFolder = true) => {
   if (createNewFolder) fs.mkdirSync(target);
 };
 
-export const clean = (createNewFolder = true) => {
-  cleanDist(PREFIX, createNewFolder);
-  cleanDist(COMPILED, createNewFolder);
-  cleanDist(OUTDIR, createNewFolder);
-  cleanDist(OUTDIR_SSSX, createNewFolder);
+type Options = {
+  createNewFolder: boolean;
+};
+
+export const clean = (options: Options = { createNewFolder: true }) => {
+  cleanDist(PREFIX, options.createNewFolder);
+  cleanDist(COMPILED, options.createNewFolder);
+  cleanDist(OUTDIR, options.createNewFolder);
+  cleanDist(OUTDIR_SSSX, options.createNewFolder);
 };

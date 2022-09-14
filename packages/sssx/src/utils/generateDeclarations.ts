@@ -2,7 +2,8 @@ import fs from '../lib/fs.js';
 import { config } from '../config/index.js';
 import { capitalize } from './capitalize.js';
 
-const filename = `index.ts`;
+const FILENAME = `index.ts`;
+
 export const generateDeclarations = () => {
   const base = `${process.cwd()}/${config.sourceRoot}/${config.routesPath}`;
   const names = fs
@@ -35,7 +36,7 @@ export const generateDeclarations = () => {
         `type ${name} = Omit<${name}T, 'type'>\n\n`)
   );
 
-  script += `\n`;
+  // script += `\n`;
   // script += `declare module 'sssx' {\n`
 
   script += `/**\n`;
@@ -54,10 +55,11 @@ export const generateDeclarations = () => {
   script += `}\n`;
   // script += `}\n`
 
-  script = `// generated automatically using \`npx sssx generate\`\n` + script;
+  script = `// generated automatically using \`npx sssx generate\`\n` + `// do not edit\n` + script;
 
   const { sourceRoot, routesPath } = config;
-  fs.writeFileSync(`${process.cwd()}/${sourceRoot}/${routesPath}/${filename}`, script, {
+
+  fs.writeFileSync(`${process.cwd()}/${sourceRoot}/${routesPath}/${FILENAME}`, script, {
     encoding: 'utf8'
   });
 };

@@ -304,7 +304,7 @@ export class Builder {
 
     for (let i = 0; i < plugins.length; i++) {
       const plugin = plugins[i];
-      await plugin(config, this);
+      plugin && (await plugin(config, this));
     }
   };
 }

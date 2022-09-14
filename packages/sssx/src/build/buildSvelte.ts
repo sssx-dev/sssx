@@ -10,12 +10,22 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../lib/esbuildSvelte.js';
 
+type Options = {
+  generate?: 'dom' | 'ssr' | false;
+};
+
+const defaultOptions: Options = {
+  generate: 'ssr'
+};
+
 export const buildSvelte = async (
   entryPoints: string[],
-  generate: 'dom' | 'ssr' | false = 'ssr',
-  setFilesMap: (k: string, v: string) => void
+  setFilesMap: (k: string, v: string) => void,
+  buildOptions = defaultOptions
 ) => {
-  const outdir = `${config.distDir}/${generate === 'ssr' ? 'ssr' : 'compiled'}`;
+  const options = Object.assign({}, defaultOptions, buildOptions);
+  const { generate } = options;
+  const outdir = `${config.distDir}/${generate === 'ssr' ? config.ssrRoot : config.compiledRoot}`;
   ensureDirExists(outdir);
 
   const naming =

@@ -24,14 +24,12 @@ import { sliceArray } from '../utils/sliceArray.js';
 import type { FilesMap } from '../types/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR } from '../utils/resolve.js';
+import { SVELTEJS } from '../constants.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SVELTEJS = `svelte.js`;
 const nanoid = customAlphabet(`0123456789abcdef`, 5);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
-const noop = (...args: any[]) => {};
 
 type Options = {
   isDev: boolean;
@@ -72,13 +70,12 @@ export class Builder {
 
   private filesMap: FilesMap = {};
 
-  private isDev;
+  private isDev = process.env.NODE_ENV !== 'production';
   private isWorker;
 
   constructor(options: Partial<Options> = defaultOptions) {
     this.id = nanoid();
     options = Object.assign({}, defaultOptions, options);
-    this.isDev = options.isDev;
     this.isWorker = options.isWorker;
     this.log(`Creating new SSSX Builder`);
   }
@@ -120,8 +117,8 @@ export class Builder {
 
     await Promise.all([
       buildTypeScript(entryPointsTS, this.setFilesMap),
-      buildSvelte(entryPointsSvelte, 'ssr', this.setFilesMap),
-      buildSvelte(entryPointsSvelte, 'dom', this.setFilesMap)
+      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'ssr' }),
+      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom' })
     ]);
 
     // this.log(`FilesMap`, this.filesMap);
@@ -169,7 +166,8 @@ export class Builder {
   };
 
   public prepareRoutes = async () => {
-    const templates = (this.ssrRouteTemplates = await glob(this.ssrRoutesWildcard));
+    const templates = await glob(this.ssrRoutesWildcard);
+    this.ssrRouteTemplates = templates;
 
     for (let i = 0; i < templates.length; i++) {
       const template = templates[i];

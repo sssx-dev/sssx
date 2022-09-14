@@ -73,7 +73,7 @@ export const writeFileSync = (
   return fsSync.writeFileSync(file, data, options);
 };
 
-const { existsSync, readFileSync, readdirSync } = fsSync;
+const { existsSync, readFileSync, readdirSync, rmSync, mkdirSync } = fsSync;
 
 export default {
   ...fs,
@@ -85,6 +85,8 @@ export default {
   existsSync,
   readFileSync,
   readdirSync,
+  rmSync,
+  mkdirSync,
 
   // sssx specific functions
   sortFile

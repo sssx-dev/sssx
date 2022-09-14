@@ -15,7 +15,7 @@ export const buildSvelteCore = async (entryPoints: string[], outdir = `./dist/ou
   });
 
   await Promise.all(
-    result.outputFiles.map(async (output, index) => {
+    result.outputFiles.map(async (output) => {
       const path = output.path.split(`/`).slice(0, -1).join(`/`);
       ensureDirExists(path);
 

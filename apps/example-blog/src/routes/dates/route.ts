@@ -12,7 +12,7 @@ export const permalink:RoutePermalinkFn<Request> = `/:slug/`
  * @returns array of all slugs
  */
 export const getAll = async () => {
-    return Array.from(Array(3).keys()).map(index => {
+    return Array.from(Array(4).keys()).map(index => {
         const date = dayjs().subtract(index, 'days').format('YYYY-MM-DD')
         return {slug:`route-${date}`, time: `00:00`}
     })

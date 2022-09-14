@@ -2,6 +2,7 @@ import glob from 'tiny-glob';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import chalk from 'chalk';
 
 import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
@@ -75,7 +76,7 @@ export class Builder {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private log = (...args: any[]) =>
-    console.log(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`, ...args);
+    console.log(chalk.yellow(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`), ...args);
 
   private prepareSvelteCore = async () => {
     const hashedSvelteCorePath = await buildSvelteCore([this.svelteLib], OUTDIR_SSSX);
@@ -221,11 +222,16 @@ export class Builder {
 
     const paths = all.flat();
 
-    // TODO: color this in red
-    this.log(`Processing removals:`);
+    let didPrint = false;
     paths.map(async (dir) => {
-      await fs.rm(dir, { recursive: true });
-      console.log(`removed ${dir}`);
+      if (fs.existsSync(dir)) {
+        await fs.rm(dir, { recursive: true });
+        if (!didPrint) {
+          didPrint = true;
+          this.log(chalk.red(`Processing removals:`));
+        }
+        console.log(`removed ${dir}`);
+      }
     });
   };
 

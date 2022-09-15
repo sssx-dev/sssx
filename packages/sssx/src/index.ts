@@ -1,7 +1,7 @@
 export { clean } from './build/clean.js';
 export { Builder } from './build/index.js';
 export { getPermalink } from './build/getPermalink.js';
-export * as fs from './lib/fs.js'; // specifal FS proxy to collect all written files
+export { default as fs } from './lib/fs.js'; // specifal FS proxy to collect all written filenames
 
 export type { Config } from './types/Config.js';
 export type { Plugin } from './types/Plugin';

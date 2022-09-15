@@ -60,7 +60,8 @@ export class Builder {
 
   private ssrRouteTemplates: string[] = [];
   private routeModules: Record<string, RouteModules> = {};
-  private paths: ItemPathTemplate[] = [];
+  private addedRequests: ItemPathTemplate[] = [];
+  private removedRequests: ItemPathTemplate[] = [];
 
   private filesMap: FilesMap = {};
   private isWorker;
@@ -192,7 +193,7 @@ export class Builder {
     await Promise.all(templates.map(this.getRoutePaths));
   };
 
-  public generatePaths = async (routes = ['*'], updatesOnly = false) => {
+  public generateRequests = async (routes = ['*'], updatesOnly = false) => {
     const templates = Object.keys(this.routeModules);
 
     const filteredTemplates = routes.includes('*')
@@ -208,11 +209,11 @@ export class Builder {
           modules,
           updatesOnly ? 'updates' : 'all'
         );
-        this.paths = this.paths.concat(array);
+        this.addedRequests = this.addedRequests.concat(array);
       })
     );
 
-    console.log('generatePaths', this.paths);
+    console.log('generateRequests', this.addedRequests);
   };
 
   /**
@@ -283,8 +284,8 @@ export class Builder {
     const options = Object.assign({}, defaultRenderOptions, renderOptions);
     await this.prepareRoutes();
     await this.generateAllPaths();
-    await this.generatePaths(options.routes, options.updatesOnly);
-    await this.compileAllHTML(this.paths);
+    await this.generateRequests(options.routes, options.updatesOnly);
+    await this.compileAllHTML(this.addedRequests);
   };
 
   public _renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
@@ -298,13 +299,13 @@ export class Builder {
     });
 
     await this.prepareRoutes();
-    await this.generatePaths(options.routes, options.updatesOnly);
+    await this.generateRequests(options.routes, options.updatesOnly);
 
-    const LENGTH = this.paths.length;
+    const LENGTH = this.addedRequests.length;
     const batchSize = Math.ceil(LENGTH / numberOfWorkers);
     const numberOfBatches = Math.floor(LENGTH / batchSize);
 
-    const array: Array<ItemPathTemplate[]> = sliceArray(this.paths, batchSize);
+    const array: Array<ItemPathTemplate[]> = sliceArray(this.addedRequests, batchSize);
 
     this.log(`Starting with ${numberOfBatches} batches:`);
 
@@ -326,8 +327,9 @@ export class Builder {
     await pool.terminate();
   };
 
-  public getPaths = () => {
-    return this.paths.map(({ path, template }) => ({ path, template }));
+  public getRequests = (type: 'added' | 'removed' = 'added') => {
+    const requests = type === 'added' ? this.addedRequests : this.removedRequests;
+    return requests.map(({ path, template }) => ({ path, template }));
   };
 
   public runPlugins = async () => {

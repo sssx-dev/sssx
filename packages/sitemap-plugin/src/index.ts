@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { fs } from 'sssx';
 import path from 'path';
 import type { Config, Plugin, Builder } from 'sssx';
 
@@ -122,16 +122,16 @@ const plugin = (inputOptions: Partial<Options> = defaultOptions) => {
     }
 
     console.log(`Generating sitemaps for ${config.origin}`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const paths: any[] = builder.getPaths();
+    // TODO: regenerate using the update URLs
+    const requests = builder.getRequests();
 
     const map: Record<string, string[]> = {};
 
     const { origin, outDir } = config;
 
-    paths.map((o) => {
-      const template = o.template.replace(`/index.js`, ``).split(`/`).pop() || '';
-      const path = origin + o.path.split(outDir).pop();
+    requests.map((r) => {
+      const template = r.template.replace(`/index.js`, ``).split(`/`).pop() || '';
+      const path = origin + r.path.split(outDir).pop();
 
       if (!map[template]) map[template] = [];
 

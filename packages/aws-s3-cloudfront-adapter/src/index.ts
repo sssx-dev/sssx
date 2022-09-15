@@ -103,7 +103,8 @@ const plugin = (_options: Partial<Options>) => {
     // log(`Inside ${PLUGIN_NAME}`, options)
     // log(config)
 
-    // const currentPaths = builder.getPaths()
+    const addedRequests = builder.getRequests('added');
+    const removedRequests = builder.getRequests('removed');
     // currentPaths.map(({path}) => log(path))
 
     const base = path.resolve(process.cwd(), config.outDir);

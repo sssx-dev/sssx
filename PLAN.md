@@ -12,6 +12,10 @@
 - [ ] add redirect for entire website level (via CloudFront)
 - [ ] delete old files, that were removed by the system
 
+## @sssx/sitemap-plugin
+
+- [ ] regerate map using existing map (via file system or by reading a previosly generated map)
+
 # Documentation
 
 - [ ] prepare basic documentation (internal + external)

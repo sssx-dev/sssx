@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "src",
+    "outDir": "./dist"
+  },
+  "references": [
+    { "path": "./packages/aws-s3-cloudfront-adapter" },
+    { "path": "./packages/sitemap-plugin" },
+    { "path": "./packages/sssx" }
+  ]
+}

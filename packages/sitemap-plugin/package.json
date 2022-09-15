@@ -28,7 +28,7 @@
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
   "dependencies": {
-    "sssx": "file:packages/sssx"
+    "sssx": "*"
   },
   "devDependencies": {
     "@types/node": "^18.6.0"

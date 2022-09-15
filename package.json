@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo run build --filter=@sssx/example-blog^... --filter=@sssx/docs && changeset publish"
+    "release": "turbo run build --filter=@sssx/example-blog^... --filter=@sssx/docs && changeset publish",
+    "postinstall": "tsc -b"
   },
   "engines": {
     "node": "v18.x"
@@ -30,11 +31,17 @@
   ],
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "apps/*"
+    ],
+    "nohoist": [
+      "packages/sssx"
+    ]
+  },
   "devDependencies": {
+    "@types/node": "^18.0.0",
     "@changesets/cli": "^2.24.1",
     "@sssx/eslint-config-sssx": "*",
     "eslint": "^8.20.0",
@@ -48,5 +55,8 @@
   },
   "bugs": {
     "url": "https://github.com/sssx-dev/sssx/issues"
+  },
+  "dependencies": {
+    "@tsconfig/svelte": "^3.0.0"
   }
 }

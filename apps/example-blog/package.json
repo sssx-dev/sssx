@@ -8,7 +8,8 @@
     "clean": "sssx clean",
     "serve": "serve dist -p 5000",
     "debug": "npx --node-options=\"--inspect\" sssx build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "wipe": "rm -rf dist .sssx"
   },
   "engines": {
     "node": "v18.x"
@@ -29,7 +30,7 @@
     "@fullhuman/postcss-purgecss": "^4.1.3",
     "dayjs": "^1.11.4",
     "dotenv": "^16.0.1",
-    "sssx": "^0.0.0",
+    "sssx": "*",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

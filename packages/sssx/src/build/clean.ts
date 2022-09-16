@@ -1,4 +1,4 @@
-import fs from '../lib/fs.js';
+import fs from 'fs';
 import { PREFIX, COMPILED, OUTDIR, OUTDIR_SSSX, config } from '../config/index.js';
 
 const cleanDist = (target = `./${config.outDir}/`, createNewFolder = true) => {

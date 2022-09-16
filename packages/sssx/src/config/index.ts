@@ -30,7 +30,15 @@ const userConfig = await loadConfig();
 
 export const config = Object.assign({}, defaultConfig, userConfig) as Config;
 
+/**
+ * Folder where SSSX stores related files
+ * @default `./.sssx`
+ */
 export const PREFIX = `${process.cwd()}/${config.distDir}`;
+/**
+ * Folder where exported HTML, CSS, JS and any other files are stored
+ * @default `./dist`
+ */
 export const OUTDIR = `${process.cwd()}/${config.outDir}`;
 
 export const COMPILED = `${PREFIX}/${config.compiledRoot}`;

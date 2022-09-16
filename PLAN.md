@@ -6,6 +6,7 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
+- [ ] Send a list of paths changed to S3 plugin
 - [x] add progress bar for S3 adapter
 - [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
@@ -14,7 +15,8 @@
 
 ## @sssx/sitemap-plugin
 
-- [ ] regerate map using existing map (via file system or by reading a previosly generated map)
+- [x] regerate map using existing map (via file system or by reading a previosly generated map)
+- [ ] add new `route` sitemaps in this `update` mode.
 
 # Documentation
 
@@ -23,7 +25,8 @@
 
 ## Rest
 
-- [ ] Send a list of paths changed to S3 plugin
+- [ ] add `dry` mode that shows changes to be made
+- [ ] for build and update add `route` name filter
 - [ ] have a way to generate a single url update
 - [ ] update removal process to remove all files that are not part of the generated folders
 - [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)

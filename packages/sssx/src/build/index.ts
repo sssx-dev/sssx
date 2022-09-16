@@ -212,8 +212,6 @@ export class Builder {
         this.addedRequests = this.addedRequests.concat(array);
       })
     );
-
-    console.log('generateRequests', this.addedRequests);
   };
 
   /**
@@ -223,31 +221,29 @@ export class Builder {
   public processRemovals = async () => {
     const templates = Object.keys(this.routeModules);
 
-    const all: string[][] = await Promise.all(
-      templates.map(async (template) => {
-        const modules = this.routeModules[template];
-        const array = await prepareRoute(this.filesMap, template, modules, 'removals');
-        return array.map((a) => a.path);
-      })
-    );
+    this.removedRequests = (
+      await Promise.all(
+        templates.map(async (template) => {
+          const modules = this.routeModules[template];
+          const array = await prepareRoute(this.filesMap, template, modules, 'removals');
+          return array;
+        })
+      )
+    ).flat();
 
-    const paths = all.flat();
+    const paths = this.removedRequests.map((r) => r.path);
 
     let didPrint = false;
     let counter = 0;
-
-    const printIntro = () => {
-      if (!didPrint) {
-        didPrint = true;
-        this.log(chalk.red(`Processing removals:`));
-      }
-    };
 
     await Promise.all(
       paths.map(async (dir) => {
         if (fs.existsSync(dir)) {
           await fs.rm(dir, { recursive: true });
-          printIntro();
+          if (!didPrint) {
+            didPrint = true;
+            this.log(chalk.red(`Processing removals:`));
+          }
           console.log(chalk.red(`removed`), dir);
           counter++;
         }
@@ -279,9 +275,15 @@ export class Builder {
     this.log(`Done`);
   };
 
+  /**
+   * SSSX builds only routes that have to be updated.
+   */
+  public isIncremental = false;
   // TODO: change back to multi-core rendering before the release
   public renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
     const options = Object.assign({}, defaultRenderOptions, renderOptions);
+    if (options.updatesOnly) this.isIncremental = true;
+
     await this.prepareRoutes();
     await this.generateAllPaths();
     await this.generateRequests(options.routes, options.updatesOnly);
@@ -343,9 +345,10 @@ export class Builder {
         const module = (await import(key)).default;
         const value = plugins[key];
         const plugin = module(value);
+        // this.log(`Plugin ${key}`, plugin);
         await plugin(config, this);
       } catch (err) {
-        this.log(chalk.red(`Error loading and running plugin "${key}"`));
+        this.log(chalk.red(`Error loading and running plugin "${key}"`), err);
       }
     }
   };

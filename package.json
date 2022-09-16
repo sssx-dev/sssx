@@ -1,6 +1,6 @@
 {
-  "name": "sssx",
-  "version": "0.0.1",
+  "name": "@sssx/monorepo",
+  "version": "0.0.0",
   "description": "Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
   "type": "module",
   "main": "dist/index.js",
@@ -31,15 +31,10 @@
   ],
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*"
-    ],
-    "nohoist": [
-      "packages/sssx"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@changesets/cli": "^2.24.1",

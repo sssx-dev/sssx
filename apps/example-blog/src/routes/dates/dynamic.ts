@@ -1,3 +1,4 @@
+// @ts-ignore
 import Header from '../../components/header.svelte';
 
 window.onload = function () {

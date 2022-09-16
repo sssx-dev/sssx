@@ -1,5 +1,6 @@
 {
   "name": "@sssx/example-blog",
+  "private": true,
   "version": "0.0.1",
   "description": "Example blog built with SSSX",
   "type": "module",
@@ -26,14 +27,11 @@
   ],
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@fullhuman/postcss-purgecss": "^4.1.3",
     "dayjs": "^1.11.4",
     "dotenv": "^16.0.1",
-    "sssx": "*",
-    "svelte": "^3.48.0"
-  },
-  "devDependencies": {
+    "svelte": "^3.48.0",
     "@sssx/aws-s3-cloudfront-adapter": "*",
     "@sssx/sitemap-plugin": "*",
     "@tailwindcss/aspect-ratio": "^0.4.0",

@@ -9,6 +9,8 @@
   "references": [
     { "path": "./packages/aws-s3-cloudfront-adapter" },
     { "path": "./packages/sitemap-plugin" },
-    { "path": "./packages/sssx" }
+    { "path": "./packages/sssx" },
+    { "path": "./apps/example-blog" },
+    { "path": "./apps/docs" }
   ]
 }

@@ -7,8 +7,8 @@
   },
   "compilerOptions": {
     "composite": true,
-    "target": "ES2020",
-    "lib": ["ES2021"],
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
     "module": "ESNext",
     "moduleResolution": "node",
     "allowJs": true,
@@ -23,10 +23,10 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "sssx": ["packages/sssx"],
-      "@sssx/eslint-config-sssx": ["packages/eslint-config-sssx"],
-      "@sssx/sitemap-plugin": ["packages/sitemap-plugin"],
-      "@sssx/aws-s3-cloudfront-adapter": ["packages/aws-s3-cloudfront-adapter"]
+      "sssx": ["./packages/sssx"],
+      "@sssx/eslint-config-sssx": ["./packages/eslint-config-sssx"],
+      "@sssx/sitemap-plugin": ["./packages/sitemap-plugin"],
+      "@sssx/aws-s3-cloudfront-adapter": ["./packages/aws-s3-cloudfront-adapter"]
     }
   }
 }

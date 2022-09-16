@@ -11,14 +11,22 @@ const defaultConfig: Partial<Config> = {
   componentsPath: `components`,
   stylesPath: `styles`,
   sourceRoot: `src`,
-  plugins: [],
+  plugins: {},
   ssrRoot: 'ssr',
   compiledRoot: 'compiled',
   filenamesPrefix: 'sssx'
 };
 
-const userConfigPath = `${process.cwd()}/sssx.config.js`;
-const userConfig = fs.existsSync(userConfigPath) ? (await import(userConfigPath)).default : {};
+const loadConfig = async (path = `${process.cwd()}/sssx.config.js`) => {
+  if (fs.existsSync(path)) {
+    const c = await import(path);
+    return c.default;
+  }
+  return {};
+};
+
+const userConfig = await loadConfig();
+// console.log('SSSX -> Config -> userConfig', userConfig);
 
 export const config = Object.assign({}, defaultConfig, userConfig) as Config;
 

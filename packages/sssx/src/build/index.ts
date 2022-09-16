@@ -333,11 +333,20 @@ export class Builder {
   };
 
   public runPlugins = async () => {
-    const plugins = config.plugins || [];
+    const { plugins } = config;
 
-    for (let i = 0; i < plugins.length; i++) {
-      const plugin = plugins[i];
-      plugin && (await plugin(config, this));
+    const modules = Object.keys(plugins);
+    for (let i = 0; i < modules.length; i++) {
+      const key = modules[i]; // like "@sssx/sitemap-plugin"
+      this.log(`Loading plugin "${key}"`);
+      try {
+        const module = (await import(key)).default;
+        const value = plugins[key];
+        const plugin = module(value);
+        await plugin(config, this);
+      } catch (err) {
+        this.log(chalk.red(`Error loading and running plugin "${key}"`));
+      }
     }
   };
 

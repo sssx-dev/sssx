@@ -4,8 +4,12 @@ import type { Config, Plugin, Builder } from 'sssx';
 
 const PLUGIN_NAME = `sssx-sitemap-plugin`;
 
-type Options = {
+export type Options = {
   origin: string;
+  /**
+   * paths to exclude
+   * @default []
+   */
   exclude: string[];
   changefreq: 'monthly' | 'weekly' | 'daily';
   priority: number;

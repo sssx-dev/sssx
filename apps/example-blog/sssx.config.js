@@ -1,15 +1,13 @@
-// import sitemapPlugin from '@sssx/sitemap-plugin';
-// import s3adapter from '@sssx/aws-s3-cloudfront-adapter'
-
 const isProduction = process.env.NODE_ENV === 'production';
 const origin = `https://sssx.github.io`;
 
-// console.log('hello from sssx.config.js');
-
 let plugins = {};
-plugins['@sssx/sitemap-plugin'] = { origin, exclude: [] };
+
+/** @type {import('@sssx/sitemap-plugin').Options} */
+plugins['@sssx/sitemap-plugin'] = { origin };
 
 if (isProduction) {
+  /** @type {import('@sssx/aws-s3-cloudfront-adapter').Options} */
   plugins['@sssx/aws-s3-cloudfront-adapter'] = {};
 }
 
@@ -21,13 +19,6 @@ const config = {
   appDir: '__SSSX__',
   basePath: '',
   plugins
-  //   plugins: {
-  //     sitemapPlugin({
-  //         origin,
-  //         exclude: []
-  //     }),
-  //     isProduction && s3adapter({})
-  //   }
 };
 
 export default config;

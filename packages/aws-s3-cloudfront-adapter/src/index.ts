@@ -15,7 +15,10 @@ dotenv.config({
 
 const PLUGIN_NAME = `@sssx/aws-s3-cloudfront-adapter`;
 
-type Options = {
+/**
+ * default options are loaded from your `.env` file
+ */
+export type Options = {
   AWS_CLOUDFRONT_DISTRIBUTION_ID?: string;
   AWS_ACCESS_KEY_ID: string;
   AWS_SECRET_ACCESS_KEY: string;

@@ -6,6 +6,10 @@ export type IURL = {
 };
 
 export interface ISitemap {
+  '?xml': {
+    '@_version': string; //'1.0'
+    '@_encoding': string; //'UTF-8'
+  };
   '@_xmlns': string;
   urlset: {
     url: IURL[];

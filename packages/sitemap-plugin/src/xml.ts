@@ -9,6 +9,10 @@ export class XML {
   parser = new XMLParser({ ignoreAttributes: false });
   builder = new XMLBuilder({ indentBy: `\t`, ignoreAttributes: false, format: true });
   xml: ISitemap = {
+    '?xml': {
+      '@_version': '1.0',
+      '@_encoding': 'UTF-8'
+    },
     '@_xmlns': xmlns,
     urlset: {
       url: []
@@ -70,12 +74,13 @@ export class XML {
 
   save = (options: { dry: boolean } = { dry: true }) => {
     const raw = this.builder.build(this.xml);
+    // console.log(raw);
 
     if (options.dry) {
       console.log(`XML -> save`);
       console.log(raw);
     } else {
-      fs.writeFileSync(this.path, `${XML_PREFIX}\n${raw}`, {
+      fs.writeFileSync(this.path, raw, {
         encoding: 'utf-8'
       });
     }

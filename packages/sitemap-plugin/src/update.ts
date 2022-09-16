@@ -48,9 +48,9 @@ const updateRoute = async (
 ) => {
   const xmlRegex = path.resolve(process.cwd(), config.outDir, options.prefix) + `-${route}-*.xml`;
   const xmlFiles = await glob(xmlRegex);
-  //   console.log('updateRoute', { route, addedPaths, removedPaths });
-  //   console.log({ xmlRegex });
-  //   console.log({ xmlFiles });
+  // console.log('updateRoute', { route, addedPaths, removedPaths });
+  // console.log({ xmlRegex });
+  // console.log({ xmlFiles });
 
   const lastXMLFile = xmlFiles[xmlFiles.length - 1];
 

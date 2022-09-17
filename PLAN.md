@@ -7,11 +7,11 @@
 ## @sssx/aws-s3-cloudfront-adapter
 
 - [ ] Send a list of paths changed to S3 plugin
+- [ ] delete old files, that were removed by the system
 - [x] add progress bar for S3 adapter
 - [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
-- [ ] delete old files, that were removed by the system
 
 ## @sssx/sitemap-plugin
 

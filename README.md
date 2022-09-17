@@ -14,14 +14,25 @@ This project was created from the need to manage sites with millions of pages, w
 
 ### Features
 
-- Incremental updates `sssx update`
-- 1000ms or less spent on building each page
-- Static pages don't need JavaScript whatsoever
-- Island architecture for hydration (Using Svelte components)
-- Progressive hydration
-- Small size of JavaScript overhead (thanks to Svelte)
-- ESM first, no more enormous CommonJS bundles (thanks to Esbuild)
-- Dynamic JS injection per route
+- 📈 Incremental updates `sssx update`
+- 🚀 1000ms or less spent on building each page
+- 👍 Static pages don't need JavaScript whatsoever
+- 🏝️ Island architecture for hydration (Using Svelte components)
+- 💦 Progressive hydration
+- 📦 Small size of JavaScript overhead (thanks to Svelte)
+- 💪 ESM first, no more enormous CommonJS bundles (thanks to Esbuild)
+- ⚡️ Dynamic JS injection per route
+
+## Structure
+
+This repository is structured as a monorepo.
+
+### Packages
+
+- sssx (main source code of the SSG)
+- eslint-config-sssx (ESLint configuration)
+- aws-s3-cloudfront-adapter (Plugin to upload generated website to S3 and CloudFront)
+- sitemap-plugin (Plugin to generate robots.txt and sitemaps)
 
 ## Plugins
 
@@ -63,6 +74,6 @@ Inspirations are drawn from:
 
 ## License
 
-Copyright (c) 2022 [Eugene Hauptmann](https://github.com/eugenehp)
+Copyright © 2022 [Eugene Hauptmann](https://github.com/eugenehp)
 
 [MIT](https://github.com/sssx-dev/sssx/blob/master/LICENSE)

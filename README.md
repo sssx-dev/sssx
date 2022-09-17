@@ -6,6 +6,10 @@ This framework is built to deliver fast generation of millions of pages and redu
 
 ❌ Not ready for production yet. Use it at your own risk. ❌
 
+```shell
+npm install -g sssx
+```
+
 ## Overview
 
 Why another SSG?
@@ -25,7 +29,9 @@ This project was created from the need to manage sites with millions of pages, w
 
 ## Structure
 
-This repository is structured as a monorepo.
+This repository is structured as a monorepo and uses workspaces.
+
+To build all dependencies at once use `tsc --build --watch`.
 
 ### Packages
 
@@ -36,8 +42,8 @@ This repository is structured as a monorepo.
 
 ## Plugins
 
-- [x] [@sssx/sitemap-plugin](https://github.com/sssx-dev/sssx/tree/master/packages/sitemap-plugin)
-- [x] [@sssx/aws-s3-cloudfront-adapter](https://github.com/sssx-dev/sssx/tree/master/packages/aws-s3-cloudfront-adapter)
+- [x] [@sssx/sitemap-plugin](https://github.com/sssx-dev/sssx/tree/master/packages/sitemap-plugin) generates `robot.txt` and sitemaps
+- [x] [@sssx/aws-s3-cloudfront-adapter](https://github.com/sssx-dev/sssx/tree/master/packages/aws-s3-cloudfront-adapter) uploads website content to S3 and refreshes CloudFront distribution for the changed URLs.
 
 ## Roadmap
 
@@ -51,6 +57,7 @@ To run an example project use the following:
 
 ```shell
 cd apps/example-blog
+npm install
 sssx build
 ```
 
@@ -58,7 +65,7 @@ sssx build
 
 ```shell
 npm install
-npm run dev
+tsc --build --watch
 ```
 
 ## Thank you

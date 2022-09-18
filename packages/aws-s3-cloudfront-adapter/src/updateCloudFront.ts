@@ -1,16 +1,19 @@
 import AWS from 'aws-sdk';
+import colors from 'ansi-colors';
+import { Progress } from 'sssx';
+
 import type { Config } from 'sssx';
-import type cliProgress from 'cli-progress';
+
 import type { Options } from './options.js';
 import { delay } from './delay.js';
+
+const TIMEOUT = 100;
 
 export const updateCloudFront = async (
   credentials: AWS.Credentials,
   options: Options,
   paths: string[],
-  config: Config,
-  bar: cliProgress.SingleBar,
-  barLength: number
+  config: Config
 ) => {
   const cloudfront = options.AWS_CLOUDFRONT_DISTRIBUTION_ID
     ? new AWS.CloudFront({ credentials })
@@ -18,6 +21,14 @@ export const updateCloudFront = async (
 
   // https://github.com/aws/aws-sdk-js/issues/3983#issuecomment-990786567
   if (cloudfront && options.AWS_CLOUDFRONT_DISTRIBUTION_ID) {
+    const bar = Progress.createBar(
+      's3',
+      TIMEOUT,
+      0,
+      {},
+      { format: colors.gray('{bar}') + '| CloudFront' }
+    );
+
     const d = new Date();
     const ar = [d.getFullYear(), d.getMonth(), d.getDate(), Math.random()];
     const CallerReference = ar.join(`-`);
@@ -54,7 +65,7 @@ export const updateCloudFront = async (
       bar.update(cfCounter++, { status, seconds: `${cfCounter} seconds` });
     }
 
-    bar.update(barLength);
+    bar.update(TIMEOUT);
     bar.stop();
   }
 };

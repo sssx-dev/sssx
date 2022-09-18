@@ -6,10 +6,10 @@ let plugins = {};
 /** @type {import('@sssx/sitemap-plugin').Options} */
 plugins['@sssx/sitemap-plugin'] = { origin };
 
-if (isProduction) {
-  /** @type {import('@sssx/aws-s3-cloudfront-adapter').Options} */
-  plugins['@sssx/aws-s3-cloudfront-adapter'] = {};
-}
+// if (isProduction) {
+/** @type {import('@sssx/aws-s3-cloudfront-adapter').Options} */
+plugins['@sssx/aws-s3-cloudfront-adapter'] = {};
+// }
 
 /** @type {import('sssx').Config} */
 const config = {

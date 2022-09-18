@@ -2,12 +2,13 @@ import path from 'path';
 import AWS from 'aws-sdk';
 import glob from 'tiny-glob';
 import * as dotenv from 'dotenv';
+import colors from 'ansi-colors';
+import { Progress } from 'sssx';
 
 import type { Builder, Plugin, Config } from 'sssx';
 
 import { defaultOptions, type Options } from './options.js';
 import { uploadToS3 } from './uploadToS3.js';
-import { createBars } from './createBars.js';
 import { updateCloudFront } from './updateCloudFront.js';
 
 dotenv.config({
@@ -32,34 +33,47 @@ const plugin = (_options: Partial<Options>) => {
   const awsS3CloudfrontAdapter: Plugin = async (config: Config, builder: Builder) => {
     const addedRequests = builder.getRequests('added');
     const removedRequests = builder.getRequests('removed');
-    // currentPaths.map(({path}) => log(path))
 
     const base = path.resolve(process.cwd(), config.outDir);
-    const paths = await glob(`${base}/**/*.*`);
+    const paths = (
+      await Promise.all([
+        glob(`${base}/${config.appDir}/**/*.*`),
+        glob(`${base}/**/*.xml`), // reupload xml files
+        glob(`${base}/**/*.txt`) // reupload txt files
+      ])
+    )
+      .flat()
+      .sort();
 
-    const bars = createBars(paths.length);
+    console.log(`\n`);
+    console.log(`=========PATHS========`);
+    paths.map((path) => console.log(path));
+    console.log(`=========addedRequests========`);
+    addedRequests.map(({ path }) => console.log(path));
+    console.log(`=========removedRequests========`);
+    removedRequests.map(({ path }) => console.log(path));
+
+    return;
+    const bar = Progress.createBar(
+      's3',
+      paths.length,
+      0,
+      { route: '' },
+      { format: colors.blue('{bar}') + '| S3 | {percentage}%' }
+    );
 
     // uploading everything to S3
     for (let i = 0; i < paths.length; i++) {
       const localPath = paths[i];
       const route = localPath.split(config.outDir).pop() || '';
       await uploadToS3(s3, localPath, Bucket, config.outDir);
-      bars.s3.bar.update(i + 1, { route });
+      bar.update(i + 1, { route });
     }
 
-    bars.s3.bar.update(bars.s3.bar.getTotal(), { route: 'done' });
-    bars.s3.bar.stop();
+    bar.update(paths.length, { route: 'done' });
+    bar.stop();
 
-    await updateCloudFront(
-      credentials,
-      options,
-      paths,
-      config,
-      bars.cloudfront.bar,
-      bars.cloudfront.length
-    );
-
-    bars.multibar.stop();
+    await updateCloudFront(credentials, options, paths, config);
   };
 
   return awsS3CloudfrontAdapter;

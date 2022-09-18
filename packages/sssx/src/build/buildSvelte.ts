@@ -40,6 +40,7 @@ export const buildSvelte = async (
     minify: false, //so the resulting code is easier to understand
     sourcemap: 'inline',
     write: false,
+    logLevel: 'silent',
     plugins: [
       // postCssPlugin(),
       esbuildSvelte({

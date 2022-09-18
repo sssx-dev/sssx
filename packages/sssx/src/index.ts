@@ -1,6 +1,7 @@
 export { clean } from './build/clean.js';
 export { Builder } from './build/index.js';
 export { getPermalink } from './build/getPermalink.js';
+export { default as Progress } from './cli/Progress.js';
 export { default as fs } from './lib/fs.js'; // specifal FS proxy to collect all written filenames
 
 export type { Config } from './types/Config.js';

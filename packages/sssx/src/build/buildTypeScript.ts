@@ -17,7 +17,8 @@ export const buildTypeScript = async (
     write: false,
     outdir: `${PREFIX}/${config.compiledRoot}`,
     minify: false,
-    plugins: [renamePlugin({ force: true })]
+    plugins: [renamePlugin({ force: true })],
+    logLevel: 'silent'
   });
 
   // passing back mapping for route/route.ts -> .ssr/compiled/route/route-hash.js

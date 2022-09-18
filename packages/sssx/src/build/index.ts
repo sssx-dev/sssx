@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
+import colors from 'ansi-colors';
 
 import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
@@ -19,6 +20,7 @@ import { PREFIX, OUTDIR_SSSX, config } from '../config/index.js';
 import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
+import Progress from '../cli/Progress.js';
 
 import type { FilesMap, RouteModules, ItemPathTemplate } from './types.js';
 
@@ -70,7 +72,7 @@ export class Builder {
     this.id = nanoid();
     options = Object.assign({}, defaultOptions, options);
     this.isWorker = options.isWorker;
-    this.log(`Creating new SSSX Builder`);
+    // this.log(`Creating new SSSX Builder`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -98,21 +100,32 @@ export class Builder {
    * - dynamic scripts
    */
   public setup = async () => {
+    const bar = Progress.createBar(
+      'compilation',
+      7,
+      0,
+      {},
+      { format: colors.blue('{bar}') + '| Compilation | {percentage}%' }
+    );
     await this.prepareSvelteCore();
+    bar.update(1);
 
     const [entryPointsSvelte, entryPointsTS, entryPointsCSS] = await Promise.all([
       glob(this.svelteWildcard),
       glob(this.typescriptWildcard),
       glob(this.cssWildcard)
     ]);
+    bar.update(2);
 
     await processCSSFiles(entryPointsCSS, this.setFilesMap);
+    bar.update(3);
 
     await Promise.all([
       buildTypeScript(entryPointsTS, this.setFilesMap),
       buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'ssr' }),
       buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom' })
     ]);
+    bar.update(4);
 
     const o = { filesMap: this.filesMap };
     const dst = [PREFIX, config.compiledRoot].join(SEPARATOR);
@@ -122,14 +135,18 @@ export class Builder {
       replaceImports(this.routesWildcard, { ...o, dst }),
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
+    bar.update(5);
 
     await replaceImports(this.routesDynamicWildcard, {
       ...o,
       dst,
       matchHashesImports: true
     });
+    bar.update(6);
 
     await this.copyDynamicFiles();
+    bar.update(7);
+    bar.stop();
   };
 
   private copyDynamicFiles = async () => {
@@ -231,32 +248,42 @@ export class Builder {
       )
     ).flat();
 
-    const paths = this.removedRequests.map((r) => r.path);
+    const paths = this.removedRequests.map((r) => r.path).filter((path) => fs.existsSync(path));
 
-    let didPrint = false;
-    let counter = 0;
-
-    await Promise.all(
-      paths.map(async (dir) => {
-        if (fs.existsSync(dir)) {
-          await fs.rm(dir, { recursive: true });
-          if (!didPrint) {
-            didPrint = true;
-            this.log(chalk.red(`Processing removals:`));
-          }
-          console.log(chalk.red(`removed`), dir);
-          counter++;
+    if (paths.length > 0) {
+      const bar = Progress.createBar(
+        'removal',
+        paths.length,
+        0,
+        { route: '' },
+        {
+          format:
+            colors.red('{bar}') +
+            '| Removing old routes | {percentage}% | {value}/{total} | {route}'
         }
-      })
-    );
+      );
 
-    if (counter > 0) {
-      console.log(chalk.bgRed(`Removed ${counter} routes`));
+      paths.map((dir, index) => {
+        fs.rmSync(dir, { recursive: true });
+        bar.update(index, { route: dir.replace(process.cwd(), '') });
+      });
+
+      bar.stop();
     }
   };
 
   public compileAllHTML = async (paths: ItemPathTemplate[]) => {
-    this.log(`compileAllHTML`, { pathsLength: paths.length });
+    const bar = Progress.createBar(
+      'html',
+      paths.length,
+      0,
+      { route: '' },
+      {
+        format:
+          colors.black('{bar}') +
+          '| Generating static HTML | {percentage}% | {value}/{total} | {route}'
+      }
+    );
 
     for (let i = 0; i < paths.length; i++) {
       const { item, path, template, dynamic } = paths[i];
@@ -270,9 +297,12 @@ export class Builder {
         filesMap: this.filesMap,
         dynamic
       });
+
+      bar.update(i, { route: path.replace(process.cwd(), '') });
     }
 
-    this.log(`Done`);
+    bar.update(paths.length, { route: 'done' });
+    bar.stop();
   };
 
   /**
@@ -355,5 +385,6 @@ export class Builder {
 
   public finalize = async () => {
     fs.sortFile();
+    Progress.stop();
   };
 }

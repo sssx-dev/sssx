@@ -11,7 +11,8 @@ export const buildSvelteCore = async (entryPoints: string[], outdir = `./dist/ou
     ...BASE,
     minify: false,
     outdir,
-    write: false
+    write: false,
+    logLevel: 'silent'
   });
 
   await Promise.all(

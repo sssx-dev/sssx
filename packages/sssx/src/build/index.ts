@@ -100,7 +100,7 @@ export class Builder {
    * - dynamic scripts
    */
   public setup = async () => {
-    const bar = Progress.createBar('compilation', 7, 0, '| Compilation | {percentage}%', {});
+    const bar = Progress.createBar('Compilation', 7, 0, '{percentage}%', {});
     await this.prepareSvelteCore();
     bar.update(1);
 
@@ -264,10 +264,10 @@ export class Builder {
 
   public compileAllHTML = async (paths: ItemPathTemplate[]) => {
     const bar = Progress.createBar(
-      'html',
+      'HTML',
       paths.length,
       0,
-      '| Generating static HTML | {percentage}% | {value}/{total} | {route}',
+      '{percentage}% | {value}/{total} | {route}',
       { route: '' }
     );
 

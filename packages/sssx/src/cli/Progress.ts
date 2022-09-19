@@ -28,13 +28,13 @@ class Progress {
     name: string,
     total: number,
     startValue: number,
-    format: string,
+    format = '',
     payload: unknown = {},
     color = colors.blue
     // barOptions?: Options
   ) => {
     const bar = this.multibar.create(total, startValue, payload, {
-      format: color('{bar}') + format
+      format: color('{bar}') + `| ${name} | ` + format
     });
     this.bars[name] = bar;
     this.lengths[name] = total;

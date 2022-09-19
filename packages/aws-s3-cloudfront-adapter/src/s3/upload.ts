@@ -1,8 +1,20 @@
 import fs from 'fs';
 import stream from 'stream';
-import { getContentType } from './getContentType.js';
+import { getContentType } from '../getContentType.js';
 
-export const uploadToS3 = async (
+const uploadStream = (S3: AWS.S3, Key: string, request: AWS.S3.Types.PutObjectRequest) => {
+  const passT = new stream.PassThrough();
+  return {
+    writeStream: passT,
+    promise: S3.upload({
+      ...request,
+      Key,
+      Body: passT
+    }).promise()
+  };
+};
+
+export const upload = async (
   S3: AWS.S3,
   localPath: string,
   Bucket: string,
@@ -28,19 +40,7 @@ export const uploadToS3 = async (
       Key = Key.split(`/`).slice(0, -1).join(`/`) + '/';
     }
 
-    const uploadStream = () => {
-      const passT = new stream.PassThrough();
-      return {
-        writeStream: passT,
-        promise: S3.upload({
-          ...partial,
-          Key,
-          Body: passT
-        }).promise()
-      };
-    };
-
-    const { writeStream, promise } = uploadStream();
+    const { writeStream, promise } = uploadStream(S3, Key, partial);
     readStream.pipe(writeStream);
 
     promise.then(resolve).catch(reject);

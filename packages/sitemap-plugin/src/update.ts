@@ -1,5 +1,6 @@
 import glob from 'tiny-glob';
 import path from 'path';
+import { Progress } from 'sssx';
 import type { Builder, Config } from 'sssx';
 import type { Options } from './options.js';
 import { requestsToMap } from './requestsToMap.js';
@@ -14,20 +15,19 @@ export const updateSitemaps = async (config: Config, builder: Builder, options: 
     .filter((value, index, array) => array.indexOf(value) === index) // remove duplicates
     .sort();
 
-  //   console.log(`addedMap`);
-  //   console.log(addedMap);
-  //   console.log(`removedMap`);
-  //   console.log(removedMap);
-  //   console.log(`routes`);
-  //   console.log(routes);
+  const bar = Progress.createBar('Sitemaps', routes.length, 0, '{route}', { route: '' });
 
   await Promise.all(
-    routes.map((route) => {
+    routes.map(async (route, index) => {
       const addedPaths = addedMap[route];
       const removedPaths = removedMap[route];
-      return updateRoute(route, addedPaths, removedPaths, config, options);
+      await updateRoute(route, addedPaths, removedPaths, config, options);
+      bar.update(index, { route });
     })
   );
+
+  bar.update(routes.length, { route: '' });
+  bar.stop();
 };
 
 /**

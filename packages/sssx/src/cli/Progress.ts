@@ -1,5 +1,5 @@
+import colors from 'ansi-colors';
 import { MultiBar, Presets, SingleBar } from 'cli-progress';
-import type { Options } from 'cli-progress';
 
 class Progress {
   private static instance?: Progress;
@@ -28,10 +28,14 @@ class Progress {
     name: string,
     total: number,
     startValue: number,
-    payload?: unknown,
-    barOptions?: Options
+    format: string,
+    payload: unknown = {},
+    color = colors.blue
+    // barOptions?: Options
   ) => {
-    const bar = this.multibar.create(total, startValue, payload, barOptions);
+    const bar = this.multibar.create(total, startValue, payload, {
+      format: color('{bar}') + format
+    });
     this.bars[name] = bar;
     this.lengths[name] = total;
 

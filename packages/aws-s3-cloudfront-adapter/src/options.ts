@@ -1,3 +1,9 @@
+import path from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: path.resolve(process.cwd(), `.env.local`)
+});
 /**
  * default options are loaded from your `.env` file
  */

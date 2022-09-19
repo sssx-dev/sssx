@@ -100,13 +100,7 @@ export class Builder {
    * - dynamic scripts
    */
   public setup = async () => {
-    const bar = Progress.createBar(
-      'compilation',
-      7,
-      0,
-      {},
-      { format: colors.blue('{bar}') + '| Compilation | {percentage}%' }
-    );
+    const bar = Progress.createBar('compilation', 7, 0, '| Compilation | {percentage}%', {});
     await this.prepareSvelteCore();
     bar.update(1);
 
@@ -255,12 +249,8 @@ export class Builder {
         'removal',
         paths.length,
         0,
-        { route: '' },
-        {
-          format:
-            colors.red('{bar}') +
-            '| Removing old routes | {percentage}% | {value}/{total} | {route}'
-        }
+        '| Removing old routes | {percentage}% | {value}/{total} | {route}',
+        { route: '' }
       );
 
       paths.map((dir, index) => {
@@ -277,12 +267,8 @@ export class Builder {
       'html',
       paths.length,
       0,
-      { route: '' },
-      {
-        format:
-          colors.black('{bar}') +
-          '| Generating static HTML | {percentage}% | {value}/{total} | {route}'
-      }
+      '| Generating static HTML | {percentage}% | {value}/{total} | {route}',
+      { route: '' }
     );
 
     for (let i = 0; i < paths.length; i++) {

@@ -29,6 +29,9 @@ const loadConfig = async (input = path.resolve(process.cwd(), 'sssx.config.js'))
 
 const userConfig = await loadConfig();
 
+/**
+ * Configuration for existing environment parsed from `sssx.config.js`
+ */
 export const config = Object.assign({}, defaultConfig, userConfig) as Config;
 
 /**
@@ -48,11 +51,25 @@ export const OUTDIR = [process.cwd(), config.outDir].join(SEPARATOR);
  */
 export const GENERATED_ROUTES = [process.cwd(), config.distDir, config.routesPath].join(SEPARATOR);
 
+/**
+ * Folder where we store client generated javascript code (svelte + typescript sources)
+ */
 export const COMPILED = [PREFIX, config.compiledRoot].join(SEPARATOR);
+
+/**
+ * Folder where we store server generated javascript code (svelte + typescript sources)
+ */
 export const SSR = [PREFIX, config.ssrRoot].join(SEPARATOR);
+
+/**
+ * Absolute path for @config.appDir
+ * @default './dist/__SSSX__'
+ */
 export const OUTDIR_SSSX = [OUTDIR, config.appDir].join(SEPARATOR);
 
-// used for referencing inside HTML
+/**
+ * Root dir is used for referencing inside generated HTML
+ */
 export const ROOT_DIR =
   (config.basePath || '').length > 0
     ? [config.basePath, config.appDir].join(SEPARATOR)

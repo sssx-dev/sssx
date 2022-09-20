@@ -11,14 +11,15 @@
 - [ ] add redirect for entire website level (via CloudFront)
 - [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] implement sync feature?
+- [ ] update removal process to remove all files that are not part of the generated folders
 - [x] Send a list of paths changed to S3 plugin
 - [x] delete old files, that were removed by the system
 - [x] add progress bar for S3 adapter
 
 ## @sssx/sitemap-plugin
 
-- [x] regerate map using existing map (via file system or by reading a previosly generated map)
 - [ ] add new `route` sitemaps in this `update` mode.
+- [x] regerate map using existing map (via file system or by reading a previosly generated map)
 
 # Documentation
 
@@ -33,10 +34,7 @@
 
 - [ ] Access all routes from the helper function
 - [ ] add `dry` mode that shows changes to be made
-- [ ] for build and update add `route` name filter
 - [ ] have a way to generate a single url update
-- [ ] update removal process to remove all files that are not part of the generated folders
-- [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [ ] Slug generation should include title, description, tags (what else?)
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 - [ ] cache `all()` requests
@@ -65,6 +63,8 @@
 
 ## Done
 
+- [x] for build and update add `route` name filter
+- [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [x] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like dynamic.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?
 - [x] Added route generation, route check via permalink
 - [x] add incremental function to the data file

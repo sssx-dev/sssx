@@ -42,7 +42,7 @@ To build all dependencies at once use `tsc --build --watch`.
 
 ## Plugins
 
-- [x] [@sssx/sitemap-plugin](https://github.com/sssx-dev/sssx/tree/master/packages/sitemap-plugin) generates `robot.txt` and sitemaps
+- [x] [@sssx/sitemap-plugin](https://github.com/sssx-dev/sssx/tree/master/packages/sitemap-plugin) generates `robots.txt` and sitemaps
 - [x] [@sssx/aws-s3-cloudfront-adapter](https://github.com/sssx-dev/sssx/tree/master/packages/aws-s3-cloudfront-adapter) uploads website content to S3 and refreshes CloudFront distribution for the changed URLs.
 
 ## Roadmap

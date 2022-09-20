@@ -1,9 +1,7 @@
 import glob from 'tiny-glob';
-import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
-import colors from 'ansi-colors';
 
 import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
@@ -16,13 +14,14 @@ import { replaceImports } from '../plugins/replaceImports.js';
 import { processCSSFiles } from './processCSSFiles.js';
 import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
 import { compileHTML } from './compileHTML.js';
-import { PREFIX, OUTDIR_SSSX, config } from '../config/index.js';
+import { PREFIX, OUTDIR_SSSX, config, GENERATED_ROUTES } from '../config/index.js';
 import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
 import Progress from '../cli/Progress.js';
 
 import type { FilesMap, RouteModules, Request } from './types.js';
+import { difference, getTemplateRoute } from './helpers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,10 +30,12 @@ const nanoid = customAlphabet(`0123456789abcdef`, 5);
 
 type Options = {
   isWorker: boolean;
+  isDry: boolean;
 };
 
 const defaultOptions: Options = {
-  isWorker: false
+  isWorker: false,
+  isDry: false
 };
 
 type RenderOptions = {
@@ -100,26 +101,27 @@ export class Builder {
    * - dynamic scripts
    */
   public setup = async () => {
-    const bar = Progress.createBar('Compilation', 7, 0, '{percentage}%', {});
+    let counter = 0;
+    const bar = Progress.createBar('Compilation', 7, counter, '{percentage}%', {});
     await this.prepareSvelteCore();
-    bar.update(1);
+    bar.update(++counter);
 
     const [entryPointsSvelte, entryPointsTS, entryPointsCSS] = await Promise.all([
       glob(this.svelteWildcard),
       glob(this.typescriptWildcard),
       glob(this.cssWildcard)
     ]);
-    bar.update(2);
+    bar.update(++counter);
 
     await processCSSFiles(entryPointsCSS, this.setFilesMap);
-    bar.update(3);
+    bar.update(++counter);
 
     await Promise.all([
       buildTypeScript(entryPointsTS, this.setFilesMap),
       buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'ssr' }),
       buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom' })
     ]);
-    bar.update(4);
+    bar.update(++counter);
 
     const o = { filesMap: this.filesMap };
     const dst = [PREFIX, config.compiledRoot].join(SEPARATOR);
@@ -129,17 +131,17 @@ export class Builder {
       replaceImports(this.routesWildcard, { ...o, dst }),
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
-    bar.update(5);
+    bar.update(++counter);
 
     await replaceImports(this.routesDynamicWildcard, {
       ...o,
       dst,
       matchHashesImports: true
     });
-    bar.update(6);
+    bar.update(++counter);
 
     await this.copyDynamicFiles();
-    bar.update(7);
+    bar.update(++counter);
     bar.stop();
   };
 
@@ -164,6 +166,13 @@ export class Builder {
     );
   };
 
+  private previouslyGeneratedRoutes = fs
+    .readdirSync(GENERATED_ROUTES)
+    .map((txtFile) => txtFile.split(`.`)[0]);
+
+  /**
+   * Preload all existing SSR and Data modules
+   */
   public prepareRoutes = async () => {
     const templates = await glob(this.ssrRoutesWildcard);
     this.ssrRouteTemplates = templates;
@@ -185,13 +194,13 @@ export class Builder {
       .sort();
 
     // saving to file route-name.txt
-    const dir = [process.cwd(), config.distDir, config.routesPath].join(SEPARATOR);
-    ensureDirExists(dir);
-
-    const filename = template.split(SEPARATOR)[3] + `.txt`;
-    await fs.writeFile([dir, filename].join(SEPARATOR), paths.sort().join(`\n`), {
-      encoding: 'utf8'
-    });
+    const filename = getTemplateRoute(template) + `.txt`;
+    ensureDirExists(GENERATED_ROUTES);
+    await fs.writeFile(
+      [GENERATED_ROUTES, filename].join(SEPARATOR),
+      paths.sort().join(`\n`),
+      'utf8'
+    );
   };
 
   /**
@@ -204,25 +213,45 @@ export class Builder {
     await Promise.all(templates.map(this.getRoutePaths));
   };
 
+  /**
+   * Generate requests using `getUpdates` in each route.
+   *
+   * In `updatesOnly` mode it will check if new routes were created, and will generate requests for each such route.
+   *
+   * @param routes ['*']
+   * @param updatesOnly false
+   */
   public generateRequests = async (routes = ['*'], updatesOnly = false) => {
     const templates = Object.keys(this.routeModules);
 
+    const existingRoutes = templates.map(getTemplateRoute);
+    const previousRoutes = this.previouslyGeneratedRoutes;
+    const diff = difference(existingRoutes, previousRoutes);
+
+    const newTemplates = templates.filter((template) => diff.includes(getTemplateRoute(template)));
+
     const filteredTemplates = routes.includes('*')
       ? templates
-      : templates.filter((path) => routes.includes(path.split(`/`).slice(-2)[0]));
+      : templates.filter((path) => routes.includes(getTemplateRoute(path)));
 
-    await Promise.all(
-      filteredTemplates.map(async (template) => {
-        const modules = this.routeModules[template];
-        const array = await prepareRoute(
-          this.filesMap,
-          template,
-          modules,
-          updatesOnly ? 'updates' : 'all'
-        );
-        this.addedRequests = this.addedRequests.concat(array);
-      })
-    );
+    // TODO: DRY
+    this.addedRequests = (
+      await Promise.all(
+        [
+          newTemplates.map((template) =>
+            prepareRoute(this.filesMap, template, this.routeModules[template], 'all')
+          ),
+          filteredTemplates.map((template) =>
+            prepareRoute(
+              this.filesMap,
+              template,
+              this.routeModules[template],
+              updatesOnly ? 'updates' : 'all'
+            )
+          )
+        ].flat()
+      )
+    ).flat();
   };
 
   /**

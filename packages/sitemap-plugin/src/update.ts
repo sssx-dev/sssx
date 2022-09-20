@@ -61,7 +61,7 @@ const updateRoute = async (
   // remove paths from all XML files
   xmlFiles.map((file) => {
     const builder = new XML(file);
-    removedPaths.map((path) => builder.remove(path)); // TODO: this is O(m*n), simplify it by searching for a string first via sed or regex
+    removedPaths && removedPaths.map((path) => builder.remove(path)); // TODO: this is O(m*n), simplify it by searching for a string first via sed or regex
     builder.save({ dry: false });
   });
 

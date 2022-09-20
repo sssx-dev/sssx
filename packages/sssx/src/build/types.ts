@@ -8,7 +8,7 @@ export type RouteModules = {
   ssr: SSRModule;
 };
 
-export type ItemPathTemplate = {
+export type Request = {
   item: AbstractItem;
   path: string;
   template: string;

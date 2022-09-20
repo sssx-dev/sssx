@@ -22,7 +22,7 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
 import Progress from '../cli/Progress.js';
 
-import type { FilesMap, RouteModules, ItemPathTemplate } from './types.js';
+import type { FilesMap, RouteModules, Request } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,8 +62,8 @@ export class Builder {
 
   private ssrRouteTemplates: string[] = [];
   private routeModules: Record<string, RouteModules> = {};
-  private addedRequests: ItemPathTemplate[] = [];
-  private removedRequests: ItemPathTemplate[] = [];
+  private addedRequests: Request[] = [];
+  private removedRequests: Request[] = [];
 
   private filesMap: FilesMap = {};
   private isWorker;
@@ -246,10 +246,10 @@ export class Builder {
 
     if (paths.length > 0) {
       const bar = Progress.createBar(
-        'removal',
+        'Removing old routes',
         paths.length,
         0,
-        '| Removing old routes | {percentage}% | {value}/{total} | {route}',
+        ' {percentage}% | {value}/{total} | {route}',
         { route: '' }
       );
 
@@ -262,7 +262,7 @@ export class Builder {
     }
   };
 
-  public compileAllHTML = async (paths: ItemPathTemplate[]) => {
+  public compileAllHTML = async (paths: Request[]) => {
     const bar = Progress.createBar(
       'HTML',
       paths.length,
@@ -306,44 +306,44 @@ export class Builder {
     await this.compileAllHTML(this.addedRequests);
   };
 
-  public _renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
-    const options = Object.assign({}, defaultRenderOptions, renderOptions);
-    const numberOfWorkers = os.cpus().length;
+  // public _renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {
+  //   const options = Object.assign({}, defaultRenderOptions, renderOptions);
+  //   const numberOfWorkers = os.cpus().length;
 
-    const pool = workerpool.pool(path.resolve(__dirname, 'worker.js'), {
-      minWorkers: numberOfWorkers,
-      maxWorkers: numberOfWorkers,
-      workerType: 'process'
-    });
+  //   const pool = workerpool.pool(path.resolve(__dirname, 'worker.js'), {
+  //     minWorkers: numberOfWorkers,
+  //     maxWorkers: numberOfWorkers,
+  //     workerType: 'process'
+  //   });
 
-    await this.prepareRoutes();
-    await this.generateRequests(options.routes, options.updatesOnly);
+  //   await this.prepareRoutes();
+  //   await this.generateRequests(options.routes, options.updatesOnly);
 
-    const LENGTH = this.addedRequests.length;
-    const batchSize = Math.ceil(LENGTH / numberOfWorkers);
-    const numberOfBatches = Math.floor(LENGTH / batchSize);
+  //   const LENGTH = this.addedRequests.length;
+  //   const batchSize = Math.ceil(LENGTH / numberOfWorkers);
+  //   const numberOfBatches = Math.floor(LENGTH / batchSize);
 
-    const array: Array<ItemPathTemplate[]> = sliceArray(this.addedRequests, batchSize);
+  //   const array: Array<Request[]> = sliceArray(this.addedRequests, batchSize);
 
-    this.log(`Starting with ${numberOfBatches} batches:`);
+  //   this.log(`Starting with ${numberOfBatches} batches:`);
 
-    const promises = [];
-    for (let i = 0; i < array.length; i++) {
-      const batch = array[i];
-      this.log(`Batched`, batch.length);
-      const promise = pool.exec('render', [batch]);
-      promises.push(promise);
-    }
+  //   const promises = [];
+  //   for (let i = 0; i < array.length; i++) {
+  //     const batch = array[i];
+  //     this.log(`Batched`, batch.length);
+  //     const promise = pool.exec('render', [batch]);
+  //     promises.push(promise);
+  //   }
 
-    // TODO: add progress bar
-    const before = new Date().getTime();
-    await Promise.all(promises);
-    const after = new Date().getTime();
-    const delta = after - before;
+  //   // TODO: add progress bar
+  //   const before = new Date().getTime();
+  //   await Promise.all(promises);
+  //   const after = new Date().getTime();
+  //   const delta = after - before;
 
-    console.log(`DONE ${(delta / 1000).toFixed(2)} seconds`);
-    await pool.terminate();
-  };
+  //   console.log(`DONE ${(delta / 1000).toFixed(2)} seconds`);
+  //   await pool.terminate();
+  // };
 
   public getRequests = (type: 'added' | 'removed' = 'added') => {
     const requests = type === 'added' ? this.addedRequests : this.removedRequests;

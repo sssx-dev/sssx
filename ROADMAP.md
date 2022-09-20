@@ -6,14 +6,14 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
-- [x] Send a list of paths changed to S3 plugin
-- [x] delete old files, that were removed by the system
-- [x] add progress bar for S3 adapter
 - [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
 - [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] implement sync feature?
+- [x] Send a list of paths changed to S3 plugin
+- [x] delete old files, that were removed by the system
+- [x] add progress bar for S3 adapter
 
 ## @sssx/sitemap-plugin
 
@@ -25,14 +25,18 @@
 - [ ] prepare basic documentation (internal + external)
 - [ ] generate basic documentation website
 
+# Future plugins
+
+- [ ] Markdown generation using MDX?
+
 ## Rest
 
+- [ ] Access all routes from the helper function
 - [ ] add `dry` mode that shows changes to be made
 - [ ] for build and update add `route` name filter
 - [ ] have a way to generate a single url update
 - [ ] update removal process to remove all files that are not part of the generated folders
 - [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
-- [ ] Access all routes from the helper function
 - [ ] Slug generation should include title, description, tags (what else?)
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 - [ ] cache `all()` requests

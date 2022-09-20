@@ -1,6 +1,4 @@
-// import type { BuildOptions } from "esbuild";
 import type { CompileOptions } from 'svelte/types/compiler';
-import type { Plugin } from './Plugin';
 
 // Some other Config examples
 
@@ -68,7 +66,7 @@ export interface Config extends Record<string, unknown> {
   stylesPath: string;
 
   /**
-   * Compiler options passed down to Esbuild
+   * Compiler options passed down to Svelte compiler
    */
   compilerOptions?: CompileOptions;
 

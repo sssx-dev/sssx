@@ -13,7 +13,7 @@ export const update = async (
 ) => {
   const credentials = getCredentials(options);
 
-  console.log('updateS3', removals);
+  // console.log('updateS3', removals);
 
   const Bucket = options.S3_BUCKET;
 

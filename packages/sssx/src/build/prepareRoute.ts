@@ -3,13 +3,7 @@ import { loadDataModule } from './loadDataModule.js';
 import { loadSSRModule } from './loadSSRModule.js';
 import { config, OUTDIR } from '../config/index.js';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
-import type {
-  ItemPathTemplate,
-  RouteModules,
-  AbstractItem,
-  FilesMap,
-  PrepareRouteMode
-} from './types.js';
+import type { Request, RouteModules, AbstractItem, FilesMap, PrepareRouteMode } from './types.js';
 
 export const prepareRouteModules = async (template: string, filesMap: FilesMap) => {
   const [dataModule, ssrModule] = await Promise.all([
@@ -25,6 +19,12 @@ export const prepareRouteModules = async (template: string, filesMap: FilesMap) 
   return modules;
 };
 
+const getDynamicPath = (template: string) => {
+  return template
+    .replace('index.js', `${DYNAMIC_NAME}.js`)
+    .replace([config.distDir, config.ssrRoot].join(SEPARATOR), config.sourceRoot);
+};
+
 export const prepareRoute = async (
   filesMap: FilesMap,
   template: string,
@@ -33,23 +33,22 @@ export const prepareRoute = async (
 ) => {
   let items: AbstractItem[] = [];
 
-  if (mode === 'updates' && modules.data.getUpdates !== undefined)
+  if (mode === 'updates' && modules.data.getUpdates !== undefined) {
     items = await modules.data.getUpdates();
-  else if (mode === 'removals' && modules.data.getRemovals !== undefined)
+  } else if (mode === 'removals' && modules.data.getRemovals !== undefined) {
     items = await modules.data.getRemovals();
-  else if (mode === 'all') items = await modules.data.getAll();
+  } else if (mode === 'all' && modules.data.getAll !== undefined) {
+    items = await modules.data.getAll();
+  }
 
   const routeName = template.split(SEPARATOR)[3];
-  const array: ItemPathTemplate[] = items.map((item: AbstractItem) => {
+  const array: Request[] = items.map((item: AbstractItem) => {
     const path = getPermalink(routeName, item as never, modules.data.permalink, {
       relative: false,
       checkExistingRoutes: false
     });
 
-    const dynamicPath = template
-      .replace('index.js', `${DYNAMIC_NAME}.js`)
-      .replace([config.distDir, config.ssrRoot].join(SEPARATOR), config.sourceRoot);
-
+    const dynamicPath = getDynamicPath(template);
     const map = filesMap[dynamicPath];
     const dynamic = map ? map.slice(-1)[0].replace(OUTDIR, '') : undefined;
 

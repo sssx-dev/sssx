@@ -67,8 +67,14 @@ export interface Config extends Record<string, unknown> {
    */
   stylesPath: string;
 
+  /**
+   * Compiler options passed down to Esbuild
+   */
   compilerOptions?: CompileOptions;
 
+  /**
+   * Name of the plugin's NPM package and its configuration
+   */
   plugins: Record<string, unknown>;
 
   /**

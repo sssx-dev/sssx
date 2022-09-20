@@ -19,7 +19,12 @@ const plugin = (_options: Partial<Options>) => {
       .map(({ path }) => path.replace(process.cwd(), '').slice(1));
     const removedRequests = builder
       .getRequests('removed')
-      .map(({ path }) => path.replace(process.cwd(), '').slice(1));
+      .map(({ path }) =>
+        path
+          .replace(process.cwd(), '')
+          .replace(config.outDir, config.basePath)
+          .replaceAll(`//`, `/`)
+      );
 
     const base = path.resolve(process.cwd(), config.outDir);
     const all = await getAllFiles(base);

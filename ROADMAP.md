@@ -6,12 +6,14 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
-- [ ] Send a list of paths changed to S3 plugin
-- [ ] delete old files, that were removed by the system
+- [x] Send a list of paths changed to S3 plugin
+- [x] delete old files, that were removed by the system
 - [x] add progress bar for S3 adapter
 - [ ] add an option to not cache certain files/routes
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
+- [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
+- [ ] implement sync feature?
 
 ## @sssx/sitemap-plugin
 

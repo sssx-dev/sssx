@@ -5,7 +5,8 @@ type Options = {
 };
 
 export const remove = async (options: Options) => {
-  const { s3, Bucket, Prefix } = options;
+  const { s3, Bucket } = options;
+  const Prefix = options.Prefix.startsWith(`/`) ? options.Prefix.slice(1) : options.Prefix;
   const listParams = {
     Bucket,
     Prefix

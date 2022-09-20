@@ -13,6 +13,8 @@ export const update = async (
 ) => {
   const credentials = getCredentials(options);
 
+  console.log('updateS3', removals);
+
   const Bucket = options.S3_BUCKET;
 
   const s3 = new AWS.S3({

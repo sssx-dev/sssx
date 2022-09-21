@@ -21,14 +21,23 @@
 - [ ] add new `route` sitemaps in this `update` mode.
 - [x] regerate map using existing map (via file system or by reading a previosly generated map)
 
-# Documentation
+## @sssx/logger
+
+- [ ] log everything to a file
+- [ ] add LogLevel verbose
+
+## Documentation
 
 - [ ] prepare basic documentation (internal + external)
 - [ ] generate basic documentation website
 
-# Future plugins
+## Future plugins
 
 - [ ] Markdown generation using MDX?
+
+## Future examples
+
+- [ ] create plugin to generate podcast RSS feed and pages
 
 ## Rest
 
@@ -39,30 +48,33 @@
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 - [ ] cache `all()` requests
 - [ ] social image generation
-- [ ] lazy loading (async, defer, observer, better web vitals)
 - [ ] validate if the internal link exists or not, use <Link> to do automatic verification
 - [ ] build first version of a pipeline for production
 - [ ] build pipeline for dev (watch + ssr?)
 - [ ] build pipeline for production (plugins, updates)
 - [ ] prepare separation between production and development
-- [ ] consider mdsvex for markdown provider (generate static only version)
-- [ ] for each generated component js file, hash its content and add as a hex chunk name
 - [ ] copy files from public to the root
-- [ ] dns-prefetch resources
 - [ ] hydration could become a layer and an internal plugin, where we do postprocessing for the ssr'ed components/pages
 - [ ] figure out hook's version that we run per point (maybe Astro's model with before/after certain points)
-- [ ] add perf with `node_perf`
 - [ ] fix import typescript module/file in the component, it is not passed to `outDir`
-- [ ] example boilerplate (should it be a generated one via CLI?)
 - [ ] start preparing foundation for the unit tests
 - [ ] on the start, show configuration of CPUs and RAM available
-- [ ] add typescript linter
-- [ ] add linter to all packages and apps
-- [ ] create plugin to generate podcast RSS feed and pages
 - [ ] rework `replaceImports` with AST based parser/walker
+- [ ] add perf with `node_perf`
+- [ ] add basic e2e tests
+- [ ] add basic unit tests
+
+## Client side
+
+- [ ] dns-prefetch resources
+- [ ] lazy loading (async, defer, observer, better web vitals)
 
 ## Done
 
+- [x] add typescript linter
+- [x] add linter to all packages and apps
+- [x] example boilerplate (should it be a generated one via CLI?)
+- [x] for each generated component js file, hash its content and add as a hex chunk name
 - [x] for build and update add `route` name filter
 - [x] add CLI option to only update dynamic files (don't regenerate whole build, don't reupload it)
 - [x] dynamic.ts should import svelte components and execute mounting function, script will be deferred. this should be loaded with timestamp like dynamic.js?ts=202208081010 so it would be invoked each time, and not cached, or should we set TTL to 0 instead?

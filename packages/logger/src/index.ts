@@ -2,6 +2,7 @@ import colors from 'ansi-colors';
 
 class Logger {
   private static instance?: Logger;
+  private prefix = colors.blue('SSSX:');
 
   constructor() {
     //
@@ -15,7 +16,7 @@ class Logger {
   }
 
   log = (message?: unknown, ...optionalParams: unknown[]) => {
-    console.log(colors.blue('SSSX:'), message, ...optionalParams);
+    console.log(this.prefix, message, ...optionalParams);
   };
 }
 

@@ -1,6 +1,6 @@
 import { config } from '../config/index.js';
-import type { RoutePermalinkFn, RoutePropsFn } from '../types/Route.js';
-import type { AbstractItem, FilesMap } from './types.js';
+import type { RouteParams, RoutePermalinkFn, RoutePropsFn } from '../types/Route.js';
+import type { FilesMap } from '../types';
 
 export type DataModule = Awaited<ReturnType<typeof loadDataModule>>;
 
@@ -17,11 +17,11 @@ export const loadDataModule = async (template: string, filesMap: FilesMap) => {
   // console.log(`loadDataModule`, {sourcePath, dataFile})
 
   const dataModule = await import(dataFile);
-  const getAll: (...args: unknown[]) => AbstractItem[] = dataModule.getAll;
-  const getUpdates: (...args: unknown[]) => AbstractItem[] = dataModule.getUpdates;
-  const getRemovals: (...args: unknown[]) => AbstractItem[] = dataModule.getRemovals;
-  const getProps: RoutePropsFn<AbstractItem, unknown> = dataModule.getProps;
-  const permalink: RoutePermalinkFn<AbstractItem> = dataModule.permalink;
+  const getAll: (...args: unknown[]) => RouteParams[] = dataModule.getAll;
+  const getUpdates: (...args: unknown[]) => RouteParams[] = dataModule.getUpdates;
+  const getRemovals: (...args: unknown[]) => RouteParams[] = dataModule.getRemovals;
+  const getProps: RoutePropsFn<RouteParams, unknown> = dataModule.getProps;
+  const permalink: RoutePermalinkFn<RouteParams> = dataModule.permalink;
 
   return {
     getAll,

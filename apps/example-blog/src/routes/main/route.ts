@@ -1,17 +1,32 @@
-import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx';
+import type {
+  UnwrapRouteAll,
+  RouteAllFn,
+  RoutePropsFn,
+  RoutePermalinkFn,
+  SvelteComponentProps
+} from 'sssx';
 import type Page from './index.svelte';
 import { Routes } from '../index.js';
+import { getRoutes } from 'sssx';
 
 export type PageProps = SvelteComponentProps<typeof Page>;
 export type Request = UnwrapRouteAll<typeof getAll>;
 
 export const permalink: RoutePermalinkFn<Request> = `/`;
 
+const title = `Example SSSX Blog`;
+
 /**
  * Get all slugs for this route
  * @returns array of all slugs
  */
-export const getAll = async () => [{}];
+export const getAll: RouteAllFn = async () => [
+  {
+    slug: '',
+    title,
+    description: `Description for ${title}`
+  }
+];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
@@ -20,16 +35,13 @@ export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
 
   // works
   const testBlogSlug = Routes['blog']({ slug: `hello` }); // can't be generated in the root scope
-  const requests = [
-    {
-      slug: '/test',
-      title: 'Test title'
-    }
-  ];
+  const requests = getRoutes('dates');
+  const links = requests.map((r) => Routes['dates'](r));
 
   return {
-    title: `Example SSSX Blog`,
+    title,
     testBlogSlug,
-    requests
+    requests,
+    links
   };
 };

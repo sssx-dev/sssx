@@ -1,17 +1,33 @@
-export type RoutePropsFn<Item,PageProps> = (item:Item) => Promise<PageProps>
-export type RoutePermalinkFn<Item> = string | ((item: Item) => string)
+export type RouteParams = {
+  slug: string;
+  title: string;
+  description: string;
+  image?: string;
+  [key: string]: unknown;
+};
+
+export type Request = {
+  item: RouteParams;
+  path: string;
+  template: string;
+  routeName: string;
+  dynamic?: string;
+};
+
+export type RouteAllFn = (...args: never[]) => Promise<RouteParams[]>;
+export type RoutePropsFn<Item, PageProps> = (item: Item) => Promise<PageProps>;
+export type RoutePermalinkFn<Item> = string | ((item: Item) => string);
 
 type Unarray<T> = T extends Array<infer U> ? U : T; // Unarray<Item[]> = Item
-type AllFunctions = (...args: any[]) => any
 
-export type UnwrapRouteAll<T extends AllFunctions> = Unarray<Awaited<ReturnType<T>>>
+export type UnwrapRouteAll<T extends RouteAllFn> = Unarray<Awaited<ReturnType<T>>>;
 
-export interface PageModule<T extends AllFunctions, PageProps> {
+export interface PageModule<T extends RouteAllFn, PageProps> {
   getAll: T;
   getUpdates: T;
   getRemovals: T;
-  permalink:RoutePermalinkFn<T>;
-  getProps:RoutePropsFn<T, PageProps>
+  permalink: RoutePermalinkFn<T>;
+  getProps: RoutePropsFn<T, PageProps>;
 }
 
 /*

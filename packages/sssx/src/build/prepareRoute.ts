@@ -3,7 +3,8 @@ import { loadDataModule } from './loadDataModule.js';
 import { loadSSRModule } from './loadSSRModule.js';
 import { config, OUTDIR } from '../config/index.js';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
-import type { Request, RouteModules, AbstractItem, FilesMap, PrepareRouteMode } from './types.js';
+import type { RouteModules, FilesMap, PrepareRouteMode } from '../types';
+import type { Request, RouteParams } from '../types/Route.js';
 
 export const prepareRouteModules = async (template: string, filesMap: FilesMap) => {
   const [dataModule, ssrModule] = await Promise.all([
@@ -31,7 +32,7 @@ export const prepareRoute = async (
   modules: RouteModules,
   mode: PrepareRouteMode = 'all'
 ) => {
-  let items: AbstractItem[] = [];
+  let items: RouteParams[] = [];
 
   if (mode === 'updates' && modules.data.getUpdates !== undefined) {
     items = await modules.data.getUpdates();
@@ -42,7 +43,7 @@ export const prepareRoute = async (
   }
 
   const routeName = template.split(SEPARATOR)[3];
-  const array: Request[] = items.map((item: AbstractItem) => {
+  const array: Request[] = items.map((item: RouteParams) => {
     const path = getPermalink(routeName, item as never, modules.data.permalink, {
       relative: false,
       checkExistingRoutes: false

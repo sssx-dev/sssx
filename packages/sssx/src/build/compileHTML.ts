@@ -5,7 +5,8 @@ import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { DataModule } from './loadDataModule.js';
 import type { SSRModule } from './loadSSRModule.js';
-import type { AbstractItem, FilesMap } from './types.js';
+import type { FilesMap } from '../types';
+import type { RouteParams } from '../types/Route.js';
 
 // get all nodes between two nodes start and end
 const GET_TARGET_FN = `
@@ -81,7 +82,7 @@ type Args = {
   ssrModule: SSRModule;
   dataModule: DataModule;
   outdir: string;
-  item: AbstractItem;
+  item: RouteParams;
   filesMap: FilesMap;
   dynamic?: string;
 };

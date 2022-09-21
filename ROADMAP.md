@@ -41,7 +41,8 @@
 
 ## Rest
 
-- [ ] Access all routes from the helper function
+- [ ] remove line from `.sssx/routes/route.txt` during process removals
+- [ ] Integrate `title`, `description`, `image` in the page, layout and types.
 - [ ] add `dry` mode that shows changes to be made
 - [ ] have a way to generate a single url update
 - [ ] Slug generation should include title, description, tags (what else?)
@@ -71,6 +72,7 @@
 
 ## Done
 
+- [x] Access all routes from the helper function
 - [x] add typescript linter
 - [x] add linter to all packages and apps
 - [x] example boilerplate (should it be a generated one via CLI?)

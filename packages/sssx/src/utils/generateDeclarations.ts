@@ -1,3 +1,4 @@
+import path from 'path';
 import fs from '../lib/fs.js';
 import { config } from '../config/index.js';
 import { capitalize } from './capitalize.js';
@@ -5,7 +6,7 @@ import { capitalize } from './capitalize.js';
 const FILENAME = `index.ts`;
 
 export const generateDeclarations = () => {
-  const base = `${process.cwd()}/${config.sourceRoot}/${config.routesPath}`;
+  const base = path.resolve(process.cwd(), config.sourceRoot, config.routesPath);
   const names = fs
     .readdirSync(base, { withFileTypes: true })
     .filter((a) => !a.isFile())
@@ -36,9 +37,6 @@ export const generateDeclarations = () => {
         `type ${name} = Omit<${name}T, 'type'>\n\n`)
   );
 
-  // script += `\n`;
-  // script += `declare module 'sssx' {\n`
-
   script += `/**\n`;
   script += `* Routes helper to generate link within a given route.\n`;
   script += `* @example SSSX.Routes['blog']({slug:'123'})\n`;
@@ -53,13 +51,11 @@ export const generateDeclarations = () => {
   );
 
   script += `}\n`;
-  // script += `}\n`
 
   script = `// generated automatically using \`npx sssx generate\`\n` + `// do not edit\n` + script;
 
   const { sourceRoot, routesPath } = config;
 
-  fs.writeFileSync(`${process.cwd()}/${sourceRoot}/${routesPath}/${FILENAME}`, script, {
-    encoding: 'utf8'
-  });
+  const filename = path.resolve(process.cwd(), sourceRoot, routesPath, FILENAME);
+  fs.writeFileSync(filename, script, 'utf8');
 };

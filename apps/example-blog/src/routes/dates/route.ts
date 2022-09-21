@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
-import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx';
-// @ts-ignore
+import type {
+  UnwrapRouteAll,
+  RouteAllFn,
+  RoutePropsFn,
+  RoutePermalinkFn,
+  SvelteComponentProps
+} from 'sssx';
 import type Page from './index.svelte';
 
 export type PageProps = SvelteComponentProps<typeof Page>;
@@ -8,14 +13,21 @@ export type Request = UnwrapRouteAll<typeof getAll>;
 
 export const permalink: RoutePermalinkFn<Request> = `/:slug/`;
 
+const COUNT = 100;
+
 /**
  * Get all slugs for this route
  * @returns array of all slugs
  */
-export const getAll = async () => {
-  return Array.from(Array(4).keys()).map((index) => {
+export const getAll: RouteAllFn = async () => {
+  return Array.from(Array(COUNT).keys()).map((index) => {
     const date = dayjs().subtract(index, 'days').format('YYYY-MM-DD');
-    return { slug: `route-${date}`, time: `00:00` };
+    return {
+      slug: `route-${date}`,
+      time: `00:00`,
+      title: `Title for ${date}`,
+      description: `Description on ${date}`
+    };
   });
 };
 
@@ -33,7 +45,9 @@ export const getUpdates = async () => {
  * @returns array of slus
  */
 export const getRemovals = async () => {
-  const date = dayjs().subtract(3, 'days').format('YYYY-MM-DD');
+  const date = dayjs()
+    .subtract(COUNT - 1, 'days') // delete last day
+    .format('YYYY-MM-DD');
 
   return [{ slug: `route-${date}`, time: dayjs().format(`HH:mm`) }];
 };

@@ -2,6 +2,7 @@
   export let title: string = '';
   export let testBlogSlug: string = '';
   export let requests: any[] = [];
+  export let links: string[] = [];
 </script>
 
 <svelte:head>
@@ -15,14 +16,14 @@
 <h3>Generated blog slug is <a href="{testBlogSlug}">{testBlogSlug}</a></h3>
 
 <h2>Links inside dates</h2>
-<ul>
-  {#each requests as r}
+<ol>
+  {#each requests as r, i}
     <li>
-      <a target="_blank" href="{r.slug}">
+      <a target="_blank" href="{links[i]}">
         {r.title}
       </a>
     </li>
   {/each}
-</ul>
+</ol>
 
 <footer>Made with <a href="https://github.com/sssx-dev/sssx" target="_blank">SSSX</a></footer>

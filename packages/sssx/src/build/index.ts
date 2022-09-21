@@ -17,11 +17,12 @@ import { compileHTML } from './compileHTML.js';
 import { PREFIX, OUTDIR_SSSX, config, GENERATED_ROUTES } from '../config/index.js';
 import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
-import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
+import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
 import Progress from '../cli/Progress.js';
 import Logger from '@sssx/logger';
 
-import type { FilesMap, RouteModules, Request } from './types.js';
+import type { FilesMap, RouteModules } from '../types';
+import type { Request } from '../types/Route.js';
 import { difference, getTemplateRoute } from './helpers.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -186,17 +187,18 @@ export class Builder {
     const modules = this.routeModules[template];
     const array = await prepareRoute(this.filesMap, template, modules, 'all');
     const paths = array
-      .map(({ path }) =>
-        path.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase()
-      )
+      .map((o) => {
+        o.path = o.path.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase();
+        return JSON.stringify(o);
+      })
       .sort();
 
-    // saving to file route-name.txt
+    // saving to file route-name.txt, as JSON per line
     const filename = getTemplateRoute(template) + `.txt`;
     ensureDirExists(GENERATED_ROUTES);
     await fs.writeFile(
       [GENERATED_ROUTES, filename].join(SEPARATOR),
-      paths.sort().join(`\n`),
+      paths.sort().join(NEWLINE),
       'utf8'
     );
   };

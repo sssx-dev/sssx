@@ -1,7 +1,7 @@
 import workerpool from 'workerpool';
 
 import { Builder } from './index.js';
-import type { Request } from './types.js';
+import type { Request } from '../types/Route.js';
 
 const render = async (paths: Request[]) => {
   const builder = new Builder({ isWorker: true });

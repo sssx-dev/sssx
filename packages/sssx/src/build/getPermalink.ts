@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import path from 'path';
 import fs from '../lib/fs.js';
-import { config, OUTDIR } from '../config/index.js';
+import { GENERATED_ROUTES, OUTDIR } from '../config/index.js';
 import type { RoutePermalinkFn } from '../types/Route';
 import { RouteErrors } from '../types/Errors.js';
+import Logger from '@sssx/logger';
 
 /**
  *
@@ -10,15 +12,15 @@ import { RouteErrors } from '../types/Errors.js';
  * @param routeName
  */
 const validateRouteExists = (suffix: string, routeName: string) => {
-  const filename = `${process.cwd()}/${config.distDir}/${config.routesPath}/${routeName}.txt`;
+  const filename = path.resolve(GENERATED_ROUTES, `${routeName}.txt`);
 
   if (fs.existsSync(filename)) {
-    const paths = fs.readFileSync(filename, { encoding: 'utf8' }).split(`\n`);
+    const paths = fs.readFileSync(filename, 'utf8'); //.split(`\n`);
     if (!paths.includes(suffix.toLowerCase()))
       throw new Error(RouteErrors[101001](suffix, filename));
-    // console.log(`getPermalink`, {suffix}, paths)
+    Logger.verbose(`getPermalink`, { suffix }, paths);
   } else {
-    // console.log(`getPermalink, file with paths does not exist yet`, {filename, suffix})
+    Logger.warn(`getPermalink, file with paths does not exist yet`, { filename, suffix });
   }
 };
 

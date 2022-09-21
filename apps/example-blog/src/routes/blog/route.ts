@@ -1,5 +1,10 @@
-import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx';
-// @ts-ignore
+import type {
+  UnwrapRouteAll,
+  RoutePropsFn,
+  RoutePermalinkFn,
+  SvelteComponentProps,
+  RouteAllFn
+} from 'sssx';
 import type Page from './index.svelte';
 import { hello } from '../../bar.js';
 
@@ -8,8 +13,12 @@ export type Request = UnwrapRouteAll<typeof getAll>;
 
 export const permalink: RoutePermalinkFn<Request> = `/blog/:slug/`;
 
-export const getAll = async () => {
-  return [{ slug: `hello`, bar: hello() }, { slug: `world` }];
+export const getAll: RouteAllFn = async () => {
+  return [{ slug: `hello`, bar: hello() }, { slug: `world` }].map((a, index) => ({
+    ...a,
+    title: `Title ${index}`,
+    description: `Description ${index}`
+  }));
 };
 
 export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {

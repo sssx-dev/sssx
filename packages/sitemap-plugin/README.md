@@ -1,4 +1,4 @@
-# sssx-sitemap
+# @sssx/sitemap-plugin
 
 A plugin to generate sitemap for SSSX website.
 

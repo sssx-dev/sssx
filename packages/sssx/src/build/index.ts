@@ -19,6 +19,7 @@ import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS } from '../constants.js';
 import Progress from '../cli/Progress.js';
+import Logger from '@sssx/logger';
 
 import type { FilesMap, RouteModules, Request } from './types.js';
 import { difference, getTemplateRoute } from './helpers.js';
@@ -78,7 +79,7 @@ export class Builder {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private log = (...args: any[]) =>
-    console.log(chalk.yellow(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`), ...args);
+    Logger.log(chalk.yellow(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`), ...args);
 
   private prepareSvelteCore = async () => {
     const hashedSvelteCorePath = await buildSvelteCore([this.svelteLib], OUTDIR_SSSX);

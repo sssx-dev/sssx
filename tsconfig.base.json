@@ -26,6 +26,7 @@
       "sssx": ["./packages/sssx"],
       "@sssx/eslint-config-sssx": ["./packages/eslint-config-sssx"],
       "@sssx/sitemap-plugin": ["./packages/sitemap-plugin"],
+      "@sssx/logger": ["./packages/logger"],
       "@sssx/aws-s3-cloudfront-adapter": ["./packages/aws-s3-cloudfront-adapter"]
     }
   }

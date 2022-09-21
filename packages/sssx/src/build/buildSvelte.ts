@@ -1,5 +1,6 @@
 import fs from '../lib/fs.js';
 import { build } from 'esbuild';
+import type { LogLevel } from 'esbuild';
 import sveltePreprocess from 'svelte-preprocess';
 import autoprefixer from 'autoprefixer';
 
@@ -9,13 +10,16 @@ import { config } from '../config/index.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../lib/esbuildSvelte.js';
+import Logger from '@sssx/logger';
 
 type Options = {
   generate?: 'dom' | 'ssr' | false;
+  logLevel?: LogLevel;
 };
 
 const defaultOptions: Options = {
-  generate: 'ssr'
+  generate: 'ssr',
+  logLevel: 'silent'
 };
 
 export const buildSvelte = async (
@@ -24,7 +28,7 @@ export const buildSvelte = async (
   buildOptions = defaultOptions
 ) => {
   const options = Object.assign({}, defaultOptions, buildOptions);
-  const { generate } = options;
+  const { generate, logLevel } = options;
   const outdir = `${config.distDir}/${generate === 'ssr' ? config.ssrRoot : config.compiledRoot}`;
   ensureDirExists(outdir);
 
@@ -40,7 +44,7 @@ export const buildSvelte = async (
     minify: false, //so the resulting code is easier to understand
     sourcemap: 'inline',
     write: false,
-    logLevel: 'silent',
+    logLevel, //: 'silent',
     plugins: [
       // postCssPlugin(),
       esbuildSvelte({
@@ -69,23 +73,21 @@ export const buildSvelte = async (
   });
 
   // write out generated JS files from svelte files, and replace imports with js files too
-  await Promise.all(
-    result.outputFiles.map(async (output) => {
-      const path = output.path.split(`/`).slice(0, -1).join(`/`);
-      ensureDirExists(path);
+  result.outputFiles.map((output) => {
+    const path = output.path.split(`/`).slice(0, -1).join(`/`);
+    ensureDirExists(path);
 
-      //   console.log('buildSvelte', output.path);
+    Logger.verbose('buildSvelte', output.path);
 
-      let text = output.text.replaceAll(`.svelte`, `.js`);
+    let text = output.text.replaceAll(`.svelte`, `.js`);
 
-      if (
-        generate === 'ssr' &&
-        (output.path.includes(`/${config.routesPath}/`) ||
-          output.path.includes(`/${config.componentsPath}/`))
-      ) {
-        text = wrapHydratableComponents(text, output.path);
-      }
-      await fs.writeFile(output.path, text, { encoding: 'utf-8' });
-    })
-  );
+    if (
+      generate === 'ssr' &&
+      (output.path.includes(`/${config.routesPath}/`) ||
+        output.path.includes(`/${config.componentsPath}/`))
+    ) {
+      text = wrapHydratableComponents(text);
+    }
+    fs.writeFileSync(output.path, text, { encoding: 'utf-8' });
+  });
 };

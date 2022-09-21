@@ -1,12 +1,12 @@
-import fs from '../lib/fs.js';
+import Logger from '@sssx/logger';
 import glob from 'tiny-glob';
+import fs from '../lib/fs.js';
 import { config } from '../config/index.js';
 import type { FilesMap } from '../build/types.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
-import { SEPARATOR } from '../constants.js';
+import { IMPORT_REGEX, SEPARATOR, SVELTEJS } from '../constants.js';
 
-const importRe =
-  /import\s+?(?:(?:(?:[\w*\s{},]*)\s+from\s+?)|)(?:(?:".*?")|(?:'.*?'))[\s]*?(?:;|$|)/gi;
+// TODO: test this on Windows
 
 type Options = {
   css: boolean;
@@ -75,14 +75,14 @@ const replaceImportsToHashedImports = (
       .filter((a) => a.length > 0)
       .join(`/`)
       .replaceAll(`/./`, `/`); // convert /src/routes/./blog/ into /src/routes/blog/
-    // console.log(`replaceImportsToHashedImports`, originalSourcePath);
+    Logger.verbose(`replaceImportsToHashedImports`, originalSourcePath);
     try {
       const newFilename = getFilenameFromOptions(originalSourcePath, options.filesMap);
       const newRelativePath = relativePath.replace(filename, newFilename);
       // console.log(`replaceImports`, {relativePath, newRelativePath})
       code = code.replaceAll(`"${relativePath}"`, `"${newRelativePath}"`);
     } catch (err) {
-      console.error(`replaceImportsToHashedImports err`, { originalSourcePath, file }, err);
+      Logger.error(`replaceImportsToHashedImports err`, { originalSourcePath, file }, err);
     }
   }
 
@@ -105,10 +105,12 @@ const getFilenameFromOptions = (originalSourcePath: string, filesMap: FilesMap) 
 };
 
 const replaceFile = async (file: string, options: Options) => {
-  let code = await fs.readFile(file, { encoding: 'utf-8' });
-  const matches = code.match(importRe);
+  let code = fs.readFileSync(file, 'utf8');
+  const matches = code.match(IMPORT_REGEX);
 
-  const coreSvelteName = options.filesMap[`svelte.js`][0].split(`/`).pop() || '';
+  const coreSvelteName = options.filesMap[SVELTEJS][0].split(`/`).pop() || '';
+
+  Logger.verbose('replaceFile -> matches', file, matches);
 
   matches &&
     matches.map((entry) => {
@@ -133,17 +135,17 @@ const replaceFile = async (file: string, options: Options) => {
     const fileTarget = `${options.dst}/${suffix}`;
     const fileTargetPath = fileTarget.split(`/`).slice(0, -1).join(`/`);
     ensureDirExists(fileTargetPath);
-    await fs.writeFile(fileTarget, code, { flag: 'w' });
+    fs.writeFileSync(fileTarget, code, { flag: 'w', encoding: 'utf8' });
   }
 
-  if (options.overwriteOriginal) await fs.writeFile(file, code, { flag: 'w' });
+  if (options.overwriteOriginal) fs.writeFileSync(file, code, { flag: 'w', encoding: 'utf8' });
 };
 
 export const replaceImports = async (
   globWildcard: string,
   inputOptions: Partial<Options> = defaultOptions
 ) => {
-  // console.log(`replaceImports`, globWildcard)
+  Logger.verbose(`replaceImports`, globWildcard);
   const options: Options = Object.assign({}, defaultOptions, inputOptions);
   const files = await glob(globWildcard);
   await Promise.all(files.map((file) => replaceFile(file, options)));

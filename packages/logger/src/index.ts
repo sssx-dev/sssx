@@ -1,6 +1,7 @@
-import colors from 'ansi-colors';
+import colors from 'chalk';
 
 export enum LogLevel {
+  SILENT = 'SILENT',
   VERBOSE = 'VERBOSE',
   INFO = 'INFO',
   DEBUG = 'DEBUG',
@@ -10,7 +11,7 @@ export enum LogLevel {
 
 class Logger {
   private static instance?: Logger;
-  private prefix = colors.blue('SSSX:');
+  private prefix = 'SSSX:';
   private _level: LogLevel;
 
   constructor() {
@@ -33,21 +34,30 @@ class Logger {
   }
 
   log = (...data: unknown[]) => {
-    console.log(this.prefix, ...data);
+    this.level != LogLevel.SILENT &&
+      (this.level == LogLevel.INFO ||
+        this.level == LogLevel.VERBOSE ||
+        this.level == LogLevel.DEBUG) &&
+      console.log(colors.bgBlue.whiteBright(this.prefix), ...data);
   };
 
   info = this.log;
 
   verbose = (...data: unknown[]) => {
-    console.log(this.prefix, ...data);
+    this.level === LogLevel.VERBOSE &&
+      console.log(colors.bgBlack.whiteBright(this.prefix), ...data);
+  };
+
+  debug = (...data: unknown[]) => {
+    this.level === LogLevel.DEBUG && console.log(colors.bgBlack.whiteBright(this.prefix), ...data);
   };
 
   warn = (...data: unknown[]) => {
-    console.warn(this.prefix, ...data);
+    this.level != LogLevel.SILENT && console.warn(colors.bgYellow.black(this.prefix), ...data);
   };
 
   error = (...data: unknown[]) => {
-    console.error(this.prefix, ...data);
+    this.level != LogLevel.SILENT && console.error(colors.bgRed.whiteBright(this.prefix), ...data);
   };
 }
 

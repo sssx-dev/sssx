@@ -1,5 +1,4 @@
 import type { UnwrapRouteAll, RoutePropsFn, RoutePermalinkFn, SvelteComponentProps } from 'sssx';
-// @ts-ignore
 import type Page from './index.svelte';
 import { Routes } from '../index.js';
 
@@ -21,9 +20,16 @@ export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
 
   // works
   const testBlogSlug = Routes['blog']({ slug: `hello` }); // can't be generated in the root scope
+  const requests = [
+    {
+      slug: '/test',
+      title: 'Test title'
+    }
+  ];
 
   return {
     title: `Example SSSX Blog`,
-    testBlogSlug
+    testBlogSlug,
+    requests
   };
 };

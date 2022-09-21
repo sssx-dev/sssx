@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import Logger, { LogLevel } from '@sssx/logger';
 
 import fs from '../lib/fs.js';
 import { Builder } from '../index.js';
@@ -11,10 +12,24 @@ import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { askQuestion } from './askQuestion.js';
 
+const checkVerbose = (args: Record<string, never>) => {
+  if (args.verbose) {
+    Logger.level = LogLevel.VERBOSE;
+  }
+};
+
 ///////////////////////////
 const routes = {
   description: 'Specify which route has to be updated. Serparate with comma for muliple routes',
   default: '*'
+};
+
+const verbose = {
+  description: 'Enable verbose logging'
+};
+
+const yes = {
+  description: 'Automatically answer "yes" to any prompts that npm might print on the command line.'
 };
 ///////////////////////////
 
@@ -31,43 +46,58 @@ yargs(hideBin(process.argv))
 
     // could have been a serve function, but if the `route` is not generated, then we need to build in the runtime
   })
-  .command('build', 'Start building the static site', { routes }, async (args) => {
-    const routes = checkRoutes(args);
-    const builder = new Builder();
+  .command(
+    'build',
+    'Start building the static site',
+    { routes, verbose, yes, y: yes },
+    async (args) => {
+      checkVerbose(args as never);
+      const routes = checkRoutes(args);
+      const builder = new Builder();
 
-    if (fs.existsSync(config.outDir) || fs.existsSync(config.distDir)) {
-      const shouldContinue = await askQuestion(
-        chalk.red('Are you sure you want to remove all previosuly generated files?')
-      );
+      if (args.yes || args.y) {
+        clean();
+      } else if (fs.existsSync(config.outDir) || fs.existsSync(config.distDir)) {
+        const shouldContinue = await askQuestion(
+          chalk.red('Are you sure you want to remove all previosuly generated files?')
+        );
 
-      if (!shouldContinue) {
-        return console.log('Aborted');
+        if (!shouldContinue) {
+          return console.log('Aborted');
+        }
+
+        clean(); // creates clean build, be removing all previous copies
+      } else {
+        clean();
       }
 
-      clean(); // creates clean build, be removing all previous copies
-    } else {
-      clean();
+      generateDeclarations();
+
+      await builder.setup();
+      await builder.renderPool({ routes });
+      await builder.runPlugins();
+      await builder.finalize();
     }
+  )
+  .command(
+    'update',
+    'Start updating the static site',
+    { routes, verbose, yes, y: yes },
+    async (args) => {
+      checkVerbose(args as never);
+      const routes = checkRoutes(args);
 
-    generateDeclarations();
-
-    await builder.setup();
-    await builder.renderPool({ routes });
-    await builder.runPlugins();
-    await builder.finalize();
-  })
-  .command('update', 'Start updating the static site', { routes }, async (args) => {
-    const routes = checkRoutes(args);
-
-    generateDeclarations();
-    const builder = new Builder();
-    await builder.setup();
-    await builder.renderPool({ routes, updatesOnly: true });
-    await builder.processRemovals();
-    await builder.runPlugins();
-    await builder.finalize();
-  })
-  .command('dynamic', 'Update only dynamic files', {}, async () => {
+      generateDeclarations();
+      const builder = new Builder();
+      await builder.setup();
+      await builder.renderPool({ routes, updatesOnly: true });
+      await builder.processRemovals();
+      await builder.runPlugins();
+      await builder.finalize();
+    }
+  )
+  .command('dynamic', 'Update only dynamic files', { verbose }, async (args) => {
+    checkVerbose(args as never);
     generateDeclarations();
     const builder = new Builder();
     await builder.setup();

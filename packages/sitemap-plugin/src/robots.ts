@@ -1,6 +1,7 @@
 import path from 'path';
 import { fs } from 'sssx';
 import type { Config } from 'sssx';
+import Logger from '@sssx/logger';
 import type { Options } from './options.js';
 import { PLUGIN_NAME } from './constants.js';
 
@@ -18,5 +19,6 @@ export const robots = (options: Options, config: Config, sitemaps: string[]) => 
   fs.writeFileSync(absoluteFilename, [options.robotsHead, ...data].join(`\n`), {
     encoding: 'utf-8'
   });
-  console.log(`* Generated ${filename}`);
+
+  Logger.verbose(`* Generated ${filename}`);
 };

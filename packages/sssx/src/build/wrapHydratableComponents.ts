@@ -1,39 +1,20 @@
-import fs from '../lib/fs.js';
+import Logger from '@sssx/logger';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import fs from '../lib/fs.js';
 import { config } from '../config/index.js';
+import { IMPORT_REGEX } from '../constants.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const SEPARATOR = `\n`;
 // TODO: check if source code mapping remains intact
-// TODO: this can be done nicer via replacing "import { create_ssr_component, escape, validate_component } from "svelte/internal";"
+// TODO: move to AST parsing
 const POSTPROCESSING = fs
   .readFileSync(`${__dirname}/../patches/postProcessing.js`, { encoding: 'utf-8' })
   .split(SEPARATOR);
-
-type Options = {
-  first: boolean;
-  last: boolean;
-};
-const getImportIndex = (lines: string[], options: Partial<Options>) => {
-  let counter = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (line.startsWith(`import`)) {
-      counter = i;
-      if (options.first) break;
-    } else if (counter > 0) {
-      // allow banner with comments first
-      break;
-    }
-  }
-
-  return counter;
-};
 
 const injectHydratableComponents = (text: string, selector: string) => {
   let index = 0;
@@ -47,23 +28,8 @@ const injectHydratableComponents = (text: string, selector: string) => {
   return text;
 };
 
-// we inject generated SSR component, to ajust SSR code, so when it's called to generate static code, we inject hydratable calls automatically
-// postProcessing -> ssr/route/x/name/index.svelte -> out/name/index.html
-export const wrapHydratableComponents = (text: string, path?: string) => {
-  text = injectHydratableComponents(text, `create_ssr_component(`);
-  text = injectHydratableComponents(text, `validate_component(`);
-  const lines = text.split(`\n`);
-  const firstImport = getImportIndex(lines, { first: true });
-  const lastImport = getImportIndex(lines, { last: true });
-
-  const banner = firstImport > 0 ? lines.slice(0, firstImport) : [];
-  const allImports = lines.slice(firstImport, lastImport + 1);
-  const code = lines.slice(lastImport + 1);
-
-  let imports = allImports.filter((line) => !line.includes(`.css`) && !line.startsWith(`import "`));
-  const cssImports = allImports.filter(
-    (line) => line.includes(`.css`) && line.startsWith(`import "`)
-  );
+const processCSS = (imports: string[]) => {
+  const cssImports = imports.filter((line) => line.includes(`.css`) && line.startsWith(`import "`));
   const cssFiles = cssImports.map((a) => {
     let relativeURL = a.replace(`import "`, ``).replace(`";`, ``).trim();
 
@@ -73,16 +39,18 @@ export const wrapHydratableComponents = (text: string, path?: string) => {
 
     return relativeURL;
   });
-
-  // console.log(`wrapHydratableComponents`, path, {firstImport, lastImport, cssImports, imports})
-
   const cssLinks = cssFiles.map((url) => `<link rel="stylesheet" type="text/css" href="${url}">`);
 
+  return cssLinks;
+};
+
+const addCSSLinksImport = (matches: string[]) => {
+  const imports = matches.join(`\n`).split(`\n`);
   // when component needs to export css styles, lets grab them statically
   // and then use them in the route's page
   const variableName = `cssLinks`;
   const variablesArray: string[] = [];
-  imports = imports.map((line) => {
+  const modifiedImports = imports.map((line) => {
     if (line.includes(config.componentsPath)) {
       const array = line.split(` `);
       const componentName = array[1];
@@ -94,9 +62,57 @@ export const wrapHydratableComponents = (text: string, path?: string) => {
     return line;
   });
 
+  return { variablesArray, modifiedImports };
+};
+
+/**
+ * @param code source code
+ * @returns Comments in the top section of the source code
+ */
+const getBanner = (code: string) => {
+  const banner = [];
+  const lines = code.split(`\n`);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim().startsWith('import')) banner.push(line);
+    else break;
+  }
+
+  return banner.join('\n');
+};
+
+/**
+ * we inject generated SSR component,
+ * to ajust SSR code, so when it's called to generate static code,
+ * we inject hydratable calls automatically.
+ * postProcessing -> ssr/route/x/name/index.svelte -> out/name/index.html
+ */
+export const wrapHydratableComponents = (text: string) => {
+  const matches = text.match(IMPORT_REGEX) || [];
+  const banner = getBanner(text);
+
+  text = text.replace(banner, '');
+  matches.map((match) => (text = text.replace(match, '')));
+  text = injectHydratableComponents(text, `create_ssr_component(`);
+  text = injectHydratableComponents(text, `validate_component(`);
+
+  const code = text;
+
+  // let imports = allImports.filter((line) => !line.includes(`.css`) && !line.startsWith(`import "`));
+  const imports = matches.filter((singleImport) => !singleImport.includes(`.css`));
+  const cssLinks = processCSS(matches);
+  const { variablesArray, modifiedImports } = addCSSLinksImport(imports);
+
+  Logger.verbose(`wrapHydratableComponents`, path, {
+    matches,
+    cssLinks,
+    modifiedImports
+  });
+
   const result = [
-    imports,
     banner,
+    modifiedImports,
     '///',
     '//=============== injected from wrapHydratableComponents start',
     POSTPROCESSING,

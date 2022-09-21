@@ -74,12 +74,8 @@ export class Builder {
     this.id = nanoid();
     options = Object.assign({}, defaultOptions, options);
     this.isWorker = options.isWorker;
-    // this.log(`Creating new SSSX Builder`);
+    Logger.verbose(`Creating new SSSX Builder`);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private log = (...args: any[]) =>
-    Logger.log(chalk.yellow(`${this.isWorker ? '[W]' : '[B]'}${this.id}:`), ...args);
 
   private prepareSvelteCore = async () => {
     const hashedSvelteCorePath = await buildSvelteCore([this.svelteLib], OUTDIR_SSSX);
@@ -167,9 +163,10 @@ export class Builder {
     );
   };
 
-  private previouslyGeneratedRoutes = fs
-    .readdirSync(GENERATED_ROUTES)
-    .map((txtFile) => txtFile.split(`.`)[0]);
+  private previouslyGeneratedRoutes =
+    fs.existsSync(PREFIX) && fs.existsSync(GENERATED_ROUTES)
+      ? fs.readdirSync(GENERATED_ROUTES).map((txtFile) => txtFile.split(`.`)[0])
+      : [];
 
   /**
    * Preload all existing SSR and Data modules
@@ -371,7 +368,7 @@ export class Builder {
   //   const after = new Date().getTime();
   //   const delta = after - before;
 
-  //   console.log(`DONE ${(delta / 1000).toFixed(2)} seconds`);
+  //   Logger.log(`DONE ${(delta / 1000).toFixed(2)} seconds`);
   //   await pool.terminate();
   // };
 
@@ -386,15 +383,14 @@ export class Builder {
     const modules = Object.keys(plugins);
     for (let i = 0; i < modules.length; i++) {
       const key = modules[i]; // like "@sssx/sitemap-plugin"
-      this.log(`Loading plugin "${key}"`);
+      Logger.verbose(`Loading plugin "${key}"`);
       try {
         const module = (await import(key)).default;
         const value = plugins[key];
         const plugin = module(value);
-        // this.log(`Plugin ${key}`, plugin);
         await plugin(config, this);
       } catch (err) {
-        this.log(chalk.red(`Error loading and running plugin "${key}"`), err);
+        Logger.error(chalk.red(`Error loading and running plugin "${key}"`), err);
       }
     }
   };

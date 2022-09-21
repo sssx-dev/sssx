@@ -1,5 +1,8 @@
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import yargs from 'yargs';
+import path from 'path';
 import { hideBin } from 'yargs/helpers';
 import Logger, { LogLevel } from '@sssx/logger';
 
@@ -18,6 +21,14 @@ const checkVerbose = (args: Record<string, never>) => {
   }
 };
 
+const getVersion = () => {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const pckg = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, '..', '..', 'package.json'), 'utf8')
+  );
+  return pckg.version;
+};
+
 ///////////////////////////
 const routes = {
   description: 'Specify which route has to be updated. Serparate with comma for muliple routes',
@@ -28,12 +39,17 @@ const verbose = {
   description: 'Enable verbose logging'
 };
 
-const yes = {
-  description: 'Automatically answer "yes" to any prompts that npm might print on the command line.'
-};
+const yes = {};
 ///////////////////////////
 
-yargs(hideBin(process.argv))
+const args = await yargs(hideBin(process.argv))
+  .options({
+    yes: {
+      alias: 'y',
+      description:
+        'Automatically answer "yes" to any prompts that npm might print on the command line.'
+    }
+  })
   .command('dev', 'Start development server with SSR', noop, async () => {
     const PORT = process.env.PORT || 3000;
     console.log(`Starting development server on http://localhost:${PORT}/`);
@@ -46,39 +62,34 @@ yargs(hideBin(process.argv))
 
     // could have been a serve function, but if the `route` is not generated, then we need to build in the runtime
   })
-  .command(
-    'build',
-    'Start building the static site',
-    { routes, verbose, yes, y: yes },
-    async (args) => {
-      checkVerbose(args as never);
-      const routes = checkRoutes(args);
-      const builder = new Builder();
+  .command('build', 'Start building the static site', { routes, verbose }, async (args) => {
+    checkVerbose(args as never);
+    const routes = checkRoutes(args);
+    const builder = new Builder();
 
-      if (args.yes || args.y) {
-        clean();
-      } else if (fs.existsSync(config.outDir) || fs.existsSync(config.distDir)) {
-        const shouldContinue = await askQuestion(
-          chalk.red('Are you sure you want to remove all previosuly generated files?')
-        );
+    if (args.yes || args.y) {
+      clean();
+    } else if (fs.existsSync(config.outDir) || fs.existsSync(config.distDir)) {
+      const shouldContinue = await askQuestion(
+        chalk.red('Are you sure you want to remove all previosuly generated files?')
+      );
 
-        if (!shouldContinue) {
-          return console.log('Aborted');
-        }
-
-        clean(); // creates clean build, be removing all previous copies
-      } else {
-        clean();
+      if (!shouldContinue) {
+        return console.log('Aborted');
       }
 
-      generateDeclarations();
-
-      await builder.setup();
-      await builder.renderPool({ routes });
-      await builder.runPlugins();
-      await builder.finalize();
+      clean(); // creates clean build, be removing all previous copies
+    } else {
+      clean();
     }
-  )
+
+    generateDeclarations();
+
+    await builder.setup();
+    await builder.renderPool({ routes });
+    await builder.runPlugins();
+    await builder.finalize();
+  })
   .command(
     'update',
     'Start updating the static site',
@@ -116,4 +127,6 @@ yargs(hideBin(process.argv))
   //     await hydrate()
   // })
   .demandCommand(1)
+  .version('version', 'Print SSSX version', getVersion())
+  .alias('version', 'v')
   .parse();

@@ -14,6 +14,7 @@ import { noop } from '../utils/noop.js';
 import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { askQuestion } from './askQuestion.js';
+import { startDevServer } from './devServer.js';
 
 const checkVerbose = (args: Record<string, never>) => {
   if (args.verbose) {
@@ -42,7 +43,7 @@ const verbose = {
 const yes = {};
 ///////////////////////////
 
-const args = await yargs(hideBin(process.argv))
+await yargs(hideBin(process.argv))
   .options({
     yes: {
       alias: 'y',
@@ -50,17 +51,9 @@ const args = await yargs(hideBin(process.argv))
         'Automatically answer "yes" to any prompts that npm might print on the command line.'
     }
   })
-  .command('dev', 'Start development server with SSR', noop, async () => {
-    const PORT = process.env.PORT || 3000;
-    console.log(`Starting development server on http://localhost:${PORT}/`);
-    clean(); // only .sssx folder, keep the outDir
-    generateDeclarations();
-
-    // watch changes
-    const builder = new Builder();
-    await builder.setup();
-
-    // could have been a serve function, but if the `route` is not generated, then we need to build in the runtime
+  .command('dev', 'Start development server with SSR', { routes, verbose }, async (args) => {
+    const routes = checkRoutes(args);
+    startDevServer(routes, !!args.verbose);
   })
   .command('build', 'Start building the static site', { routes, verbose }, async (args) => {
     checkVerbose(args as never);

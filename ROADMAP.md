@@ -46,7 +46,6 @@
 - [ ] Integrate `title`, `description`, `image` in the page, layout and types.
 - [ ] have a way to generate a single url update
 - [ ] copy files from public to the root
-- [ ] add simple dev server (run sssx update)
 
 ## Backlog
 
@@ -75,6 +74,7 @@
 
 ## Done
 
+- [x] add simple dev server (run sssx update)
 - [x] remove line from `.sssx/routes/route.txt` during process removals
 - [x] Slug generation should include title, description, tags (what else?)
 - [x] cache `all()` requests (builds `.sssx/routes/route.txt`)

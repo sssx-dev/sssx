@@ -49,7 +49,6 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
   return `import ${COMPONENT_NAME} from "${componentsPath}";
-import { AbstractItem, FilesMap } from './types';
         (function(){
             const target = getTarget('${prefix}')
             const params = ${componentParams}

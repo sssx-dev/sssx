@@ -1,7 +1,7 @@
 {
   // "extends": "@tsconfig/svelte/tsconfig.json",
   "extends": "../../tsconfig.base.json",
-  "include": ["./*.ts", "./src/**/*.ts", "./src/**/*.svelte"],
+  "include": ["./*.ts", "./src/**/*.ts", "./src/**/*.svelte", "./svelte.config.js"],
   "exclude": ["node_modules/**/*", "public/**/*"],
   "ts-node": {
     "esm": true

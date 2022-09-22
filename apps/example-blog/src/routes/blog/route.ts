@@ -22,7 +22,9 @@ export const getAll: RouteAllFn = async () => {
 };
 
 export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
+  const { title, description } = request;
   return {
-    title: `Hello ${request.slug}`
+    title,
+    description
   };
 };

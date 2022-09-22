@@ -66,7 +66,7 @@ To run an example project use the following:
 ```shell
 cd apps/example-blog
 npm install
-sssx build
+sssx dev # or sssx build
 ```
 
 ## Development

@@ -15,12 +15,7 @@ import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { askQuestion } from './askQuestion.js';
 import { startDevServer } from './devServer.js';
-
-const checkVerbose = (args: Record<string, never>) => {
-  if (args.verbose) {
-    Logger.level = LogLevel.VERBOSE;
-  }
-};
+import { checkVerbose } from './checkVerbose.js';
 
 const getVersion = () => {
   const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -53,7 +48,8 @@ await yargs(hideBin(process.argv))
   })
   .command('dev', 'Start development server with SSR', { routes, verbose }, async (args) => {
     const routes = checkRoutes(args);
-    startDevServer(routes, !!args.verbose);
+    checkVerbose(args as never);
+    startDevServer(routes);
   })
   .command('build', 'Start building the static site', { routes, verbose }, async (args) => {
     checkVerbose(args as never);

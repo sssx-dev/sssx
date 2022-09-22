@@ -43,7 +43,6 @@
 
 ## Rest
 
-- [ ] Integrate `title`, `description`, `image` in the page, layout and types.
 - [ ] have a way to generate a single url update
 - [ ] copy files from public to the root
 
@@ -74,6 +73,7 @@
 
 ## Done
 
+- [x] Integrate `title`, `description`, `image` in the page, layout and types.
 - [x] add simple dev server (run sssx update)
 - [x] remove line from `.sssx/routes/route.txt` during process removals
 - [x] Slug generation should include title, description, tags (what else?)

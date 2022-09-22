@@ -1,16 +1,16 @@
-import express from 'express';
 import open from 'open';
-import Logger from '@sssx/logger';
+import express from 'express';
 import * as dotenv from 'dotenv';
+import Logger from '@sssx/logger';
 
-import { config, OUTDIR } from '../config/index.js';
+import fs from '../lib/fs.js';
 import { Builder } from '../build/index.js';
+import { config, OUTDIR } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
-import fs from 'src/lib/fs.js';
 
 dotenv.config({ path: '.env.local' });
 
-export const startDevServer = async (routes: string[] = [], verbose = false) => {
+export const startDevServer = async (routes: string[] = []) => {
   const PORT = process.env.PORT || 3000;
   const URL = `http://localhost:${PORT}/`;
   Logger.log(`Starting development server on ${URL}\nfrom ${OUTDIR}`);
@@ -30,7 +30,7 @@ export const startDevServer = async (routes: string[] = [], verbose = false) => 
   const prefix = config.basePath.length === 0 ? '/' : config.basePath;
 
   app.use((req, res, next) => {
-    Logger.log(`url ${req.path}`);
+    Logger.log(`dev`, req.path);
     next();
   });
 

@@ -10,6 +10,14 @@ This framework is built to deliver fast generation of millions of pages and redu
 npm install -g sssx
 ```
 
+## Name
+
+| Definition                   | Abbreviation |
+| ---------------------------- | ------------ |
+| Svelte Static Site Generator | SSSG         |
+| Svelte Server Side Rendering | SSSR         |
+| =                            | SSSX         |
+
 ## Overview
 
 Why another SSG?

@@ -18,13 +18,13 @@
 
 ## @sssx/sitemap-plugin
 
-- [ ] add new `route` sitemaps in this `update` mode.
+- [x] add new `route` sitemaps in this `update` mode.
 - [x] regerate map using existing map (via file system or by reading a previosly generated map)
 
 ## @sssx/logger
 
 - [ ] log everything to a file
-- [ ] add LogLevel verbose
+- [x] add LogLevel verbose
 
 ## Documentation
 

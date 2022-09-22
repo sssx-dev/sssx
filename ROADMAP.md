@@ -1,9 +1,5 @@
 # Plan:
 
-## create-sssx
-
-- [ ] create-sssx to install a template
-
 ## @sssx/aws-s3-cloudfront-adapter
 
 - [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
@@ -31,11 +27,13 @@
 - [ ] prepare basic documentation (internal + external)
 - [ ] generate basic documentation website
 
-## Future plugins
+## Future packages
 
+- [ ] create-sssx to install a template
 - [ ] Markdown generation using MDX?
 - [ ] SEO tests (length, tags, alts)
 - [ ] Web vitals test using Lighthouse?
+- [ ] Move dev server to a standalone package?
 
 ## Future examples
 
@@ -50,6 +48,7 @@
 
 ## Backlog
 
+- [ ] extract third-party ESM modules and host them as lib under the `__SSSX__` folder
 - [ ] add `dry` mode that shows changes to be made
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
 - [ ] social image generation

@@ -35,9 +35,16 @@ export const getAll: RouteAllFn = async () => {
  * Slugs to update or generate
  * @returns array of slugs
  */
-export const getUpdates = async () => {
+export const getUpdates: RouteAllFn = async () => {
   const date = dayjs().format('YYYY-MM-DD');
-  return [{ slug: `route-${date}`, time: dayjs().format(`HH:mm`) }];
+  return [
+    {
+      slug: `route-${date}`,
+      time: dayjs().format(`HH:mm`),
+      title: `Title for ${date}`,
+      description: `Description on ${date}`
+    }
+  ];
 };
 
 /**

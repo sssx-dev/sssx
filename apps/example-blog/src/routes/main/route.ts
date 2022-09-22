@@ -16,25 +16,27 @@ export const permalink: RoutePermalinkFn<Request> = `/`;
 
 const title = `Example SSSX Blog`;
 
+const SINGLE_PAGE = {
+  slug: '',
+  title,
+  description: `Description for ${title}`
+};
+
 /**
  * Get all slugs for this route
  * @returns array of all slugs
  */
-export const getAll: RouteAllFn = async () => [
-  {
-    slug: '',
-    title,
-    description: `Description for ${title}`
-  }
-];
+export const getAll: RouteAllFn = async () => [SINGLE_PAGE];
+
+/**
+ * Slugs to update or generate
+ * @returns array of slugs
+ */
+export const getUpdates: RouteAllFn = getAll; // always update
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
-  // breaks
-  // const testBlogSlug = Routes['blog']({slug:`123`}) // can't be generated in the root scope
-
-  // works
-  const testBlogSlug = Routes['blog']({ slug: `hello` }); // can't be generated in the root scope
+  const testBlogSlug = Routes['blog']({ slug: `hello` });
   const requests = getRoutes('dates');
   const links = requests.map((r) => Routes['dates'](r));
 

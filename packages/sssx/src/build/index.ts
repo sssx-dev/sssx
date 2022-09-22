@@ -186,12 +186,22 @@ export class Builder {
   private getRoutePaths = async (template: string) => {
     const modules = this.routeModules[template];
     const array = await prepareRoute(this.filesMap, template, modules, 'all');
+
+    // helper function
+    const transformPath = (input: string) =>
+      input.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase();
+
+    const removedPaths = this.removedRequests.map((o) => o.path);
+
     const paths = array
-      .map((o) => {
-        o.path = o.path.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase();
-        return JSON.stringify(o);
-      })
+      .filter((o) => !removedPaths.includes(o.path))
+      .map((o) => JSON.stringify({ ...o, path: transformPath(o.path) }))
       .sort();
+
+    // filter out removals from this.removedRequests
+
+    // Logger.log('getRoutePaths', template, paths);
+    // Logger.log('getRoutePaths[removedRequests]', template, this.removedRequests);
 
     // saving to file route-name.txt, as JSON per line
     const filename = getTemplateRoute(template) + `.txt`;
@@ -209,8 +219,20 @@ export class Builder {
    * @example template='.sssx/ssr/routes/blog/index.js'
    */
   public generateAllPaths = async () => {
+    await this.generateRemovals();
     const templates = Object.keys(this.routeModules);
     await Promise.all(templates.map(this.getRoutePaths));
+  };
+
+  public generateRemovals = async () => {
+    const allTemplates = Object.keys(this.routeModules);
+    this.removedRequests = (
+      await Promise.all(
+        allTemplates.map((t) => {
+          return prepareRoute(this.filesMap, t, this.routeModules[t], 'removals');
+        })
+      )
+    ).flat();
   };
 
   /**
@@ -259,18 +281,6 @@ export class Builder {
    * we call `processRemovals` to remove these folders
    */
   public processRemovals = async () => {
-    const templates = Object.keys(this.routeModules);
-
-    this.removedRequests = (
-      await Promise.all(
-        templates.map(async (template) => {
-          const modules = this.routeModules[template];
-          const array = await prepareRoute(this.filesMap, template, modules, 'removals');
-          return array;
-        })
-      )
-    ).flat();
-
     const paths = this.removedRequests.map((r) => r.path).filter((path) => fs.existsSync(path));
 
     if (paths.length > 0) {

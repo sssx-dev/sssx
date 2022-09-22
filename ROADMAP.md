@@ -43,7 +43,6 @@
 
 ## Rest
 
-- [ ] remove line from `.sssx/routes/route.txt` during process removals
 - [ ] Integrate `title`, `description`, `image` in the page, layout and types.
 - [ ] have a way to generate a single url update
 - [ ] copy files from public to the root
@@ -76,6 +75,7 @@
 
 ## Done
 
+- [x] remove line from `.sssx/routes/route.txt` during process removals
 - [x] Slug generation should include title, description, tags (what else?)
 - [x] cache `all()` requests (builds `.sssx/routes/route.txt`)
 - [x] Access all routes from the helper function

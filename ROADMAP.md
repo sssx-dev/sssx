@@ -6,12 +6,12 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
-- [ ] add an option to not cache certain files/routes
+- [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
-- [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] implement sync feature?
 - [ ] update removal process to remove all files that are not part of the generated folders
+- [ ] add an option to not cache certain files/routes
 - [x] Send a list of paths changed to S3 plugin
 - [x] delete old files, that were removed by the system
 - [x] add progress bar for S3 adapter
@@ -34,6 +34,8 @@
 ## Future plugins
 
 - [ ] Markdown generation using MDX?
+- [ ] SEO tests (length, tags, alts)
+- [ ] Web vitals test using Lighthouse?
 
 ## Future examples
 
@@ -43,18 +45,20 @@
 
 - [ ] remove line from `.sssx/routes/route.txt` during process removals
 - [ ] Integrate `title`, `description`, `image` in the page, layout and types.
-- [ ] add `dry` mode that shows changes to be made
 - [ ] have a way to generate a single url update
-- [ ] Slug generation should include title, description, tags (what else?)
+- [ ] copy files from public to the root
+- [ ] add simple dev server (run sssx update)
+
+## Backlog
+
+- [ ] add `dry` mode that shows changes to be made
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)
-- [ ] cache `all()` requests
 - [ ] social image generation
 - [ ] validate if the internal link exists or not, use <Link> to do automatic verification
 - [ ] build first version of a pipeline for production
 - [ ] build pipeline for dev (watch + ssr?)
 - [ ] build pipeline for production (plugins, updates)
 - [ ] prepare separation between production and development
-- [ ] copy files from public to the root
 - [ ] hydration could become a layer and an internal plugin, where we do postprocessing for the ssr'ed components/pages
 - [ ] figure out hook's version that we run per point (maybe Astro's model with before/after certain points)
 - [ ] fix import typescript module/file in the component, it is not passed to `outDir`
@@ -72,6 +76,8 @@
 
 ## Done
 
+- [x] Slug generation should include title, description, tags (what else?)
+- [x] cache `all()` requests (builds `.sssx/routes/route.txt`)
 - [x] Access all routes from the helper function
 - [x] add typescript linter
 - [x] add linter to all packages and apps

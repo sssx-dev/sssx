@@ -43,6 +43,7 @@
 
 ## Rest
 
+- [ ] find a way to pass generated request directly into the page, and `layout` component
 - [ ] have a way to generate a single url update
 - [ ] copy files from public to the root
 - [ ] generate a social image locally (use sharp) and place it inside the route's folder (public folder?).

@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import {config} from '@sssx/config'
+  import { config } from '@sssx/config';
   import type { Request } from 'sssx';
 
   export let request: Request;
@@ -10,8 +10,7 @@
   export let logo: string = '';
   export let keywords: string[] = [];
 
-  // const { origin } = config;
-  const origin = `https://sssx.github.io`;
+  const { origin } = config;
   const viewport = `width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0`;
   const tileColor = `#000000`;
   const themeColor = `#000000`;

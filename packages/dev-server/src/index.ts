@@ -13,7 +13,8 @@ dotenv.config({ path: '.env.local' });
 export const startDevServer = async (routes: string[] = []) => {
   const PORT = process.env.PORT || 3000;
   const URL = `http://localhost:${PORT}/`;
-  Logger.log(`Starting development server on ${URL}\nfrom ${OUTDIR}`);
+  Logger.log(`Starting development server on ${URL}`);
+  Logger.log(`from ${OUTDIR}`);
 
   if (!fs.existsSync(OUTDIR)) {
     routes = ['*']; // render all
@@ -33,9 +34,9 @@ export const startDevServer = async (routes: string[] = []) => {
     ignored: [OUTDIR, PREFIX]
   });
 
-  watcher.on('all', async (eventName, path, stats) => {
+  watcher.on('all', async (eventName, path) => {
     Logger.clear();
-    Logger.log('dev:watch', chalk.green(eventName), path);
+    Logger.log(chalk.gray('dev:watch'), chalk.green(eventName), path);
 
     // rebuilding whole site again, optimise later to rebuild only certain pieces
     const builder = new Builder();
@@ -47,7 +48,7 @@ export const startDevServer = async (routes: string[] = []) => {
   });
 
   app.use((req, res, next) => {
-    Logger.log(`dev:browser`, req.path);
+    Logger.log(chalk.gray('dev:browser'), req.path);
     next();
   });
 

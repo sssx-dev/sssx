@@ -315,10 +315,13 @@ export class Builder {
       { route: '' }
     );
 
+    const timePerPage = [];
+
     for (let i = 0; i < paths.length; i++) {
       const { item, path, template, dynamic } = paths[i];
       const { ssr, data } = this.routeModules[template];
 
+      const before = new Date().getTime();
       await compileHTML({
         item,
         outdir: path,
@@ -327,11 +330,19 @@ export class Builder {
         filesMap: this.filesMap,
         dynamic
       });
+      const after = new Date().getTime();
+      const diff = after - before;
+      timePerPage.push(diff);
 
       bar.update(i, { route: path.replace(process.cwd(), '') });
     }
 
-    bar.update(paths.length, { route: 'done' });
+    const sum = timePerPage.reduce((a, b) => a + b);
+    const average = sum / paths.length;
+
+    bar.update(paths.length, {
+      route: `${(average / 1000).toFixed(5)} seconds per page`
+    });
     bar.stop();
   };
 

@@ -9,7 +9,7 @@
   "compilerOptions": {
     "types": ["node", "svelte"],
     "baseUrl": "./",
-    "rootDir": "src",
+    "rootDir": "./src",
     "outDir": "./dist",
     "noEmit": true
   }

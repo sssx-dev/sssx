@@ -1,6 +1,6 @@
 import path from 'path';
 import { fs } from 'sssx';
-import type { Config } from 'sssx';
+import type { Config } from '@sssx/config';
 import type { Options } from './options.js';
 
 export const clean = (options: Options, config: Config) => {

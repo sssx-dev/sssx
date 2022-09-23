@@ -20,9 +20,10 @@
 
 ## @sssx/dev-server
 
-- [ ] add `watch` over filesystem using `chockidar`
+- [x] add `watch` over filesystem using `chokidar`
 - [ ] rebuild a route/path
 - [ ] hotreload the page via `websocket` and `window.reload()` KISS
+- [ ] stop builder midway, if we need to start over
 
 ## @sssx/config
 
@@ -54,9 +55,11 @@
 ## Rest
 
 - [ ] find a way to pass generated request directly into the page, and `layout` component
+- [ ] Simplify confusion between what's passed in SSSX internally, and what Request is used in the developer space: `UnwrapRouteAll`, `Request`, `RouteParams`, `item`
 - [ ] have a way to generate a single url update
 - [ ] copy files from public to the root
 - [ ] generate a social image locally (use sharp) and place it inside the route's folder (public folder?).
+- [ ] BUG: copying `/sssx-monorepo/packages/sssx/dist/build/../patches/svelte.js` gives error from `@sssx/dev-server`
 
 ## Backlog
 

@@ -1,4 +1,4 @@
-import type { Config } from 'sssx';
+import type { Config } from '@sssx/config';
 import { generateSingleRouteSitemap } from './generateSingleRouteSitemap.js';
 import type { Options } from './options.js';
 

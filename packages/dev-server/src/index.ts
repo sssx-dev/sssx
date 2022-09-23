@@ -1,10 +1,11 @@
+import path from 'path';
 import open from 'open';
 import express from 'express';
 import * as dotenv from 'dotenv';
 import Logger from '@sssx/logger';
-
 import { fs, Builder } from 'sssx';
-import { config, OUTDIR } from '@sssx/config';
+import { config, OUTDIR, PREFIX } from '@sssx/config';
+import chokidar from 'chokidar';
 
 dotenv.config({ path: '.env.local' });
 
@@ -25,6 +26,24 @@ export const startDevServer = async (routes: string[] = []) => {
 
   const app = express();
   const prefix = config.basePath.length === 0 ? '/' : config.basePath;
+
+  const watcher = chokidar.watch(path.resolve(process.cwd(), config.sourceRoot), {
+    ignoreInitial: true,
+    ignored: [OUTDIR, PREFIX]
+  });
+
+  watcher.on('all', async (eventName, path, stats) => {
+    Logger.clear();
+    Logger.log('watch', eventName, path, stats);
+
+    // rebuilding whole site again, optimise later to rebuild only certain pieces
+    const builder = new Builder();
+    await builder.setup();
+    await builder.renderPool({ routes });
+    await builder.finalize();
+
+    open(URL);
+  });
 
   app.use((req, res, next) => {
     Logger.log(`dev`, req.path);

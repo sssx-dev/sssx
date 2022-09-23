@@ -1,5 +1,5 @@
 import fs from '../lib/fs.js';
-import { build } from 'esbuild';
+import { build, type LogLevel } from 'esbuild';
 import { BASE } from './base.js';
 import { config, PREFIX } from '@sssx/config';
 import { renamePlugin } from '../plugins/renamePlugin.js';
@@ -7,7 +7,8 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 export const buildTypeScript = async (
   entryPoints: string[],
-  setFilesMap: (k: string, v: string) => void
+  setFilesMap: (k: string, v: string) => void,
+  logLevel: LogLevel = 'silent'
 ) => {
   const result = await build({
     entryPoints,
@@ -18,7 +19,7 @@ export const buildTypeScript = async (
     outdir: `${PREFIX}/${config.compiledRoot}`,
     minify: false,
     plugins: [renamePlugin({ force: true })],
-    logLevel: 'silent'
+    logLevel
   });
 
   // passing back mapping for route/route.ts -> .ssr/compiled/route/route-hash.js

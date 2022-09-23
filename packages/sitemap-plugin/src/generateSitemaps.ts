@@ -1,5 +1,6 @@
 import { Progress } from 'sssx';
-import type { Config, Builder } from 'sssx';
+import type { Config } from '@sssx/config';
+import type { Builder } from 'sssx';
 
 import { generateRouteSitemaps } from './generateRouteSitemaps.js';
 import { writeSitemapsIndex } from './writeSitemapsIndex.js';

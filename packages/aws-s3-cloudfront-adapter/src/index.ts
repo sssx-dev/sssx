@@ -1,7 +1,8 @@
 import path from 'path';
 import glob from 'tiny-glob';
 
-import type { Builder, Plugin, Config } from 'sssx';
+import type { Builder, Plugin } from 'sssx';
+import type { Config } from '@sssx/config';
 
 import { defaultOptions, type Options } from './options.js';
 import { update as updateS3 } from './s3/update.js';

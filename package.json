@@ -37,9 +37,9 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@types/node": "^18.0.0",
     "@changesets/cli": "^2.24.1",
     "@sssx/eslint-config-sssx": "*",
+    "@types/node": "^18.0.0",
     "eslint": "^8.20.0",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.7.0",
@@ -53,6 +53,7 @@
     "url": "https://github.com/sssx-dev/sssx/issues"
   },
   "dependencies": {
-    "@tsconfig/svelte": "^3.0.0"
+    "@tsconfig/svelte": "^3.0.0",
+    "chokidar": "^3.5.3"
   }
 }

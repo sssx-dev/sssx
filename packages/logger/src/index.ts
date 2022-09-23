@@ -33,6 +33,10 @@ class Logger {
     return this._level;
   }
 
+  clear = () => {
+    console.clear();
+  };
+
   log = (...data: unknown[]) => {
     this.level != LogLevel.SILENT &&
       (this.level == LogLevel.INFO ||

@@ -1,7 +1,8 @@
 import glob from 'tiny-glob';
 import path from 'path';
 import { Progress } from 'sssx';
-import type { Builder, Config } from 'sssx';
+import type { Config } from '@sssx/config';
+import type { Builder } from 'sssx';
 import type { Options } from './options.js';
 import { requestsToMap } from './requestsToMap.js';
 import { XML } from './xml.js';

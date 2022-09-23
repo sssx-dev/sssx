@@ -1,4 +1,4 @@
-import type { Config } from 'sssx';
+import type { Config } from '@sssx/config';
 
 type Request = {
   path: string;

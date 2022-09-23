@@ -1,11 +1,10 @@
 import AWS from 'aws-sdk';
 import { Progress } from 'sssx';
-
-import type { Config } from 'sssx';
-
-import type { Options } from '../options.js';
 import { delay } from '../delay.js';
 import { getCredentials } from '../getCredentials.js';
+
+import type { Config } from '@sssx/config';
+import type { Options } from '../options.js';
 
 const TIMEOUT = 100;
 

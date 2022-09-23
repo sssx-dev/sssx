@@ -1,4 +1,5 @@
-import type { Config, Plugin, Builder } from 'sssx';
+import type { Plugin, Builder } from 'sssx';
+import type { Config } from '@sssx/config';
 import { defaultOptions, type Options } from './options.js';
 import { clean } from './clean.js';
 

@@ -117,10 +117,13 @@ export class Builder {
     await processCSSFiles(entryPointsCSS, this.setFilesMap);
     bar.update(++counter);
 
+    const logLevel = 'silent';
+    // const logLevel = Logger.level.toLowerCase() as never;
+
     await Promise.all([
-      buildTypeScript(entryPointsTS, this.setFilesMap),
-      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'ssr' }),
-      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom' })
+      buildTypeScript(entryPointsTS, this.setFilesMap, logLevel),
+      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'ssr', logLevel }),
+      buildSvelte(entryPointsSvelte, this.setFilesMap, { generate: 'dom', logLevel })
     ]);
     bar.update(++counter);
 
@@ -197,11 +200,10 @@ export class Builder {
     const removedPaths = this.removedRequests.map((o) => o.path);
 
     const paths = array
+      // filter out removals from this.removedRequests
       .filter((o) => !removedPaths.includes(o.path))
       .map((o) => JSON.stringify({ ...o, path: transformPath(o.path) }))
       .sort();
-
-    // filter out removals from this.removedRequests
 
     // Logger.log('getRoutePaths', template, paths);
     // Logger.log('getRoutePaths[removedRequests]', template, this.removedRequests);

@@ -1,6 +1,6 @@
 import path from 'path';
 import { fs } from 'sssx';
-import type { Config } from 'sssx';
+import type { Config } from '@sssx/config';
 import Logger from '@sssx/logger';
 import type { Options } from './options.js';
 import { PLUGIN_NAME } from './constants.js';

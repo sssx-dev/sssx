@@ -1,10 +1,14 @@
 import fs from '../lib/fs.js';
-import { build } from 'esbuild';
+import { build, type LogLevel } from 'esbuild';
 import { BASE } from './base.js';
 import { config } from '@sssx/config';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
-export const buildSvelteCore = async (entryPoints: string[], outdir = `./dist/out`) => {
+export const buildSvelteCore = async (
+  entryPoints: string[],
+  outdir = `./dist/out`,
+  logLevel: LogLevel = 'silent'
+) => {
   const result = await build({
     entryPoints,
     entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]`,
@@ -12,7 +16,7 @@ export const buildSvelteCore = async (entryPoints: string[], outdir = `./dist/ou
     minify: false,
     outdir,
     write: false,
-    logLevel: 'silent'
+    logLevel
   });
 
   await Promise.all(

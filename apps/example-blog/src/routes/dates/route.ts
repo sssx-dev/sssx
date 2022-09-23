@@ -61,6 +61,9 @@ export const getRemovals = async () => {
 
 export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
   return {
-    answer: `Hello ${request.slug} on ${request.time}`
+    answer: `Hello ${request.slug} on ${request.time}`,
+    request: {
+      item: request
+    }
   };
 };

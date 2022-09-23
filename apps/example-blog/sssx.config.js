@@ -7,8 +7,8 @@ let plugins = {};
 plugins['@sssx/sitemap-plugin'] = { origin };
 
 // if (isProduction) {
-/** @type {import('@sssx/aws-s3-cloudfront-adapter').Options} */
-plugins['@sssx/aws-s3-cloudfront-adapter'] = {};
+/** @type {import('@sssx/aws-adapter').Options} */
+plugins['@sssx/aws-adapter'] = {};
 // }
 
 /** @type {import('sssx').Config} */

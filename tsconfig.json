@@ -12,6 +12,6 @@
     { "path": "./packages/logger" },
     { "path": "./packages/dev-server" },
     { "path": "./packages/sitemap-plugin" },
-    { "path": "./packages/aws-s3-cloudfront-adapter" }
+    { "path": "./packages/aws-adapter" }
   ]
 }

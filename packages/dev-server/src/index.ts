@@ -6,6 +6,7 @@ import Logger from '@sssx/logger';
 import { fs, Builder } from 'sssx';
 import { config, OUTDIR, PREFIX } from '@sssx/config';
 import chokidar from 'chokidar';
+import chalk from 'chalk';
 
 dotenv.config({ path: '.env.local' });
 
@@ -34,7 +35,7 @@ export const startDevServer = async (routes: string[] = []) => {
 
   watcher.on('all', async (eventName, path, stats) => {
     Logger.clear();
-    Logger.log('watch', eventName, path, stats);
+    Logger.log('dev:watch', chalk.green(eventName), path);
 
     // rebuilding whole site again, optimise later to rebuild only certain pieces
     const builder = new Builder();
@@ -46,7 +47,7 @@ export const startDevServer = async (routes: string[] = []) => {
   });
 
   app.use((req, res, next) => {
-    Logger.log(`dev`, req.path);
+    Logger.log(`dev:browser`, req.path);
     next();
   });
 

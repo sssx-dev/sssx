@@ -1,14 +1,14 @@
 # Plan:
 
-## @sssx/aws-s3-cloudfront-adapter
+## @sssx/aws-adapter
 
-- [ ] rename to `@sssx/aws-adapter`
 - [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
 - [ ] implement sync feature?
 - [ ] update removal process to remove all files that are not part of the generated folders
 - [ ] add an option to not cache certain files/routes
+- [x] rename to `@sssx/aws-adapter`
 - [x] Send a list of paths changed to S3 plugin
 - [x] delete old files, that were removed by the system
 - [x] add progress bar for S3 adapter

@@ -1,5 +1,5 @@
 {
-  "name": "@sssx/aws-s3-cloudfront-adapter",
+  "name": "@sssx/aws-adapter",
   "version": "0.0.1",
   "description": "Simple SSSX adapter to upload incremental updates to AWS S3 and invalidate cache in AWS CloudFront",
   "type": "module",

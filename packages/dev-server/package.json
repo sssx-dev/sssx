@@ -1,0 +1,40 @@
+{
+  "name": "@sssx/dev-server",
+  "version": "0.0.1",
+  "description": "Development server for SSSX",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "prettier --check --ignore-path=../../.prettierignore . && eslint .",
+    "format": "prettier --write --ignore-path=../../.prettierignore ."
+  },
+  "engines": {
+    "node": "v18.x"
+  },
+  "keywords": [
+    "development",
+    "server",
+    "dev",
+    "SSSX",
+    "SSG",
+    "SSR",
+    "Svelte",
+    "SEO",
+    "JAM",
+    "JAMstack",
+    "generator",
+    "static",
+    "sitemap"
+  ],
+  "author": "Eugene Hauptmann <eugene@sssx.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.6.0",
+    "sssx": "*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

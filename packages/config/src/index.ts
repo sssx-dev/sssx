@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { SEPARATOR } from '../constants.js';
-import type { Config } from '../types/Config.js';
+import type { Config as C } from './types.js';
+
+export type Config = C;
+
+const isWin = process.platform === 'win32';
+const SEPARATOR = isWin ? '\\' : '/';
 
 const defaultConfig: Partial<Config> = {
   distDir: `.sssx`,

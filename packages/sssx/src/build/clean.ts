@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { PREFIX, COMPILED, OUTDIR, OUTDIR_SSSX, config } from '../config/index.js';
+import { PREFIX, COMPILED, OUTDIR, OUTDIR_SSSX, config } from '@sssx/config';
 
 const cleanDist = (target = `./${config.outDir}/`, createNewFolder = true) => {
   if (fs.existsSync(target)) fs.rmSync(target, { recursive: true });

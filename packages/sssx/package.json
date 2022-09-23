@@ -30,6 +30,7 @@
     "sssx": "./dist/cli/index.js"
   },
   "dependencies": {
+    "@sssx/dev-server": "*",
     "@types/express": "^4.17.14",
     "autoprefixer": "^10.4.7",
     "chalk": "^5.0.1",

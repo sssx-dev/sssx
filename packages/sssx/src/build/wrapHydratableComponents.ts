@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import fs from '../lib/fs.js';
-import { config } from '../config/index.js';
+import { config } from '@sssx/config';
 import { IMPORT_REGEX } from '../constants.js';
 
 const __filename = fileURLToPath(import.meta.url);

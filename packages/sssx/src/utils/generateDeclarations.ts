@@ -1,6 +1,6 @@
 import path from 'path';
+import { config } from '@sssx/config';
 import fs from '../lib/fs.js';
-import { config } from '../config/index.js';
 import { capitalize } from './capitalize.js';
 
 const FILENAME = `index.ts`;

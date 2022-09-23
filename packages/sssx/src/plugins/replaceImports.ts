@@ -1,7 +1,7 @@
 import Logger from '@sssx/logger';
 import glob from 'tiny-glob';
 import fs from '../lib/fs.js';
-import { config } from '../config/index.js';
+import { config } from '@sssx/config';
 import type { FilesMap } from '../types';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { IMPORT_REGEX, SEPARATOR, SVELTEJS } from '../constants.js';

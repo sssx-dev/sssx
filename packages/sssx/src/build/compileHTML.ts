@@ -1,6 +1,6 @@
 import fs from '../lib/fs.js';
 import path from 'path';
-import { config, ROOT_DIR } from '../config/index.js';
+import { config, ROOT_DIR } from '@sssx/config';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { DataModule } from './loadDataModule.js';

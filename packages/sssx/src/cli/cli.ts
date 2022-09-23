@@ -4,17 +4,16 @@ import chalk from 'chalk';
 import yargs from 'yargs';
 import path from 'path';
 import { hideBin } from 'yargs/helpers';
-import Logger, { LogLevel } from '@sssx/logger';
+import { startDevServer } from '@sssx/dev-server';
+import { config } from '@sssx/config';
 
 import fs from '../lib/fs.js';
 import { Builder } from '../index.js';
 import { clean } from '../build/clean.js';
 import { checkRoutes } from './checkRoutes.js';
 import { noop } from '../utils/noop.js';
-import { config } from '../config/index.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { askQuestion } from './askQuestion.js';
-import { startDevServer } from './devServer.js';
 import { checkVerbose } from './checkVerbose.js';
 
 const getVersion = () => {
@@ -49,6 +48,8 @@ await yargs(hideBin(process.argv))
   .command('dev', 'Start development server with SSR', { routes, verbose }, async (args) => {
     const routes = checkRoutes(args);
     checkVerbose(args as never);
+
+    generateDeclarations();
     startDevServer(routes);
   })
   .command('build', 'Start building the static site', { routes, verbose }, async (args) => {

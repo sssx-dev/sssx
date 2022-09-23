@@ -3,10 +3,8 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import Logger from '@sssx/logger';
 
-import fs from '../lib/fs.js';
-import { Builder } from '../build/index.js';
-import { config, OUTDIR } from '../config/index.js';
-import { generateDeclarations } from '../utils/generateDeclarations.js';
+import { fs, Builder } from 'sssx';
+import { config, OUTDIR } from '@sssx/config';
 
 dotenv.config({ path: '.env.local' });
 
@@ -14,7 +12,6 @@ export const startDevServer = async (routes: string[] = []) => {
   const PORT = process.env.PORT || 3000;
   const URL = `http://localhost:${PORT}/`;
   Logger.log(`Starting development server on ${URL}\nfrom ${OUTDIR}`);
-  generateDeclarations();
 
   if (!fs.existsSync(OUTDIR)) {
     routes = ['*']; // render all

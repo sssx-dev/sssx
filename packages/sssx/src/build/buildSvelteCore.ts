@@ -1,7 +1,7 @@
 import fs from '../lib/fs.js';
 import { build } from 'esbuild';
 import { BASE } from './base.js';
-import { config } from '../config/index.js';
+import { config } from '@sssx/config';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 export const buildSvelteCore = async (entryPoints: string[], outdir = `./dist/out`) => {

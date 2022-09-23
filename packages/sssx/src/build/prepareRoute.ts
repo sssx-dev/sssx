@@ -1,7 +1,7 @@
 import { getPermalink } from './getPermalink.js';
 import { loadDataModule } from './loadDataModule.js';
 import { loadSSRModule } from './loadSSRModule.js';
-import { config, OUTDIR } from '../config/index.js';
+import { config, OUTDIR } from '@sssx/config';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
 import type { RouteModules, FilesMap, PrepareRouteMode } from '../types';
 import type { Request, RouteParams } from '../types/Route.js';

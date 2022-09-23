@@ -2,6 +2,7 @@
 
 ## @sssx/aws-s3-cloudfront-adapter
 
+- [ ] rename to `@sssx/aws-adapter`
 - [ ] find a way to provide a list of redirects via S3 via `x-amz-website-redirect-location` (1000+)
 - [ ] add redirect feature on the route level (via S3 metadata)
 - [ ] add redirect for entire website level (via CloudFront)
@@ -16,6 +17,18 @@
 
 - [x] add new `route` sitemaps in this `update` mode.
 - [x] regerate map using existing map (via file system or by reading a previosly generated map)
+
+## @sssx/dev-server
+
+- [ ] add `watch` over filesystem using `chockidar`
+- [ ] rebuild a route/path
+- [ ] hotreload the page via `websocket` and `window.reload()` KISS
+
+## @sssx/config
+
+- [ ] put all constants under a helper object/namespace
+- [x] move types to separate package
+- [x] move config parser to separate package
 
 ## @sssx/logger
 
@@ -33,7 +46,6 @@
 - [ ] Markdown generation using MDX?
 - [ ] SEO tests (length, tags, alts)
 - [ ] Web vitals test using Lighthouse?
-- [ ] Move dev server to a standalone package?
 
 ## Future examples
 
@@ -74,6 +86,7 @@
 
 ## Done
 
+- [x] Move dev server to a standalone package
 - [x] Integrate `title`, `description`, `image` in the page, layout and types.
 - [x] add simple dev server (run sssx update)
 - [x] remove line from `.sssx/routes/route.txt` during process removals

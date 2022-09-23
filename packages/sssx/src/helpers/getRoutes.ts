@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from '../lib/fs.js';
-import { GENERATED_ROUTES } from '../config/index.js';
+import { GENERATED_ROUTES } from '@sssx/config';
 import type { RouteParams } from '../types/Route.js';
 import Logger from '@sssx/logger';
 

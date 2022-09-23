@@ -4,7 +4,7 @@ import postcss from 'postcss';
 import postcssrc from 'postcss-load-config';
 import type { ConfigContext } from 'postcss-load-config';
 
-import { OUTDIR, COMPILED, SSR, config } from '../config/index.js';
+import { OUTDIR, COMPILED, SSR, config } from '@sssx/config';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { sha1 } from '../utils/sha1.js';
 

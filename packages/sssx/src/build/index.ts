@@ -2,6 +2,7 @@ import glob from 'tiny-glob';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
+import { config, PREFIX, OUTDIR_SSSX, GENERATED_ROUTES, OUTDIR } from '@sssx/config';
 
 import { customAlphabet } from 'nanoid/non-secure';
 import workerpool from 'workerpool';
@@ -14,7 +15,6 @@ import { replaceImports } from '../plugins/replaceImports.js';
 import { processCSSFiles } from './processCSSFiles.js';
 import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
 import { compileHTML } from './compileHTML.js';
-import { PREFIX, OUTDIR_SSSX, config, GENERATED_ROUTES } from '../config/index.js';
 import { sliceArray } from '../utils/sliceArray.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
@@ -70,6 +70,9 @@ export class Builder {
 
   private filesMap: FilesMap = {};
   private isWorker;
+
+  public readonly config = config;
+  public readonly outdir = OUTDIR;
 
   constructor(options: Partial<Options> = defaultOptions) {
     this.id = nanoid();

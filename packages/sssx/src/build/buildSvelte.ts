@@ -6,7 +6,7 @@ import autoprefixer from 'autoprefixer';
 
 import { BASE } from './base.js';
 import { wrapHydratableComponents } from './wrapHydratableComponents.js';
-import { config } from '../config/index.js';
+import { config } from '@sssx/config';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../lib/esbuildSvelte.js';

@@ -1,4 +1,4 @@
-import { config } from '../config/index.js';
+import { config } from '@sssx/config';
 import type { RouteParams, RoutePermalinkFn, RoutePropsFn } from '../types/Route.js';
 import type { FilesMap } from '../types';
 

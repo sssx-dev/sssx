@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import path from 'path';
 import fs from '../lib/fs.js';
-import { GENERATED_ROUTES, OUTDIR } from '../config/index.js';
+import { GENERATED_ROUTES, OUTDIR } from '@sssx/config';
 import type { RoutePermalinkFn } from '../types/Route';
 import { RouteErrors } from '../types/Errors.js';
 import Logger from '@sssx/logger';

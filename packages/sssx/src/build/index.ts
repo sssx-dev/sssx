@@ -86,7 +86,10 @@ export class Builder {
     this.filesMap[SVELTEJS] = [hashedSvelteCorePath];
 
     const filename = hashedSvelteCorePath.split(`/`).pop() || '';
-    const svelteCorePath = path.resolve(PREFIX, config.compiledRoot, filename);
+    const dst = path.resolve(PREFIX, config.compiledRoot);
+    ensureDirExists(dst);
+
+    const svelteCorePath = path.resolve(dst, filename);
     await fs.copyFile(this.svelteLib, svelteCorePath);
   };
 

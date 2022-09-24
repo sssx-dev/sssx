@@ -1,6 +1,18 @@
 # SSSX
 
-<a href="https://twitter.com/sssxdev?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @sssxdev</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/sssxdev.svg?style=social&label=Follow%20%40sssxdev)](https://twitter.com/sssxdev)
+[![Youtube URL](https://shields.io/badge/views-2k-red?logo=youtube&style=social)](https://www.youtube.com/channel/UCYzzLilEQdBG0Jj1JhVtYYg)
+
+[![GitHub license](https://img.shields.io/github/license/sssx-dev/sssx.svg?color=blue&style=for-the-badge)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/sssx.svg?color=green&style=for-the-badge)](https://www.npmjs.com/package/sssx)
+[![npm downloads](https://img.shields.io/npm/dw/sssx.svg?label=npm%20downloads&style=for-the-badge)](https://npmcharts.com/compare/sssx?minimal=true)
+[![total npm downloads](https://img.shields.io/npm/dt/sssx.svg?label=total%20npm%20downloads&style=for-the-badge)](https://npmcharts.com/compare/sssx?minimal=true)
+[![GitHub watchers](https://img.shields.io/github/watchers/sssx-dev/sssx.svg?style=for-the-badge)](https://github.com/sssx-dev/sssx/watchers)
+[![GitHub stars](https://img.shields.io/github/stars/sssx-dev/sssx.svg?label=GitHub%20stars&style=for-the-badge)](https://github.com/sssx-dev/sssx/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/sssx-dev/sssx.svg?style=for-the-badge)](https://github.com/sssx-dev/sssx/network/members)
+[![open bugs](https://img.shields.io/github/issues-raw/sssx-dev/sssx/bug.svg?color=d73a4a&label=open%20bugs&style=for-the-badge)](https://github.com/sssx-dev/sssx/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Abug)
+[![total open issues](https://img.shields.io/github/issues-raw/sssx-dev/sssx.svg?label=total%20open%20issues&style=for-the-badge)](https://github.com/sssx-dev/sssx/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/sssx-dev/sssx.svg?style=for-the-badge)](https://github.com/sssx-dev/sssx/pulls)
 
 Fast SSG framework built on top of Svelte and esbuild, optimized for SEO, featuring islands architecture with partial hydration.
 
@@ -22,7 +34,7 @@ npm install -g sssx
 
 ## Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/8gNkKyfspl8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/8gNkKyfspl8/0.jpg)](http://www.youtube.com/watch?v=8gNkKyfspl8 'SSSX demo')
 
 ## Overview
 
@@ -95,6 +107,6 @@ Inspirations are drawn from:
 
 ## License
 
-Copyright © 2022 [Eugene Hauptmann](https://github.com/eugenehp)
+Copyright © 2022 [Eugene Hauptmann](https://twitter.com/sssx-dev)
 
 [MIT](https://github.com/sssx-dev/sssx/blob/master/LICENSE)

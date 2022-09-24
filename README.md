@@ -1,6 +1,7 @@
 # SSSX
 
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/sssxdev.svg?style=social&label=Follow%20%40sssxdev)](https://twitter.com/sssxdev)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/eugenehp.svg?style=social&label=Follow%20%40eugenehp)](https://twitter.com/eugenehp)
 [![Youtube URL](https://shields.io/badge/views-2k-red?logo=youtube&style=social)](https://www.youtube.com/channel/UCYzzLilEQdBG0Jj1JhVtYYg)
 
 [![GitHub license](https://img.shields.io/github/license/sssx-dev/sssx.svg?color=blue&style=for-the-badge)](./LICENSE)
@@ -33,6 +34,8 @@ npm install -g sssx
 | =                            | SSSX         |
 
 ## Demo
+
+[YouTube demo](http://www.youtube.com/watch?v=8gNkKyfspl8)
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/8gNkKyfspl8/0.jpg)](http://www.youtube.com/watch?v=8gNkKyfspl8 'SSSX demo')
 

@@ -1,6 +1,8 @@
 # SSSX
 
-Fast SSG framework built on top of Svelte and esbuild, optimised for SEO, featuring islands architecture with partial hydration.
+<a href="https://twitter.com/sssxdev?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @sssxdev</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Fast SSG framework built on top of Svelte and esbuild, optimized for SEO, featuring islands architecture with partial hydration.
 
 This framework is built to deliver fast generation of millions of pages and reduce deployment costs, while providing great development experience.
 
@@ -17,6 +19,10 @@ npm install -g sssx
 | Svelte Static Site Generator | SSSG         |
 | Svelte Server Side Rendering | SSSR         |
 | =                            | SSSX         |
+
+## Demo
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8gNkKyfspl8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Overview
 

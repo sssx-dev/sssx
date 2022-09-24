@@ -6,6 +6,8 @@ import type {
   RoutePermalinkFn,
   SvelteComponentProps
 } from 'sssx';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import type Page from './index.svelte';
 
 export type PageProps = SvelteComponentProps<typeof Page>;
@@ -25,7 +27,7 @@ export const getAll: RouteAllFn = async () => {
     return {
       slug: `route-${date}`,
       time: `00:00`,
-      title: `Title for ${date}`,
+      title: `Hello there for ${date}`,
       description: `Description on ${date}`
     };
   });

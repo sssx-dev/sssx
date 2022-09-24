@@ -62,15 +62,12 @@ This repository is structured as a monorepo and uses workspaces.
 
 To build all dependencies at once use `tsc --build --watch`.
 
-### Packages
-
-- sssx (main source code of the SSG)
-- eslint-config-sssx (ESLint configuration)
-- aws-s3-cloudfront-adapter (Plugin to upload generated website to S3 and CloudFront)
-- sitemap-plugin (Plugin to generate robots.txt and sitemaps)
-
-## Plugins
-
+## Packages
+- [x] [sssx](https://github.com/sssx-dev/sssx/tree/master/packages/sssx) main package
+- [x] [eslint-config-sssx](https://github.com/sssx-dev/sssx/tree/master/packages/eslint-config-sssx) ESLint configuration
+- [x] [@sssx/config](https://github.com/sssx-dev/sssx/tree/master/packages/config) Configuration parser and provider for SSSX
+- [x] [@sssx/logger](https://github.com/sssx-dev/sssx/tree/master/packages/logger) SSSX specific logger
+- [x] [@sssx/dev-server](https://github.com/sssx-dev/sssx/tree/master/packages/dev-server) A basic version of SSR dev server
 - [x] [@sssx/sitemap-plugin](https://github.com/sssx-dev/sssx/tree/master/packages/sitemap-plugin) generates `robots.txt` and sitemaps
 - [x] [@sssx/aws-adapter](https://github.com/sssx-dev/sssx/tree/master/packages/aws-adapter) uploads website content to S3 and refreshes CloudFront distribution for the changed URLs.
 

@@ -1,6 +1,8 @@
-import fs from '../lib/fs.js';
 import path from 'path';
 import { config, ROOT_DIR } from '@sssx/config';
+import pretty from 'pretty';
+
+import fs from '../lib/fs.js';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { DataModule } from './loadDataModule.js';
@@ -77,15 +79,6 @@ const getSvelteURL = (filesMap: FilesMap) => {
   return `${ROOT_DIR}/${filename}`;
 };
 
-type Args = {
-  ssrModule: SSRModule;
-  dataModule: DataModule;
-  outdir: string;
-  item: RouteParams;
-  filesMap: FilesMap;
-  dynamic?: string;
-};
-
 const mapCSSFiles = (head: string[], filesMap: FilesMap) => {
   return head.map((line) => {
     if (line.includes(`rel="stylesheet"`) || line.includes(`type="text/css"`)) {
@@ -99,10 +92,27 @@ const mapCSSFiles = (head: string[], filesMap: FilesMap) => {
   });
 };
 
+type Args = {
+  ssrModule: SSRModule;
+  dataModule: DataModule;
+  outdir: string;
+  item: RouteParams;
+  filesMap: FilesMap;
+  dynamic?: string;
+  prettify?: boolean;
+  minify?: boolean;
+};
+
+const defaultArgs: Partial<Args> = {
+  prettify: true,
+  minify: false
+};
+
 // TODO: minify HTML
 // TODO: minify JS
-export const compileHTML = async (args: Args) => {
-  const { ssrModule, dataModule, outdir, item, filesMap, dynamic } = args;
+export const compileHTML = async (input: Args) => {
+  const args = Object.assign({}, defaultArgs, input);
+  const { ssrModule, dataModule, outdir, item, filesMap, dynamic, prettify, minify } = args;
   ensureDirExists(outdir);
 
   const props = await dataModule.getProps(item);
@@ -142,6 +152,7 @@ export const compileHTML = async (args: Args) => {
     ];
   }
 
-  const file = composeHTMLFile(head, html);
+  const fullHTML = composeHTMLFile(head, html);
+  const file = prettify ? pretty(fullHTML) : fullHTML;
   await fs.writeFile(`${outdir}/index.html`, file, { encoding: 'utf-8' });
 };

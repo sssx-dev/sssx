@@ -24,6 +24,7 @@ import Logger from '@sssx/logger';
 import type { FilesMap, RouteModules } from '../types';
 import type { Request } from '../types/Route.js';
 import { difference, getTemplateRoute } from './helpers.js';
+import { isProduction, isDev } from '../utils/isDev';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -309,10 +310,10 @@ export class Builder {
     }
   };
 
-  public compileAllHTML = async (paths: Request[]) => {
+  public compileAllHTML = async (requests: Request[]) => {
     const bar = Progress.createBar(
       'HTML',
-      paths.length,
+      requests.length,
       0,
       '{percentage}% | {value}/{total} | {route}',
       { route: '' }
@@ -320,8 +321,8 @@ export class Builder {
 
     const timePerPage = [];
 
-    for (let i = 0; i < paths.length; i++) {
-      const { item, path, template, dynamic } = paths[i];
+    for (let i = 0; i < requests.length; i++) {
+      const { item, path, template, dynamic } = requests[i];
       const { ssr, data } = this.routeModules[template];
 
       const before = new Date().getTime();
@@ -331,7 +332,9 @@ export class Builder {
         ssrModule: ssr,
         dataModule: data,
         filesMap: this.filesMap,
-        dynamic
+        dynamic,
+        prettify: isDev,
+        minify: isProduction
       });
       const after = new Date().getTime();
       const diff = after - before;
@@ -341,9 +344,9 @@ export class Builder {
     }
 
     const sum = timePerPage.reduce((a, b) => a + b);
-    const average = sum / paths.length;
+    const average = sum / requests.length;
 
-    bar.update(paths.length, {
+    bar.update(requests.length, {
       route: `${(average / 1000).toFixed(5)} seconds per page`
     });
     bar.stop();

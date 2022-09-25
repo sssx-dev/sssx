@@ -89,7 +89,7 @@
 
 ## Done
 
-- [ ] added HTML pretty
+- [x] added HTML pretty
 - [x] BUG: copying `/sssx-monorepo/packages/sssx/dist/build/../patches/svelte.js` gives error from `@sssx/dev-server`
 - [x] Move dev server to a standalone package
 - [x] Integrate `title`, `description`, `image` in the page, layout and types.

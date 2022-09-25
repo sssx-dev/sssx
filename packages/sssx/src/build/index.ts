@@ -24,7 +24,7 @@ import Logger from '@sssx/logger';
 import type { FilesMap, RouteModules } from '../types';
 import type { Request } from '../types/Route.js';
 import { difference, getTemplateRoute } from './helpers.js';
-import { isProduction, isDev } from '../utils/isDev';
+import { isProduction, isDev } from '../utils/isDev.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

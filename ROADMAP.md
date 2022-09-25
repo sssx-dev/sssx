@@ -20,10 +20,11 @@
 
 ## @sssx/dev-server
 
-- [x] add `watch` over filesystem using `chokidar`
+- [ ] add `youch` to show errors
 - [ ] rebuild a route/path
 - [ ] hotreload the page via `websocket` and `window.reload()` KISS
 - [ ] stop builder midway, if we need to start over
+- [x] add `watch` over filesystem using `chokidar`
 
 ## @sssx/config
 

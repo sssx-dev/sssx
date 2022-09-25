@@ -54,6 +54,7 @@
 
 ## Rest
 
+- [ ] [BUG] regeneration of replaced imports happens each time, do it only once
 - [ ] [BUG] ssr side caches older version of componentns
 - [ ] find a way to pass generated request directly into the page, and `layout` component
 - [ ] Simplify confusion between what's passed in SSSX internally, and what Request is used in the developer space: `UnwrapRouteAll`, `Request`, `RouteParams`, `item`
@@ -63,6 +64,7 @@
 
 ## Backlog
 
+- [ ] move plugins to simpler structure like `[{name:'@sssx/aws-adapter', before: 'html', priority: 99, ...config}]`
 - [ ] extract third-party ESM modules and host them as lib under the `__SSSX__` folder
 - [ ] add `dry` mode that shows changes to be made
 - [ ] build function to generate json data file, and fetch it in the frontend easy (dynamic prop?)

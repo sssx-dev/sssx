@@ -1,6 +1,7 @@
 import path from 'path';
-import { config, ROOT_DIR } from '@sssx/config';
 import pretty from 'pretty';
+import Logger from '@sssx/logger';
+import { config, ROOT_DIR } from '@sssx/config';
 
 import fs from '../lib/fs.js';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
@@ -9,6 +10,7 @@ import type { DataModule } from './loadDataModule.js';
 import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
 import type { RouteParams } from '../types/Route.js';
+import { SEPARATOR } from '../constants.js';
 
 // get all nodes between two nodes start and end
 const GET_TARGET_FN = `
@@ -39,15 +41,22 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
     config.sourceRoot,
     config.componentsPath,
     `${name.toLowerCase()}.js`
-  ].join(`/`);
-  const absoluteComponentsPath =
-    filesMap[originalComponentsPath].filter((a) => a.includes(`/${config.compiledRoot}/`)).pop() ||
-    '';
+  ].join(SEPARATOR);
+
+  const componentPaths = filesMap[originalComponentsPath].filter((a) =>
+    a.includes(`${SEPARATOR}${config.compiledRoot}${SEPARATOR}`)
+  );
+
+  // Logger.log('getScript', { COMPONENT_NAME }, tmp);
+
+  const absoluteComponentsPath = componentPaths[componentPaths.length - 1];
+
   const componentsPath = [
     ROOT_DIR,
     config.componentsPath,
-    absoluteComponentsPath.split(`/`).pop() || ''
-  ].join(`/`);
+    absoluteComponentsPath.split(SEPARATOR).pop() || ''
+  ].join(SEPARATOR);
+
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
   return `import ${COMPONENT_NAME} from "${componentsPath}";

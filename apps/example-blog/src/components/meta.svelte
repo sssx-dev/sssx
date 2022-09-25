@@ -41,3 +41,5 @@
   <meta name="theme-color" content="{themeColor}" />
   <meta name="viewport" content="{viewport}" />
 </svelte:head>
+
+<h1>{title}</h1>

@@ -1,30 +1,29 @@
-import glob from 'tiny-glob';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import chalk from 'chalk';
+import glob from 'tiny-glob';
+import Logger from '@sssx/logger';
+import { fileURLToPath } from 'url';
+import workerpool from 'workerpool';
+import { customAlphabet } from 'nanoid/non-secure';
 import { config, PREFIX, OUTDIR_SSSX, GENERATED_ROUTES, OUTDIR } from '@sssx/config';
 
-import { customAlphabet } from 'nanoid/non-secure';
-import workerpool from 'workerpool';
-
 import fs from '../lib/fs.js';
-import { buildTypeScript } from './buildTypeScript.js';
+import Progress from '../cli/Progress.js';
 import { buildSvelte } from './buildSvelte.js';
-import { buildSvelteCore } from './buildSvelteCore.js';
-import { replaceImports } from '../plugins/replaceImports.js';
-import { processCSSFiles } from './processCSSFiles.js';
-import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
 import { compileHTML } from './compileHTML.js';
 import { sliceArray } from '../utils/sliceArray.js';
-import { ensureDirExists } from '../utils/ensureDirExists.js';
-import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
-import Progress from '../cli/Progress.js';
-import Logger from '@sssx/logger';
-
-import type { FilesMap, RouteModules } from '../types';
-import type { Request } from '../types/Route.js';
-import { difference, getTemplateRoute } from './helpers.js';
+import { buildTypeScript } from './buildTypeScript.js';
+import { buildSvelteCore } from './buildSvelteCore.js';
+import { processCSSFiles } from './processCSSFiles.js';
 import { isProduction, isDev } from '../utils/isDev.js';
+import { difference, getTemplateRoute } from './helpers.js';
+import { replaceImports } from '../plugins/replaceImports.js';
+import { ensureDirExists } from '../utils/ensureDirExists.js';
+import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
+import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
+
+import type { Request } from '../types/Route.js';
+import type { FilesMap, RouteModules } from '../types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -324,6 +323,8 @@ export class Builder {
     for (let i = 0; i < requests.length; i++) {
       const { item, path, template, dynamic } = requests[i];
       const { ssr, data } = this.routeModules[template];
+
+      // Logger.log('compileAllHTML', template);
 
       const before = new Date().getTime();
       await compileHTML({

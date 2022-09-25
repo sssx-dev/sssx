@@ -15,7 +15,7 @@ export type Request = UnwrapRouteAll<typeof getAll>;
 
 export const permalink: RoutePermalinkFn<Request> = `/:slug/`;
 
-const COUNT = 100;
+const COUNT = 10;
 
 /**
  * Get all slugs for this route

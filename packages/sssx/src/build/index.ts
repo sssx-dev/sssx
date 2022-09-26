@@ -24,6 +24,7 @@ import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
 
 import type { Request } from '../types/Route.js';
 import type { FilesMap, RouteModules } from '../types';
+import { copyPublic } from './copyPublic.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -377,6 +378,7 @@ export class Builder {
     await this.generateAllPaths();
     await this.generateRequests(options.routes, options.updatesOnly);
     await this.compileAllHTML(this.addedRequests);
+    copyPublic(); // should we make a separate function somewhere?
   };
 
   // public _renderPool = async (renderOptions: RenderOptions = defaultRenderOptions) => {

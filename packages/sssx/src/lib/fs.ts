@@ -102,6 +102,8 @@ export const writeFileSync = (
 
 const { existsSync, readFileSync, readdirSync, mkdirSync } = fsSync;
 
+// TODO: proxy fs.cp function?
+
 export default {
   ...fs,
   copyFile,

@@ -10,6 +10,7 @@ const SEPARATOR = isWin ? '\\' : '/';
 const defaultConfig: Partial<Config> = {
   distDir: `.sssx`,
   outDir: `dist`,
+  publicDir: `public`,
   appDir: '__SSSX__',
   basePath: '',
   routesPath: `routes`,

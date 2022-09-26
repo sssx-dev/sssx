@@ -30,6 +30,12 @@ export interface Config extends Record<string, unknown> {
   outDir: string;
 
   /**
+   * Public directory
+   * @default "public"
+   */
+  publicDir: string;
+
+  /**
    * Destination directory for JS code
    * @default "__SSSX__"
    */

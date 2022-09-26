@@ -1,10 +1,12 @@
-import Logger from '@sssx/logger';
 import glob from 'tiny-glob';
-import fs from '../lib/fs.js';
+import Logger from '@sssx/logger';
 import { config } from '@sssx/config';
-import type { FilesMap } from '../types';
+
+import fs from '../lib/fs.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { IMPORT_REGEX, SEPARATOR, SVELTEJS } from '../constants.js';
+
+import type { FilesMap } from '../types';
 
 // TODO: test this on Windows
 
@@ -149,4 +151,19 @@ export const replaceImports = async (
   const options: Options = Object.assign({}, defaultOptions, inputOptions);
   const files = await glob(globWildcard);
   await Promise.all(files.map((file) => replaceFile(file, options)));
+};
+
+/**
+ * Goes over ESM modules and appends suffix to each import
+ * `import bar from "./bar.js"` becomes `import bar from "./bar.js?ts=123456"`
+ */
+export const replaceImportsFresh = async (globWildcard: string) => {
+  Logger.verbose(`replaceImportsFresh`, globWildcard);
+  const paths = await glob(globWildcard);
+
+  paths.map((filePath) => {
+    let raw = fs.readFileSync(filePath, 'utf8');
+    raw = raw.replaceAll('.js";', `.js?ts=${new Date().getTime()}"`);
+    fs.writeFileSync(filePath, raw, 'utf8');
+  });
 };

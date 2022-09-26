@@ -11,6 +11,7 @@ import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
 import type { RouteParams } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
+import { getBanner } from '../utils/getBanner.js';
 
 // get all nodes between two nodes start and end
 const GET_TARGET_FN = `
@@ -161,7 +162,7 @@ export const compileHTML = async (input: Args) => {
     ];
   }
 
-  const fullHTML = composeHTMLFile(head, html);
+  const fullHTML = `<!-- ${getBanner()} -->\n` + composeHTMLFile(head, html);
   const file = prettify ? pretty(fullHTML) : fullHTML;
   await fs.writeFile(`${outdir}/index.html`, file, { encoding: 'utf-8' });
 };

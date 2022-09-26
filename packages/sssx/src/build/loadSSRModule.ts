@@ -1,4 +1,7 @@
 import path from 'path';
+import Logger from '@sssx/logger';
+import { importWithoutCache } from '../utils/importWithoutCache.js';
+
 import type { create_ssr_component } from 'svelte/internal';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
 
@@ -10,8 +13,10 @@ export type SSRModule = OriginalSSRModule & {
 };
 
 export const loadSSRModule = async (modulePath: string) => {
-  // console.log(`loadSSRModule`, modulePath)
-  const Module = await import(path.resolve(process.cwd(), modulePath));
+  Logger.log(`loadSSRModule`, modulePath);
+  const absolutePath = path.resolve(process.cwd(), modulePath);
+  // const Module = await import(absolutePath);
+  const Module = await importWithoutCache(absolutePath);
 
   return Module.default as SSRModule;
 };

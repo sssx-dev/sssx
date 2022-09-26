@@ -55,8 +55,6 @@
 
 ## Rest
 
-- [ ] [BUG] regeneration of replaced imports happens each time, do it only once
-- [ ] [BUG] ssr side caches older version of componentns
 - [ ] find a way to pass generated request directly into the page, and `layout` component
 - [ ] Simplify confusion between what's passed in SSSX internally, and what Request is used in the developer space: `UnwrapRouteAll`, `Request`, `RouteParams`, `item`
 - [ ] have a way to generate a single url update
@@ -92,6 +90,9 @@
 
 ## Done
 
+- [x] [BUG] ssr side caches older version of componentns
+- [x] Invalidate ESM cache in `dev` mode
+- [x] [BUG] regeneration of replaced imports happens each time, do it only once
 - [x] added HTML pretty
 - [x] BUG: copying `/sssx-monorepo/packages/sssx/dist/build/../patches/svelte.js` gives error from `@sssx/dev-server`
 - [x] Move dev server to a standalone package

@@ -21,9 +21,8 @@ export const prepareRouteModules = async (template: string, filesMap: FilesMap) 
 };
 
 const getDynamicPath = (template: string) => {
-  return template
-    .replace('index.js', `${DYNAMIC_NAME}.js`)
-    .replace([config.distDir, config.ssrRoot].join(SEPARATOR), config.sourceRoot);
+  const dirSSR = [config.distDir, config.ssrRoot].join(SEPARATOR);
+  return template.replace('index.js', `${DYNAMIC_NAME}.js`).replace(dirSSR, config.sourceRoot);
 };
 
 export const prepareRoute = async (

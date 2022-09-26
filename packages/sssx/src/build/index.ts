@@ -17,7 +17,7 @@ import { buildSvelteCore } from './buildSvelteCore.js';
 import { processCSSFiles } from './processCSSFiles.js';
 import { isProduction, isDev } from '../utils/isDev.js';
 import { difference, getTemplateRoute } from './helpers.js';
-import { replaceImports } from '../plugins/replaceImports.js';
+import { replaceImports, replaceImportsFresh } from '../plugins/replaceImports.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
@@ -106,7 +106,9 @@ export class Builder {
    */
   public setup = async () => {
     let counter = 0;
-    const bar = Progress.createBar('Compilation', 7, counter, '{percentage}%', {});
+    const STEPS = 7; // number of steps anticipated in this method below
+
+    const bar = Progress.createBar('Compilation', STEPS, counter, '{percentage}%', {});
     await this.prepareSvelteCore();
     bar.update(++counter);
 
@@ -138,6 +140,9 @@ export class Builder {
       replaceImports(this.routesWildcard, { ...o, dst }),
       replaceImports(this.compiledWildcard, { ...o, dst, matchHashesImports: true })
     ]);
+    bar.update(++counter);
+
+    replaceImportsFresh(this.ssrRoutesWildcard);
     bar.update(++counter);
 
     await replaceImports(this.routesDynamicWildcard, {
@@ -309,6 +314,12 @@ export class Builder {
     }
   };
 
+  private getRouteModules = async (template: string) => {
+    // await this.getRoutePaths(template);
+    const { ssr, data } = this.routeModules[template];
+    return { ssr, data };
+  };
+
   public compileAllHTML = async (requests: Request[]) => {
     const bar = Progress.createBar(
       'HTML',
@@ -322,7 +333,7 @@ export class Builder {
 
     for (let i = 0; i < requests.length; i++) {
       const { item, path, template, dynamic } = requests[i];
-      const { ssr, data } = this.routeModules[template];
+      const { ssr, data } = await this.getRouteModules(template);
 
       // Logger.log('compileAllHTML', template);
 
@@ -348,7 +359,7 @@ export class Builder {
     const average = sum / requests.length;
 
     bar.update(requests.length, {
-      route: `${(average / 1000).toFixed(5)} seconds per page`
+      route: `${average.toFixed(0)} milliseconds per page`
     });
     bar.stop();
   };

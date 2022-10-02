@@ -55,7 +55,7 @@
 
 ## Rest
 
-- [ ] find a way to pass generated request directly into the page, and `layout` component
+- [ ] Each page should get `data`, `helpers`, `request` as parameters.
 - [ ] Simplify confusion between what's passed in SSSX internally, and what Request is used in the developer space: `UnwrapRouteAll`, `Request`, `RouteParams`, `item`
 - [ ] have a way to generate a single url update
 - [ ] generate a social image locally (use sharp) and place it inside the route's folder (public folder?).

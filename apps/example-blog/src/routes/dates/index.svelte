@@ -1,10 +1,10 @@
 <script type="ts">
-  import type { Request } from 'sssx';
+  import type { PageRequest } from 'sssx';
   import Meta from '../../components/meta.svelte';
   import First from '../../components/first.svelte';
   import Second from '../../components/second.svelte';
   export let answer: string = '';
-  export let request: Request;
+  export let request: PageRequest;
 </script>
 
 <Meta request="{request}" />

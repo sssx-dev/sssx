@@ -22,7 +22,7 @@ import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { prepareRoute, prepareRouteModules } from './prepareRoute.js';
 import { SEPARATOR, DYNAMIC_NAME, SVELTEJS, NEWLINE } from '../constants.js';
 
-import type { Request } from '../types/Route.js';
+import type { PageRequest } from '../types/Route.js';
 import type { FilesMap, RouteModules } from '../types';
 import { copyPublic } from './copyPublic.js';
 
@@ -66,8 +66,8 @@ export class Builder {
 
   private ssrRouteTemplates: string[] = [];
   private routeModules: Record<string, RouteModules> = {};
-  private addedRequests: Request[] = [];
-  private removedRequests: Request[] = [];
+  private addedRequests: PageRequest[] = [];
+  private removedRequests: PageRequest[] = [];
 
   private filesMap: FilesMap = {};
   private isWorker;
@@ -318,10 +318,10 @@ export class Builder {
   private getRouteModules = async (template: string) => {
     // await this.getRoutePaths(template);
     const { ssr, data } = this.routeModules[template];
-    return { ssr, data };
+    return { ssrModule: ssr, dataModule: data };
   };
 
-  public compileAllHTML = async (requests: Request[]) => {
+  public compileAllHTML = async (requests: PageRequest[]) => {
     const bar = Progress.createBar(
       'HTML',
       requests.length,
@@ -333,17 +333,17 @@ export class Builder {
     const timePerPage = [];
 
     for (let i = 0; i < requests.length; i++) {
-      const { item, path, template, dynamic } = requests[i];
-      const { ssr, data } = await this.getRouteModules(template);
+      const { data, path, template, dynamic } = requests[i];
+      const { ssrModule, dataModule } = await this.getRouteModules(template);
 
       // Logger.log('compileAllHTML', template);
 
       const before = new Date().getTime();
       await compileHTML({
-        item,
+        data,
         outdir: path,
-        ssrModule: ssr,
-        dataModule: data,
+        ssrModule,
+        dataModule,
         filesMap: this.filesMap,
         dynamic,
         prettify: isDev,

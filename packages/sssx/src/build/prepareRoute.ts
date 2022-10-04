@@ -4,7 +4,7 @@ import { loadSSRModule } from './loadSSRModule.js';
 import { config, OUTDIR } from '@sssx/config';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
 import type { RouteModules, FilesMap, PrepareRouteMode } from '../types';
-import type { Request, RouteParams } from '../types/Route.js';
+import type { PageRequest, PageData } from '../types/Route.js';
 
 export const prepareRouteModules = async (template: string, filesMap: FilesMap) => {
   const [dataModule, ssrModule] = await Promise.all([
@@ -31,19 +31,19 @@ export const prepareRoute = async (
   modules: RouteModules,
   mode: PrepareRouteMode = 'all'
 ) => {
-  let items: RouteParams[] = [];
+  let all: PageData[] = [];
 
   if (mode === 'updates' && modules.data.getUpdates !== undefined) {
-    items = await modules.data.getUpdates();
+    all = await modules.data.getUpdates();
   } else if (mode === 'removals' && modules.data.getRemovals !== undefined) {
-    items = await modules.data.getRemovals();
+    all = await modules.data.getRemovals();
   } else if (mode === 'all' && modules.data.getAll !== undefined) {
-    items = await modules.data.getAll();
+    all = await modules.data.getAll();
   }
 
   const routeName = template.split(SEPARATOR)[3];
-  const array: Request[] = items.map((item: RouteParams) => {
-    const path = getPermalink(routeName, item as never, modules.data.permalink, {
+  const array: PageRequest[] = all.map((data: PageData) => {
+    const path = getPermalink(routeName, data, modules.data.permalink, {
       relative: false,
       checkExistingRoutes: false
     });
@@ -53,7 +53,7 @@ export const prepareRoute = async (
     const dynamic = map ? map.slice(-1)[0].replace(OUTDIR, '') : undefined;
 
     return {
-      item,
+      data,
       path,
       template,
       routeName,

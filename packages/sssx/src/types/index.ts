@@ -1,10 +1,10 @@
 import type { SSRModule } from '../build/loadSSRModule';
-import type { DataModule } from '../build/loadDataModule.js';
+import type { PageModule } from '../types/Route.js';
 
 export type FilesMap = Record<string, string[]>;
 export type PrepareRouteMode = 'all' | 'updates' | 'removals';
 
 export type RouteModules = {
-  data: DataModule;
+  data: PageModule;
   ssr: SSRModule;
 };

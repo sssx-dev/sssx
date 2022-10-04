@@ -6,10 +6,9 @@ import { config, ROOT_DIR } from '@sssx/config';
 import fs from '../lib/fs.js';
 import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
-import type { DataModule } from './loadDataModule.js';
 import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
-import type { RouteParams } from '../types/Route.js';
+import type { PageData, PageModule } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
 import { getBanner } from '../utils/getBanner.js';
 
@@ -104,9 +103,9 @@ const mapCSSFiles = (head: string[], filesMap: FilesMap) => {
 
 type Args = {
   ssrModule: SSRModule;
-  dataModule: DataModule;
+  dataModule: PageModule;
   outdir: string;
-  item: RouteParams;
+  data: PageData;
   filesMap: FilesMap;
   dynamic?: string;
   prettify?: boolean;
@@ -122,15 +121,15 @@ const defaultArgs: Partial<Args> = {
 // TODO: minify JS
 export const compileHTML = async (input: Args) => {
   const args = Object.assign({}, defaultArgs, input);
-  const { ssrModule, dataModule, outdir, item, filesMap, dynamic, prettify, minify } = args;
+  const { ssrModule, dataModule, outdir, data, filesMap, dynamic, prettify, minify } = args;
   ensureDirExists(outdir);
 
-  const props = await dataModule.getProps(item);
+  const props = await dataModule.getProps(data);
   const result = ssrModule.render(props as never);
   const components = ssrModule.getHydratableComponents();
   const svelteURL = getSvelteURL(filesMap);
 
-  // console.log(`compileHTML`, outdir, props, components)
+  Logger.verbose(`compileHTML`, outdir, props, components);
 
   const modules = components.map(({ name, prefix, props }) => {
     return `<script type="module">
@@ -138,7 +137,7 @@ export const compileHTML = async (input: Args) => {
         </script>`;
   });
 
-  // console.log(`compileHTML`, result.head)
+  Logger.verbose(`compileHTML`, result.head);
 
   const dynamicHeadScript = dynamic
     ? `<script rel="module">${LOAD_DYNAMIC_JS(dynamic)}</script>`

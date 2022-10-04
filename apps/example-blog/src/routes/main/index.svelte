@@ -1,6 +1,6 @@
 <script type="ts">
+  import { config } from '@sssx/config';
   export let title: string = '';
-  export let testBlogSlug: string = '';
   export let requests: any[] = [];
   export let links: string[] = [];
 </script>
@@ -13,17 +13,17 @@
 
 <h2>Welcome to the main page</h2>
 
-<h3>Generated blog slug is <a href="{testBlogSlug}">{testBlogSlug}</a></h3>
-
 <h2>Links inside dates</h2>
-<ol>
-  {#each requests as r, i}
-    <li>
-      <a target="_blank" href="{links[i]}">
-        {r.title}
-      </a>
-    </li>
-  {/each}
-</ol>
+{#if requests.length > 0}
+  <ol>
+    {#each requests as r, i}
+      <li>
+        <a target="_blank" href="{links[i]}">
+          {r && r.title ? r.title : ''}
+        </a>
+      </li>
+    {/each}
+  </ol>
+{/if}
 
-<footer>Made with <a href="https://github.com/sssx-dev/sssx" target="_blank">SSSX</a></footer>
+<footer>Made with <a href="{config.origin}" target="_blank">SSSX</a></footer>

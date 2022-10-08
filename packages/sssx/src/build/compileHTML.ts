@@ -8,7 +8,7 @@ import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
-import type { PageData, PageModule } from '../types/Route.js';
+import type { Data, PageModule } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
 import { getBanner } from '../utils/getBanner.js';
 
@@ -105,7 +105,7 @@ type Args = {
   ssrModule: SSRModule;
   dataModule: PageModule;
   outdir: string;
-  data: PageData;
+  data: Data;
   filesMap: FilesMap;
   dynamic?: string;
   prettify?: boolean;

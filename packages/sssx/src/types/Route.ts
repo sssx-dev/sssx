@@ -1,27 +1,22 @@
-export type PageData = {
+export type Data = {
   slug: string;
-  title: string;
-  description: string;
-  image?: string;
   [key: string]: unknown;
 };
 
-export type PageRequest = {
-  data: PageData;
+export type Request = {
   path: string;
   template: string;
   routeName: string;
   dynamic?: string;
 };
 
-export type PageFnGet = (...args: never[]) => Promise<PageData[]>;
-export type PageFnProps = (data: PageData) => Promise<unknown>;
-export type PagePermalink = string | ((item: unknown) => string);
+export type PageFnGet = (...args: never[]) => Promise<Data[]>;
+export type PagePermalink = string | ((data: Data) => string);
 
 export interface PageModule {
   getAll: PageFnGet;
   getUpdates: PageFnGet;
   getRemovals: PageFnGet;
   permalink: PagePermalink;
-  getProps: PageFnProps;
+  getProps: (data: Data) => never;
 }

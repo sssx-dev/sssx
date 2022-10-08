@@ -4,11 +4,12 @@ import { loadSSRModule } from './loadSSRModule.js';
 import { config, OUTDIR } from '@sssx/config';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
 import type { RouteModules, FilesMap, PrepareRouteMode } from '../types';
-import type { PageRequest, PageData } from '../types/Route.js';
+import type { Request, Data } from '../types/Route.js';
+import type { Builder } from './index.js';
 
-export const prepareRouteModules = async (template: string, filesMap: FilesMap) => {
+export const prepareRouteModules = async (template: string, builder: Builder) => {
   const [dataModule, ssrModule] = await Promise.all([
-    loadDataModule(template, filesMap),
+    loadDataModule(template, builder),
     loadSSRModule(template)
   ]);
 
@@ -31,7 +32,7 @@ export const prepareRoute = async (
   modules: RouteModules,
   mode: PrepareRouteMode = 'all'
 ) => {
-  let all: PageData[] = [];
+  let all: Data[] = [];
 
   if (mode === 'updates' && modules.data.getUpdates !== undefined) {
     all = await modules.data.getUpdates();
@@ -42,7 +43,7 @@ export const prepareRoute = async (
   }
 
   const routeName = template.split(SEPARATOR)[3];
-  const array: PageRequest[] = all.map((data: PageData) => {
+  const array: Request[] = all.map((data: Data) => {
     const path = getPermalink(routeName, data, modules.data.permalink, {
       relative: false,
       checkExistingRoutes: false

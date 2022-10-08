@@ -1,15 +1,15 @@
-import fs from '../lib/fs.js';
+import fs from '../../lib/fs.js';
 import { build } from 'esbuild';
 import type { LogLevel } from 'esbuild';
 import sveltePreprocess from 'svelte-preprocess';
 import autoprefixer from 'autoprefixer';
 
 import { BASE } from './base.js';
-import { wrapHydratableComponents } from './wrapHydratableComponents.js';
+import { wrapHydratableComponents } from '../wrapHydratableComponents.js';
 import { config } from '@sssx/config';
-import { ensureDirExists } from '../utils/ensureDirExists.js';
+import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
-import esbuildSvelte from '../lib/esbuildSvelte.js';
+import esbuildSvelte from '../../lib/esbuildSvelte.js';
 import Logger from '@sssx/logger';
 
 type Options = {

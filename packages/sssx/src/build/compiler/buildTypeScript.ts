@@ -1,9 +1,9 @@
-import fs from '../lib/fs.js';
+import fs from '../../lib/fs.js';
 import { build, type LogLevel } from 'esbuild';
 import { BASE } from './base.js';
 import { config, PREFIX } from '@sssx/config';
-import { renamePlugin } from '../plugins/renamePlugin.js';
-import { ensureDirExists } from '../utils/ensureDirExists.js';
+import { renamePlugin } from '../../plugins/renamePlugin.js';
+import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
 export const buildTypeScript = async (
   entryPoints: string[],

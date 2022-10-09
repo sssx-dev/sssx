@@ -10,12 +10,12 @@ import { difference, getTemplateRoute } from './helpers.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
 import type { RouteModules } from '../types/index.js';
-import type { Request } from '../types/Route.js';
+import type { Route } from '../types/Route.js';
 
 export class BuilderRouter extends BuilderCompiler {
   protected routeModules: Record<string, RouteModules> = {};
-  protected addedRequests: Request[] = [];
-  protected removedRequests: Request[] = [];
+  protected addedRequests: Route[] = [];
+  protected removedRequests: Route[] = [];
 
   protected previouslyGeneratedRoutes =
     fs.existsSync(PREFIX) && fs.existsSync(GENERATED_ROUTES)

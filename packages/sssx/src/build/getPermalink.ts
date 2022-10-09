@@ -2,7 +2,7 @@
 import path from 'path';
 import fs from '../lib/fs.js';
 import { GENERATED_ROUTES, OUTDIR } from '@sssx/config';
-import type { PageData, PagePermalink } from '../types/Route.js';
+import type { PageData, PagePermalink, Request } from '../types/Route.js';
 import { RouteErrors } from '../types/Errors.js';
 import Logger from '@sssx/logger';
 
@@ -42,25 +42,25 @@ const defaultOptions: Options = {
  */
 export const getPermalink = (
   routeName: string,
-  data: PageData,
+  request: Request,
   permalink: PagePermalink,
   options: Options = defaultOptions
 ): string => {
   const opts = Object.assign({}, defaultOptions, options);
   let suffix = '';
 
-  Logger.verbose('getPermalink', { routeName, data, permalink, opts });
+  Logger.verbose('getPermalink', { routeName, request, permalink, opts });
 
   if (typeof permalink === 'string') {
     const array = permalink.split(`/`);
     suffix = array
       .map((param: string) => {
-        if (param.startsWith(`:`)) return data[param.slice(1)];
+        if (param.startsWith(`:`)) return request[param.slice(1)];
         return param;
       })
       .join(`/`);
   } else {
-    suffix = permalink(data);
+    suffix = permalink(request);
   }
 
   if (opts.checkExistingRoutes) {

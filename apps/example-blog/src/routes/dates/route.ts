@@ -14,7 +14,7 @@ const COUNT = 10;
  * Get all slugs for this route
  * @returns array of all slugs
  */
-export const getAll: PageFnGet = async () => {
+export const all: PageFnGet = async () => {
   return Array.from(Array(COUNT).keys()).map((index) => {
     const date = dayjs().subtract(index, 'days').format('YYYY-MM-DD');
     return {
@@ -30,7 +30,7 @@ export const getAll: PageFnGet = async () => {
  * Slugs to update or generate
  * @returns array of slugs
  */
-export const getUpdates: PageFnGet = async () => {
+export const updates: PageFnGet = async () => {
   const date = dayjs().format('YYYY-MM-DD');
   return [
     {
@@ -46,7 +46,7 @@ export const getUpdates: PageFnGet = async () => {
  * Slugs to remove
  * @returns array of slus
  */
-export const getRemovals: PageFnGet = async () => {
+export const removals: PageFnGet = async () => {
   const date = dayjs()
     .subtract(COUNT - 1, 'days') // delete last day
     .format('YYYY-MM-DD');
@@ -54,7 +54,7 @@ export const getRemovals: PageFnGet = async () => {
   return [{ slug: `route-${date}`, time: dayjs().format(`HH:mm`), title: '', description: '' }];
 };
 
-export const getProps: PageFnProps = async (data: PageData) => {
+export const data: PageFnProps = async (data: PageData) => {
   return {
     answer: `Hello ${data.slug} on ${data.time}`
   };

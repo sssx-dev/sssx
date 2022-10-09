@@ -4,13 +4,13 @@ import { compileHTML } from './compileHTML.js';
 import { isProduction, isDev } from '../utils/isDev.js';
 import { BuilderRouter } from './BuilderRouter.js';
 
-import type { Request } from '../types/Route.js';
+import type { Route } from '../types/Route.js';
 
 export class BuilderHTML extends BuilderRouter {
-  public compileAllHTML = async (requests: Request[]) => {
+  public compileAllHTML = async (routes: Route[]) => {
     const bar = Progress.createBar(
       'HTML',
-      requests.length,
+      routes.length,
       0,
       '{percentage}% | {value}/{total} | {route}',
       { route: '' }
@@ -18,15 +18,16 @@ export class BuilderHTML extends BuilderRouter {
 
     const timePerPage = [];
 
-    for (let i = 0; i < requests.length; i++) {
-      const { data, path, template, dynamic } = requests[i];
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+      const { path, template, dynamic } = route;
       const { ssrModule, dataModule } = await this.getRouteModules(template);
 
       // Logger.log('compileAllHTML', template);
 
       const before = new Date().getTime();
       await compileHTML({
-        data,
+        route,
         outdir: path,
         ssrModule,
         dataModule,
@@ -43,9 +44,9 @@ export class BuilderHTML extends BuilderRouter {
     }
 
     const sum = timePerPage.reduce((a, b) => a + b);
-    const average = sum / requests.length;
+    const average = sum / routes.length;
 
-    bar.update(requests.length, {
+    bar.update(routes.length, {
       route: `${average.toFixed(0)} milliseconds per page`
     });
 

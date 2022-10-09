@@ -8,7 +8,7 @@ import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
-import type { Data, PageModule } from '../types/Route.js';
+import type { Data, DataModule, Route } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
 import { getBanner } from '../utils/getBanner.js';
 
@@ -103,9 +103,9 @@ const mapCSSFiles = (head: string[], filesMap: FilesMap) => {
 
 type Args = {
   ssrModule: SSRModule;
-  dataModule: PageModule;
+  dataModule: DataModule;
   outdir: string;
-  data: Data;
+  route: Route;
   filesMap: FilesMap;
   dynamic?: string;
   prettify?: boolean;
@@ -121,15 +121,16 @@ const defaultArgs: Partial<Args> = {
 // TODO: minify JS
 export const compileHTML = async (input: Args) => {
   const args = Object.assign({}, defaultArgs, input);
-  const { ssrModule, dataModule, outdir, data, filesMap, dynamic, prettify, minify } = args;
+  const { ssrModule, dataModule, outdir, route, filesMap, dynamic, prettify, minify } = args;
+  const { request } = route;
   ensureDirExists(outdir);
 
-  const props = await dataModule.getProps(data);
-  const result = ssrModule.render(props as never);
+  const data = await dataModule.data(request);
+  const result = ssrModule.render({ data, request });
   const components = ssrModule.getHydratableComponents();
   const svelteURL = getSvelteURL(filesMap);
 
-  Logger.verbose(`compileHTML`, outdir, props, components);
+  Logger.verbose(`compileHTML`, outdir, data, components);
 
   const modules = components.map(({ name, prefix, props }) => {
     return `<script type="module">

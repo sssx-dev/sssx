@@ -34,12 +34,12 @@ export const prepareRoute = async (
 ) => {
   let all: Request[] = [];
 
-  if (mode === 'updates' && modules.data.getUpdates !== undefined) {
-    all = await modules.data.getUpdates();
-  } else if (mode === 'removals' && modules.data.getRemovals !== undefined) {
-    all = await modules.data.getRemovals();
-  } else if (mode === 'all' && modules.data.getAll !== undefined) {
-    all = await modules.data.getAll();
+  if (mode === 'updates' && modules.data.updates !== undefined) {
+    all = await modules.data.updates();
+  } else if (mode === 'removals' && modules.data.removals !== undefined) {
+    all = await modules.data.removals();
+  } else if (mode === 'all' && modules.data.all !== undefined) {
+    all = await modules.data.all();
   }
 
   const routeName = template.split(SEPARATOR)[3];

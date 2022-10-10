@@ -1,25 +1,30 @@
 <script type="ts">
   import { config } from '@sssx/config';
-  export let title: string = '';
-  export let requests: any[] = [];
-  export let links: string[] = [];
+  import type { data as DataFunction } from './route.js';
+  type Data = Awaited<ReturnType<typeof DataFunction>>;
+
+  export let data: Data;
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{data.title}</title>
 </svelte:head>
 
-<h1>{title}</h1>
+<h1>{data.title}</h1>
 
 <h2>Welcome to the main page</h2>
 
+<code>
+  {JSON.stringify(data, null, 2)}
+</code>
+
 <h2>Links inside dates</h2>
-{#if requests.length > 0}
+{#if data.routes.length > 0}
   <ol>
-    {#each requests as r, i}
+    {#each data.routes as route}
       <li>
-        <a target="_blank" href="{links[i]}">
-          {r && r.title ? r.title : ''}
+        <a target="_blank" href="{route && route.path ? route.path : ''}">
+          {route && route.request ? route.request.slug : ''}
         </a>
       </li>
     {/each}

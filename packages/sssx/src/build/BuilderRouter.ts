@@ -1,5 +1,5 @@
 import glob from 'tiny-glob';
-import { BuilderCompiler } from './BuilderCompiler';
+import { BuilderCompiler } from './BuilderCompiler.js';
 import { config, GENERATED_ROUTES, PREFIX } from '@sssx/config';
 
 import fs from '../lib/fs.js';

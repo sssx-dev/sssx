@@ -5,11 +5,10 @@
   import Second from '../../components/second.svelte';
 
   import type { data as DataFunction } from './route.js';
-
-  type t = Awaited<ReturnType<typeof DataFunction>>;
+  type Data = Awaited<ReturnType<typeof DataFunction>>;
 
   export let request: Request;
-  export let data: t;
+  export let data: Data;
 </script>
 
 <Meta request="{request}" />

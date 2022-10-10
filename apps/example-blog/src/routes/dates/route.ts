@@ -1,10 +1,5 @@
 import dayjs from 'dayjs';
-import type { PageData, PageRequests, Request, PagePermalink, SvelteComponentProps } from 'sssx';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type Page from './index.svelte';
-
-export type PageProps = SvelteComponentProps<typeof Page>;
+import type { PageRequests, Request, PagePermalink } from 'sssx';
 
 export const permalink: PagePermalink = `/:slug/`;
 

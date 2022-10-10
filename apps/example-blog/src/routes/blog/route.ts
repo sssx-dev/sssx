@@ -1,30 +1,16 @@
-import type {
-  UnwrapRouteAll,
-  RoutePropsFn,
-  RoutePermalinkFn,
-  SvelteComponentProps,
-  RouteAllFn
-} from 'sssx';
-import type Page from './index.svelte';
+import type { PageRequests, Request, PagePermalink } from 'sssx';
 import { hello } from '../../bar.js';
 
-export type PageProps = SvelteComponentProps<typeof Page>;
-export type Request = UnwrapRouteAll<typeof getAll>;
+export const permalink: PagePermalink = `/blog/:slug/`;
 
-export const permalink: RoutePermalinkFn<Request> = `/blog/:slug/`;
-
-export const getAll: RouteAllFn = async () => {
-  return [{ slug: `hello`, bar: hello() }, { slug: `world` }].map((a, index) => ({
-    ...a,
-    title: `Title ${index}`,
-    description: `Description ${index}`
-  }));
+export const all: PageRequests = async () => {
+  return [{ slug: `hello`, bar: hello() }, { slug: `world` }];
 };
 
-export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
-  const { title, description } = request;
+export const data = async (request: Request) => {
   return {
-    title,
-    description
+    ...request,
+    title: `Title ${Math.random()}`,
+    description: `Description ${Math.random()}`
   };
 };

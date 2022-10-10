@@ -1,15 +1,20 @@
 <script type="ts">
-  import type { PageRequest } from 'sssx';
+  import type { Request } from 'sssx';
   import Meta from '../../components/meta.svelte';
   import First from '../../components/first.svelte';
   import Second from '../../components/second.svelte';
-  export let answer: string = '';
-  export let request: PageRequest;
+
+  import type { data as DataFunction } from './route.js';
+
+  type t = Awaited<ReturnType<typeof DataFunction>>;
+
+  export let request: Request;
+  export let data: t;
 </script>
 
 <Meta request="{request}" />
 
-<h1>Hello, your answer is {answer}</h1>
+<h1>Hello, your answer is {data.answer}</h1>
 
 <Second hydrate-options="{{ preload: true }}" hello="static variable" />
 

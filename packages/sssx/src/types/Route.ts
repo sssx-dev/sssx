@@ -15,7 +15,7 @@ export type Request = {
 
 export type PageRequests = (...args: never[]) => Promise<Request[]>;
 export type PagePermalink = string | ((request: Request) => string);
-export type PageData = (request: Request) => Data;
+export type PageData = <T extends Record<string, unknown>>(request: Request) => T | Promise<T>;
 
 export interface DataModule {
   all: PageRequests;

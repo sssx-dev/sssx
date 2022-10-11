@@ -1,14 +1,12 @@
 <script type="ts">
-  import type { Request } from 'sssx';
+  import type { Request, GetDataType } from 'sssx';
+  import type { data as DataFunction } from './route.js';
   import Meta from '../../components/meta.svelte';
   import First from '../../components/first.svelte';
   import Second from '../../components/second.svelte';
 
-  import type { data as DataFunction } from './route.js';
-  type Data = Awaited<ReturnType<typeof DataFunction>>;
-
   export let request: Request;
-  export let data: Data;
+  export let data: GetDataType<typeof DataFunction>;
 </script>
 
 <Meta request="{request}" />

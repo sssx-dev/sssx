@@ -8,7 +8,7 @@ import type { VirtualComponentData } from '../types/svelteExtension.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import type { SSRModule } from './loadSSRModule.js';
 import type { FilesMap } from '../types';
-import type { Data, DataModule, Route } from '../types/Route.js';
+import type { DataModule, Route } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
 import { getBanner } from '../utils/getBanner.js';
 
@@ -164,5 +164,5 @@ export const compileHTML = async (input: Args) => {
 
   const fullHTML = `<!-- ${getBanner()} -->\n` + composeHTMLFile(head, html);
   const file = prettify ? pretty(fullHTML) : fullHTML;
-  await fs.writeFile(`${outdir}/index.html`, file, { encoding: 'utf-8' });
+  await fs.writeFile(`${outdir}/index.html`, file, 'utf8');
 };

@@ -29,7 +29,7 @@ export const buildTypeScript = async (
   });
 
   await Promise.all(
-    result.outputFiles.map(async (output, index) => {
+    result.outputFiles.map(async (output) => {
       const path = output.path.split(`/`).slice(0, -1).join(`/`);
       ensureDirExists(path);
 

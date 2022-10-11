@@ -33,3 +33,5 @@ export interface Route {
   routeName: string;
   dynamic?: string;
 }
+
+export type GetDataType<T extends (...args: any[]) => any> = Awaited<ReturnType<T>>;

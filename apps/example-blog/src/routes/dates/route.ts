@@ -1,19 +1,7 @@
 import dayjs from 'dayjs';
-import type {
-  UnwrapRouteAll,
-  RouteAllFn,
-  RoutePropsFn,
-  RoutePermalinkFn,
-  SvelteComponentProps
-} from 'sssx';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type Page from './index.svelte';
+import type { PageRequests, Request, PagePermalink } from 'sssx';
 
-export type PageProps = SvelteComponentProps<typeof Page>;
-export type Request = UnwrapRouteAll<typeof getAll>;
-
-export const permalink: RoutePermalinkFn<Request> = `/:slug/`;
+export const permalink: PagePermalink = `/:slug/`;
 
 const COUNT = 10;
 
@@ -21,7 +9,7 @@ const COUNT = 10;
  * Get all slugs for this route
  * @returns array of all slugs
  */
-export const getAll: RouteAllFn = async () => {
+export const all: PageRequests = async () => {
   return Array.from(Array(COUNT).keys()).map((index) => {
     const date = dayjs().subtract(index, 'days').format('YYYY-MM-DD');
     return {
@@ -37,7 +25,7 @@ export const getAll: RouteAllFn = async () => {
  * Slugs to update or generate
  * @returns array of slugs
  */
-export const getUpdates: RouteAllFn = async () => {
+export const updates: PageRequests = async () => {
   const date = dayjs().format('YYYY-MM-DD');
   return [
     {
@@ -53,19 +41,16 @@ export const getUpdates: RouteAllFn = async () => {
  * Slugs to remove
  * @returns array of slus
  */
-export const getRemovals = async () => {
+export const removals: PageRequests = async () => {
   const date = dayjs()
     .subtract(COUNT - 1, 'days') // delete last day
     .format('YYYY-MM-DD');
 
-  return [{ slug: `route-${date}`, time: dayjs().format(`HH:mm`) }];
+  return [{ slug: `route-${date}`, time: dayjs().format(`HH:mm`), title: '', description: '' }];
 };
 
-export const getProps: RoutePropsFn<Request, PageProps> = async (request) => {
+export const data = async (request: Request) => {
   return {
-    answer: `Hello ${request.slug} on ${request.time}`,
-    request: {
-      item: request
-    }
+    answer: `Hello ${request.slug} on ${request.time}`
   };
 };

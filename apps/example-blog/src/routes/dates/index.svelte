@@ -1,15 +1,17 @@
 <script type="ts">
-  import type { Request } from 'sssx';
+  import type { Request, GetDataType } from 'sssx';
+  import type { data as DataFunction } from './route.js';
   import Meta from '../../components/meta.svelte';
   import First from '../../components/first.svelte';
   import Second from '../../components/second.svelte';
-  export let answer: string = '';
+
   export let request: Request;
+  export let data: GetDataType<typeof DataFunction>;
 </script>
 
 <Meta request="{request}" />
 
-<h1>Hello, your answer is {answer}</h1>
+<h1>Hello, your answer is {data.answer}</h1>
 
 <Second hydrate-options="{{ preload: true }}" hello="static variable" />
 

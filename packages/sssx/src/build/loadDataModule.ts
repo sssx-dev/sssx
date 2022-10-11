@@ -1,37 +1,35 @@
 import { config } from '@sssx/config';
-import type { RouteParams, RoutePermalinkFn, RoutePropsFn } from '../types/Route.js';
-import type { FilesMap } from '../types';
 import { SEPARATOR } from '../constants.js';
 import { importWithoutCache } from '../utils/importWithoutCache.js';
+import type { PageRequests, PageData, PagePermalink, DataModule } from '../types/Route.js';
+import type { Builder } from './index.js';
 
-export type DataModule = Awaited<ReturnType<typeof loadDataModule>>;
+const normalizeToSourcePath = (input: string) => {
+  const originRoot = [config.distDir, config.ssrRoot].join(SEPARATOR);
 
-const normalizeToSourcePath = async (input: string) => {
   return input
-    .replace([config.distDir, config.ssrRoot].join(SEPARATOR), config.sourceRoot)
+    .replace(originRoot, config.sourceRoot)
     .replace(`${SEPARATOR}index.js`, `${SEPARATOR}route.js`);
 };
 
-export const loadDataModule = async (template: string, filesMap: FilesMap) => {
-  const sourcePath = await normalizeToSourcePath(template);
-  // console.log(`loadDataModule`, sourcePath)
-  const dataFile = filesMap[sourcePath][0];
-  // console.log(`loadDataModule`, {sourcePath, dataFile})
+export const loadDataModule = async (template: string, builder: Builder) => {
+  const sourcePath = normalizeToSourcePath(template);
+  const dataFile = builder.getFileFromFilesMap(sourcePath);
 
-  // TODO: clear cache
-  // const dataModule = await import(dataFile); // this calls are cached
-  const dataModule = await importWithoutCache(dataFile); // this calls are cached
-  const getAll: (...args: unknown[]) => RouteParams[] = dataModule.getAll;
-  const getUpdates: (...args: unknown[]) => RouteParams[] = dataModule.getUpdates;
-  const getRemovals: (...args: unknown[]) => RouteParams[] = dataModule.getRemovals;
-  const getProps: RoutePropsFn<RouteParams, unknown> = dataModule.getProps;
-  const permalink: RoutePermalinkFn<RouteParams> = dataModule.permalink;
+  // const module = await import(dataFile); // this calls are cached
+  const module = await importWithoutCache(dataFile); // this calls are cached
+
+  const all: PageRequests = module.all;
+  const updates: PageRequests = module.updates;
+  const removals: PageRequests = module.removals;
+  const data: PageData = module.data;
+  const permalink: PagePermalink = module.permalink;
 
   return {
-    getAll,
-    getUpdates,
-    getRemovals,
-    getProps,
+    all,
+    updates,
+    removals,
+    data,
     permalink
-  };
+  } as DataModule;
 };

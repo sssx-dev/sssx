@@ -4,11 +4,12 @@ import { loadSSRModule } from './loadSSRModule.js';
 import { config, OUTDIR } from '@sssx/config';
 import { SEPARATOR, DYNAMIC_NAME } from '../constants.js';
 import type { RouteModules, FilesMap, PrepareRouteMode } from '../types';
-import type { Request, RouteParams } from '../types/Route.js';
+import type { Request, Route } from '../types/Route.js';
+import type { Builder } from './index.js';
 
-export const prepareRouteModules = async (template: string, filesMap: FilesMap) => {
+export const prepareRouteModules = async (template: string, builder: Builder) => {
   const [dataModule, ssrModule] = await Promise.all([
-    loadDataModule(template, filesMap),
+    loadDataModule(template, builder),
     loadSSRModule(template)
   ]);
 
@@ -31,19 +32,19 @@ export const prepareRoute = async (
   modules: RouteModules,
   mode: PrepareRouteMode = 'all'
 ) => {
-  let items: RouteParams[] = [];
+  let all: Request[] = [];
 
-  if (mode === 'updates' && modules.data.getUpdates !== undefined) {
-    items = await modules.data.getUpdates();
-  } else if (mode === 'removals' && modules.data.getRemovals !== undefined) {
-    items = await modules.data.getRemovals();
-  } else if (mode === 'all' && modules.data.getAll !== undefined) {
-    items = await modules.data.getAll();
+  if (mode === 'updates' && modules.data.updates !== undefined) {
+    all = await modules.data.updates();
+  } else if (mode === 'removals' && modules.data.removals !== undefined) {
+    all = await modules.data.removals();
+  } else if (mode === 'all' && modules.data.all !== undefined) {
+    all = await modules.data.all();
   }
 
   const routeName = template.split(SEPARATOR)[3];
-  const array: Request[] = items.map((item: RouteParams) => {
-    const path = getPermalink(routeName, item as never, modules.data.permalink, {
+  const array: Route[] = all.map((request) => {
+    const path = getPermalink(routeName, request, modules.data.permalink, {
       relative: false,
       checkExistingRoutes: false
     });
@@ -53,7 +54,7 @@ export const prepareRoute = async (
     const dynamic = map ? map.slice(-1)[0].replace(OUTDIR, '') : undefined;
 
     return {
-      item,
+      request,
       path,
       template,
       routeName,

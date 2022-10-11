@@ -2,7 +2,7 @@
 import path from 'path';
 import fs from '../lib/fs.js';
 import { GENERATED_ROUTES, OUTDIR } from '@sssx/config';
-import type { RoutePermalinkFn } from '../types/Route';
+import type { PageData, PagePermalink, Request } from '../types/Route.js';
 import { RouteErrors } from '../types/Errors.js';
 import Logger from '@sssx/logger';
 
@@ -40,14 +40,16 @@ const defaultOptions: Options = {
  * @param permalink – function or string defined in your `route.ts` file inside `routes`, @example `/blog/:slug/`
  * @returns route's path like `/blog/route1/`
  */
-export const getPermalink = <T extends Record<string, any>>(
+export const getPermalink = (
   routeName: string,
-  request: T,
-  permalink: RoutePermalinkFn<T>,
+  request: Request,
+  permalink: PagePermalink,
   options: Options = defaultOptions
 ): string => {
   const opts = Object.assign({}, defaultOptions, options);
   let suffix = '';
+
+  Logger.verbose('getPermalink', { routeName, request, permalink, opts });
 
   if (typeof permalink === 'string') {
     const array = permalink.split(`/`);

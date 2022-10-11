@@ -1,5 +1,5 @@
 import type { BuildOptions } from 'esbuild';
-import { getBanner } from '../utils/getBanner.js';
+import { getBanner } from '../../utils/getBanner.js';
 
 export const BASE: BuildOptions = {
   bundle: true,

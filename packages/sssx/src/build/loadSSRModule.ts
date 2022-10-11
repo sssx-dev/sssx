@@ -13,7 +13,7 @@ export type SSRModule = OriginalSSRModule & {
 };
 
 export const loadSSRModule = async (modulePath: string) => {
-  Logger.log(`loadSSRModule`, modulePath);
+  Logger.verbose(`loadSSRModule`, modulePath);
   const absolutePath = path.resolve(process.cwd(), modulePath);
   // const Module = await import(absolutePath);
   const Module = await importWithoutCache(absolutePath);

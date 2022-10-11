@@ -54,8 +54,9 @@ export const generateDeclarations = () => {
 
   script = `// generated automatically using \`npx sssx generate\`\n` + `// do not edit\n` + script;
 
-  const { sourceRoot, routesPath } = config;
+  // TODO: uncomment if you want to actually write a file
+  // const { sourceRoot, routesPath } = config;
 
-  const filename = path.resolve(process.cwd(), sourceRoot, routesPath, FILENAME);
-  fs.writeFileSync(filename, script, 'utf8');
+  // const filename = path.resolve(process.cwd(), sourceRoot, routesPath, FILENAME);
+  // fs.writeFileSync(filename, script, 'utf8');
 };

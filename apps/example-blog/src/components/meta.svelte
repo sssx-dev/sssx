@@ -1,10 +1,10 @@
 <script lang="ts">
   import { config } from '@sssx/config';
-  import type { Request } from 'sssx';
+  import type { PageRequest } from 'sssx';
 
-  export let request: Request;
+  export let request: PageRequest;
 
-  export let title: string = request && request.item ? request.item.title : '';
+  export let title: string = request && request.data ? request.data.title : '';
   export let description: string = '';
   export let image: string = '';
   export let logo: string = '';

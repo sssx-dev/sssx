@@ -8,8 +8,6 @@ import { OUTDIR, COMPILED, SSR, config } from '@sssx/config';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 import { sha1 } from '../utils/sha1.js';
 
-const fileOptions: any = { encoding: 'utf-8' };
-
 const copySingleCSSFile = async (
   cssPath: string,
   setFilesMap: (k: string, v: string) => void,
@@ -18,7 +16,7 @@ const copySingleCSSFile = async (
   // console.log(`copySingleCSSFile`, cssPath)
 
   const ctx: ConfigContext = {};
-  const rawCSS = await fs.readFile(cssPath, fileOptions);
+  const rawCSS = await fs.readFile(cssPath, 'utf8');
   const { plugins, options } = await postcssrc(ctx);
   const result = await postcss(plugins).process(rawCSS, { ...options, from: cssPath });
   const { css, map } = result;
@@ -35,7 +33,7 @@ const copySingleCSSFile = async (
 
     setFilesMap(cssPath, dstCssPath);
 
-    fs.writeFile(dstCssPath, css, fileOptions);
+    fs.writeFile(dstCssPath, css, 'utf8');
     if (map) fs.writeFile(`${dstCssPath}.map`, map.toString());
   });
 };

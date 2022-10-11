@@ -1,8 +1,8 @@
-import fs from '../lib/fs.js';
+import fs from '../../lib/fs.js';
 import { build, type LogLevel } from 'esbuild';
 import { BASE } from './base.js';
 import { config } from '@sssx/config';
-import { ensureDirExists } from '../utils/ensureDirExists.js';
+import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
 export const buildSvelteCore = async (
   entryPoints: string[],

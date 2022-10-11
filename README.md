@@ -63,6 +63,7 @@ This repository is structured as a monorepo and uses workspaces.
 To build all dependencies at once use `tsc --build --watch`.
 
 ## Packages
+
 - [x] [sssx](https://github.com/sssx-dev/sssx/tree/master/packages/sssx) main package
 - [x] [eslint-config-sssx](https://github.com/sssx-dev/sssx/tree/master/packages/eslint-config-sssx) ESLint configuration
 - [x] [@sssx/config](https://github.com/sssx-dev/sssx/tree/master/packages/config) Configuration parser and provider for SSSX
@@ -75,7 +76,7 @@ To build all dependencies at once use `tsc --build --watch`.
 
 Your feedback is welcome.
 
-Check the roadmap [here](https://github.com/sssx-dev/sssx/blob/master/ROADMAP.md).
+Check the roadmap [here](https://github.com/sssx-dev/sssx/issues/18).
 
 ## Getting started
 

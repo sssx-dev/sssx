@@ -96,6 +96,7 @@ export class BuilderRouter extends BuilderCompiler {
   public generateRequests = async (routes = ['*'], updatesOnly = false) => {
     const templates = Object.keys(this.routeModules);
 
+    // detecting if new route was added, and if we need to run `build` for newly created routes
     const existingRoutes = templates.map(getTemplateRoute);
     const previousRoutes = this.previouslyGeneratedRoutes;
     const diff = difference(existingRoutes, previousRoutes);

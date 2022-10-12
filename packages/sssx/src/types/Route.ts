@@ -27,7 +27,7 @@ export interface DataModule {
 
 export interface Route {
   request: Request;
-
+  /** path of the page being generates. @example `/foo/bar/2022` */
   path: string;
   template: string;
   routeName: string;

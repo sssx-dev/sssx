@@ -56,6 +56,13 @@ This project was created from the need to manage sites with millions of pages, w
 - 💪 ESM first, no more enormous CommonJS bundles (thanks to Esbuild)
 - ⚡️ Dynamic JS injection per route
 
+## [Documentation](https://github.com/sssx-dev/sssx/blob/master/DOCUMENTATION.md)
+
+When you render millions of static pages, you don't want to rerender all of them each time.
+SSSX enables you to finetune which pages has to be updated and when.
+
+[Read more](https://github.com/sssx-dev/sssx/blob/master/DOCUMENTATION.md)
+
 ## Structure
 
 This repository is structured as a monorepo and uses workspaces.

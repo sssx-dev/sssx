@@ -15,11 +15,11 @@ const plugin = (_options: Partial<Options>) => {
   const options: Options = Object.assign({}, defaultOptions, _options);
 
   const awsS3CloudfrontAdapter: Plugin = async (config: Config, builder: Builder) => {
-    const addedRequests = builder
-      .getRequests('added')
+    const addedRoutes = builder
+      .getRoutes('added')
       .map(({ path }) => path.replace(process.cwd(), '').slice(1));
-    const removedRequests = builder
-      .getRequests('removed')
+    const removedRoutes = builder
+      .getRoutes('removed')
       .map(({ path }) =>
         path
           .replace(process.cwd(), '')
@@ -37,7 +37,7 @@ const plugin = (_options: Partial<Options>) => {
           let flag = false;
           flag = s.startsWith(prefix) || s.endsWith(`.xml`) || s.endsWith(`.txt`);
           if (flag) return flag;
-          addedRequests.map((path) => {
+          addedRoutes.map((path) => {
             if (s.startsWith(path)) flag = true;
           });
           return flag;
@@ -48,14 +48,14 @@ const plugin = (_options: Partial<Options>) => {
     // all.map((path) => console.log(path));
     // console.log(`=========PATHS========`);
     // paths.map((path) => console.log(path));
-    // console.log(`=========addedRequests========`);
-    // addedRequests.map((path) => console.log(path));
+    // console.log(`=========addedRoutes========`);
+    // addedRoutes.map((path) => console.log(path));
     // console.log(`=========removedRequests========`);
     // removedRequests.map((path) => console.log(path));
     // return;
 
-    await updateS3(options, config.outDir, paths, removedRequests);
-    await updateCloudFront(options, [...paths, ...removedRequests].sort(), config);
+    await updateS3(options, config.outDir, paths, removedRoutes);
+    await updateCloudFront(options, [...paths, ...removedRoutes].sort(), config);
   };
 
   return awsS3CloudfrontAdapter;

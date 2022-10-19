@@ -1,11 +1,7 @@
+import type { Route } from 'sssx';
 import type { Config } from '@sssx/config';
 
-type Request = {
-  path: string;
-  template: string;
-};
-
-export const requestsToMap = (requests: Request[], config: Config) => {
+export const routeToMap = (requests: Route[], config: Config) => {
   const map: Record<string, string[]> = {};
 
   requests.map((r) => {

@@ -15,8 +15,8 @@ import Logger from '@sssx/logger';
 
 export class BuilderRouter extends BuilderCompiler {
   protected routeModules: Record<string, RouteModules> = {};
-  protected addedRequests: Route[] = [];
-  protected removedRequests: Route[] = [];
+  protected addedRoutes: Route[] = [];
+  protected removedRoutes: Route[] = [];
 
   protected previouslyGeneratedRoutes =
     fs.existsSync(PREFIX) && fs.existsSync(GENERATED_ROUTES)
@@ -45,7 +45,7 @@ export class BuilderRouter extends BuilderCompiler {
     const transformPath = (input: string) =>
       input.replace([process.cwd(), config.outDir].join(SEPARATOR), ``).toLowerCase();
 
-    const removedPaths = this.removedRequests.map((o) => o.path);
+    const removedPaths = this.removedRoutes.map((o) => o.path);
 
     const paths = array
       // filter out removals from this.removedRequests
@@ -79,7 +79,7 @@ export class BuilderRouter extends BuilderCompiler {
 
   public generateRemovals = async () => {
     const allTemplates = Object.keys(this.routeModules);
-    this.removedRequests = (
+    this.removedRoutes = (
       await Promise.all(
         allTemplates.map((t) => prepareRoute(this.filesMap, t, this.routeModules[t], 'removals'))
       )
@@ -115,7 +115,7 @@ export class BuilderRouter extends BuilderCompiler {
       : templates.filter((path) => routes.includes(getTemplateRoute(path)));
 
     // TODO: DRY
-    const requests = (
+    const routesToAdd = (
       await Promise.all(
         [
           newTemplates.map((template) =>
@@ -134,10 +134,10 @@ export class BuilderRouter extends BuilderCompiler {
     ).flat();
 
     // filter paths
-    this.addedRequests =
+    this.addedRoutes =
       paths.length > 0
-        ? requests.filter((r) => paths.includes(r.path.split(config.outDir)[1]))
-        : requests;
+        ? routesToAdd.filter((r) => paths.includes(r.path.split(config.outDir)[1]))
+        : routesToAdd;
   };
 
   /**
@@ -145,7 +145,7 @@ export class BuilderRouter extends BuilderCompiler {
    * we call `processRemovals` to remove these folders
    */
   public processRemovals = async () => {
-    const paths = this.removedRequests.map((r) => r.path).filter((path) => fs.existsSync(path));
+    const paths = this.removedRoutes.map((r) => r.path).filter((path) => fs.existsSync(path));
 
     if (paths.length > 0) {
       const bar = Progress.createBar(
@@ -171,8 +171,9 @@ export class BuilderRouter extends BuilderCompiler {
     return { ssrModule: ssr, dataModule: data };
   };
 
-  public getRequests = (type: 'added' | 'removed' = 'added') => {
-    const requests = type === 'added' ? this.addedRequests : this.removedRequests;
-    return requests.map(({ path, template }) => ({ path, template }));
+  public getRoutes = (type: 'added' | 'removed' = 'added') => {
+    const routes = type === 'added' ? this.addedRoutes : this.removedRoutes;
+    return routes;
+    // return routes.map(({ path, template }) => ({ path, template }));
   };
 }

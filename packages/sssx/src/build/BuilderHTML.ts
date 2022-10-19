@@ -5,6 +5,7 @@ import { isProduction, isDev } from '../utils/isDev.js';
 import { BuilderRouter } from './BuilderRouter.js';
 
 import type { Route } from '../types/Route.js';
+import Logger from '@sssx/logger';
 
 export class BuilderHTML extends BuilderRouter {
   public compileAllHTML = async (routes: Route[]) => {
@@ -51,5 +52,7 @@ export class BuilderHTML extends BuilderRouter {
     });
 
     bar.stop();
+    // print empty line
+    Logger.log('');
   };
 }

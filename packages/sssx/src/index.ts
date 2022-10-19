@@ -7,6 +7,7 @@ export { default as fs } from './lib/fs.js'; // specifal FS proxy to collect all
 
 export type { Plugin } from './types/Plugin';
 export type {
+  Route,
   Request,
   Data,
   PageRequests,

@@ -4,13 +4,13 @@ import { Progress } from 'sssx';
 import type { Config } from '@sssx/config';
 import type { Builder } from 'sssx';
 import type { Options } from './options.js';
-import { requestsToMap } from './requestsToMap.js';
+import { routeToMap } from './routeToMap.js';
 import { XML } from './xml.js';
 import dayjs from 'dayjs';
 
 export const updateSitemaps = async (config: Config, builder: Builder, options: Options) => {
-  const addedMap = requestsToMap(builder.getRequests('added'), config);
-  const removedMap = requestsToMap(builder.getRequests('removed'), config);
+  const addedMap = routeToMap(builder.getRoutes('added'), config);
+  const removedMap = routeToMap(builder.getRoutes('removed'), config);
 
   const routes = [...Object.keys(addedMap), ...Object.keys(removedMap)]
     .filter((value, index, array) => array.indexOf(value) === index) // remove duplicates

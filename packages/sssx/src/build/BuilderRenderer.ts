@@ -15,7 +15,7 @@ export class BuilderRenderer extends BuilderHTML {
     await this.prepareRoutes();
     await this.generateAllPaths();
     await this.generateRequests(options);
-    await this.compileAllHTML(this.addedRequests);
+    await this.compileAllHTML(this.addedRoutes);
     copyPublic(); // should we make a separate function somewhere?
   };
 }

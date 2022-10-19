@@ -9,7 +9,7 @@ export type Data = {
  * General slim type that contains minimal information to start page rendering process
  */
 export type Request = {
-  slug: string;
+  slug?: string;
   [key: string]: unknown;
 };
 

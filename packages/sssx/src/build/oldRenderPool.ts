@@ -11,11 +11,11 @@
 //   await this.prepareRoutes();
 //   await this.generateRequests(options.routes, options.updatesOnly);
 
-//   const LENGTH = this.addedRequests.length;
+//   const LENGTH = this.addedRoutes.length;
 //   const batchSize = Math.ceil(LENGTH / numberOfWorkers);
 //   const numberOfBatches = Math.floor(LENGTH / batchSize);
 
-//   const array: Array<Request[]> = sliceArray(this.addedRequests, batchSize);
+//   const array: Array<Request[]> = sliceArray(this.addedRoutes, batchSize);
 
 //   this.log(`Starting with ${numberOfBatches} batches:`);
 

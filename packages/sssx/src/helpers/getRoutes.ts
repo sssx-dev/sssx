@@ -12,3 +12,13 @@ export const getRoutes = (route: string) => {
 
   return array;
 };
+
+export const getAllRoutes = () => {
+  const names = fs
+    .readdirSync(GENERATED_ROUTES)
+    .filter((name) => !name.startsWith(`.`))
+    .map((name) => name.split(`.`)[0]);
+
+  const routes = names.map(getRoutes).flat();
+  return routes;
+};

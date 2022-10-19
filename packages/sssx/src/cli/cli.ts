@@ -15,6 +15,9 @@ import { noop } from '../utils/noop.js';
 import { generateDeclarations } from '../utils/generateDeclarations.js';
 import { askQuestion } from './askQuestion.js';
 import { checkVerbose } from './checkVerbose.js';
+import Logger from '@sssx/logger';
+import { checkPaths } from './checkPaths.js';
+import e from 'express';
 
 const getVersion = () => {
   const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -28,6 +31,11 @@ const getVersion = () => {
 const routes = {
   description: 'Specify which route has to be updated. Serparate with comma for muliple routes',
   default: '*'
+};
+
+const paths = {
+  description: 'Specify which paths has to be updated. Serparate with comma for muliple paths',
+  default: ''
 };
 
 const verbose = {
@@ -82,16 +90,23 @@ await yargs(hideBin(process.argv))
   })
   .command(
     'update',
-    'Start updating the static site',
-    { routes, verbose, yes, y: yes },
+    'Start updating the static site. You can specify `routes` or `paths`, but not both.',
+    { routes, paths, verbose, yes, y: yes },
     async (args) => {
       checkVerbose(args as never);
+      const paths = args.paths.length > 0 ? checkPaths(args) : [];
       const routes = checkRoutes(args);
+
+      // if paths were submitted, force rerender them, otherwise call update fuction for given routes
+      const updatesOnly = args.paths.length > 0 ? false : true;
+
+      if (updatesOnly) Logger.log(`Updating following routes`, routes);
+      else Logger.log(`Updating following paths`, paths);
 
       generateDeclarations();
       const builder = new Builder();
       await builder.setup();
-      await builder.renderPool({ routes, updatesOnly: true });
+      await builder.renderPool({ routes, paths, updatesOnly });
       await builder.processRemovals();
       await builder.runPlugins();
       await builder.finalize();

@@ -1,6 +1,9 @@
-# DRAFT
+# Documentation (WIP)
 
-## Types
+When you render millions of static pages, you don't want to rerender all of them each time.
+SSSX enables you to finetune which pages has to be updated and when.
+
+## General Types
 
 `Route` – an abstract object that contains request, name of the route, generated path using `Permalink`.
 
@@ -16,6 +19,8 @@
 
 `SSRModule` – is a typescript representation of a `index.svelte` compiled to JavaScript using `SSR` mode, so SSSX can generate HTML out of it later.
 
+## DataModule
+
 `dynamic` – is a special script that is updated during each build and update. It's injected in each page for a given `route`.
 
 `all` – method of the `DatModule` that returns array of all existing `Request`s for given route.
@@ -25,3 +30,19 @@
 `removals` – same as above, but determine pages that have to be automatically deleted.
 
 `data` - a method that consumes single `Request` and geneates all data required for page to be rendered. SSSX also uses this method to inter return types inside `index.svelte`.
+
+## CLI
+
+TBD
+
+## Errors
+
+TBD
+
+## Dedevelopment
+
+TBD
+
+## Publishing
+
+TBD

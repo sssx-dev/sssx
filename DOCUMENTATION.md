@@ -24,7 +24,7 @@ export const permalink = (r: Request = { slug: 'hello' }) => `/${r.slug}/`;
 or same version using string format
 
 ```typescript
-expost const permalink = `/:slug/`
+export const permalink = `/:slug/`;
 ```
 
 ## DataModule

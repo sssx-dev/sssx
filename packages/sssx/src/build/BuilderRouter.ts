@@ -9,8 +9,9 @@ import { NEWLINE, SEPARATOR } from '../constants.js';
 import { difference, getTemplateRoute } from './helpers.js';
 import { ensureDirExists } from '../utils/ensureDirExists.js';
 
-import type { RouteModules } from '../types/index.js';
+import { defaultRenderOptions, type RenderOptions, type RouteModules } from '../types/index.js';
 import type { Route } from '../types/Route.js';
+import Logger from '@sssx/logger';
 
 export class BuilderRouter extends BuilderCompiler {
   protected routeModules: Record<string, RouteModules> = {};
@@ -93,8 +94,14 @@ export class BuilderRouter extends BuilderCompiler {
    * @param routes ['*']
    * @param updatesOnly false
    */
-  public generateRequests = async (routes = ['*'], updatesOnly = false) => {
+  public generateRequests = async (renderOptions: RenderOptions = defaultRenderOptions) => {
+    const options = Object.assign({}, defaultRenderOptions, renderOptions);
+    const { routes, updatesOnly } = options;
+    const paths = options.paths ? options.paths : [];
+
     const templates = Object.keys(this.routeModules);
+
+    Logger.verbose(`generateRequests`, { templates, paths });
 
     // detecting if new route was added, and if we need to run `build` for newly created routes
     const existingRoutes = templates.map(getTemplateRoute);
@@ -108,7 +115,7 @@ export class BuilderRouter extends BuilderCompiler {
       : templates.filter((path) => routes.includes(getTemplateRoute(path)));
 
     // TODO: DRY
-    this.addedRequests = (
+    const requests = (
       await Promise.all(
         [
           newTemplates.map((template) =>
@@ -125,6 +132,12 @@ export class BuilderRouter extends BuilderCompiler {
         ].flat()
       )
     ).flat();
+
+    // filter paths
+    this.addedRequests =
+      paths.length > 0
+        ? requests.filter((r) => paths.includes(r.path.split(config.outDir)[1]))
+        : requests;
   };
 
   /**

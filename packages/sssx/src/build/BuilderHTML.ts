@@ -43,7 +43,7 @@ export class BuilderHTML extends BuilderRouter {
       bar.update(i, { route: path.replace(process.cwd(), '') });
     }
 
-    const sum = timePerPage.reduce((a, b) => a + b);
+    const sum = timePerPage.length > 0 ? timePerPage.reduce((a, b) => a + b) : 0;
     const average = sum / routes.length;
 
     bar.update(routes.length, {

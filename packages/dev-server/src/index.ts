@@ -47,8 +47,12 @@ export const startDevServer = async (routes: string[] = []) => {
     open(URL);
   });
 
-  app.use((req, res, next) => {
+  app.use(async (req, res, next) => {
     Logger.log(chalk.gray('dev:browser'), req.path);
+
+    if (!req.path.startsWith(`/${config.appDir}/`))
+      await builder.renderPool({ routes, paths: [req.path] });
+
     next();
   });
 

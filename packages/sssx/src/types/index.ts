@@ -8,3 +8,16 @@ export type RouteModules = {
   data: DataModule;
   ssr: SSRModule;
 };
+
+export type RenderOptions = {
+  routes: string[];
+  paths?: string[];
+  /** each route will call updates() function */
+  updatesOnly?: boolean;
+};
+
+export const defaultRenderOptions: RenderOptions = {
+  routes: [`*`],
+  paths: [],
+  updatesOnly: false
+};

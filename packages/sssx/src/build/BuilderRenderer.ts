@@ -1,14 +1,6 @@
-import { BuilderHTML } from './BuilderHTML.js';
 import { copyPublic } from './copyPublic.js';
-
-type RenderOptions = {
-  routes: string[];
-  updatesOnly?: boolean;
-};
-
-const defaultRenderOptions: RenderOptions = {
-  routes: [`*`]
-};
+import { BuilderHTML } from './BuilderHTML.js';
+import { defaultRenderOptions, type RenderOptions } from '../types/index.js';
 
 export class BuilderRenderer extends BuilderHTML {
   /**
@@ -22,7 +14,7 @@ export class BuilderRenderer extends BuilderHTML {
 
     await this.prepareRoutes();
     await this.generateAllPaths();
-    await this.generateRequests(options.routes, options.updatesOnly);
+    await this.generateRequests(options);
     await this.compileAllHTML(this.addedRequests);
     copyPublic(); // should we make a separate function somewhere?
   };

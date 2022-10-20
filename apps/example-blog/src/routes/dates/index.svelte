@@ -4,6 +4,7 @@
   import Meta from '../../components/meta.svelte';
   import First from '../../components/first.svelte';
   import Second from '../../components/second.svelte';
+  import Confetti from '../../components/confetti.svelte';
 
   export let request: Request;
   export let data: GetDataType<typeof DataFunction>;
@@ -23,3 +24,5 @@
 <Second hydrate-options="{{ preload: true }}" hello="static variable #2">
   <p>This is slot's content</p>
 </Second>
+
+<Confetti hydrate-options="{{ preload: true }}" />

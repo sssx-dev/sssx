@@ -1,4 +1,4 @@
-import { getAllRoutes } from '../helpers/getRoutes.js';
+import { getAllRoutes } from '../utils/getRoutes.js';
 import Logger from '@sssx/logger';
 
 export const checkPaths = (args: { paths: string }) => {

@@ -14,6 +14,7 @@ import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../../lib/esbuildSvelte.js';
 import { SEPARATOR } from '../../constants.js';
+import path from 'path';
 
 type AllBuildResult = BuildResult & { outputFiles: OutputFile[] };
 
@@ -49,14 +50,19 @@ export const buildSvelte = async (
 ) => {
   const options = Object.assign({}, defaultOptions, buildOptions);
 
+  // if (options.generate === 'dom')
+  //   entryPoints = entryPoints.filter(
+  //     (name) => !name.startsWith(config.sourceRoot + `/` + config.routesPath)
+  //   );
+
   const result: AllBuildResult = await svelte2javascript(entryPoints, setFilesMap, options);
 
   // compile second time, and get plugins applied to javasc
   if (options.generate === 'dom') {
     const javascriptEntryPoints = result.outputFiles.map(({ path }) => path);
-    Logger.log(`buildSvelte`, javascriptEntryPoints);
+    // Logger.log(`buildSvelte`, javascriptEntryPoints);
 
-    const { logLevel, minify, bundle } = options;
+    const { logLevel, minify } = options;
     const outdir = [config.distDir, config.compiledRoot].join(SEPARATOR);
 
     const newResult = await build({
@@ -71,6 +77,8 @@ export const buildSvelte = async (
       logLevel,
       plugins: [skypackResolver()]
     });
+
+    if (newResult.errors.length > 0) Logger.error(`buildSvelte`, newResult.errors);
   }
 };
 
@@ -131,6 +139,26 @@ export const svelte2javascript = async (
   return result;
 };
 
+/**
+ *
+ * @param hashedFileName  '/Users/eugene/Desktop/sssx-monorepo/apps/example-blog/.sssx/compiled/components/sssx-confetti-LUM5ZDUS.js',
+ * @return 'src/components/confetti.svelte'
+ */
+const getOriginalFilename = (hashedFileName: string) => {
+  let output = hashedFileName.replace(process.cwd() + SEPARATOR, '');
+  output = output.replace(config.distDir + SEPARATOR + config.compiledRoot, config.sourceRoot);
+  output = output.replace(config.distDir + SEPARATOR + config.ssrRoot, config.sourceRoot);
+  const last = output.split(SEPARATOR).slice(-1)[0];
+
+  if (last.includes(config.filenamesPrefix + '-')) {
+    const ext = last.split('.').slice(-1)[0];
+    const name = last.split('-')[1];
+    output = output.replace(last, `${name}.${ext}`);
+  }
+
+  return output;
+};
+
 const writeFiles = (
   result: AllBuildResult,
   generate: GenerateType,
@@ -139,17 +167,16 @@ const writeFiles = (
 ) => {
   // TODO: resturcutre to call it .ssr/compiled/component/filename/hash.js
   // passing back mapping for component/route.ts -> .ssr/compiled/component/filename-hash.js
-  result.outputFiles.map((output, index) => {
-    const entry = entryPoints[index].replace(`.svelte`, `.js`);
-    setFilesMap(entry, output.path);
-    entryPoints[index] = entry;
+  result.outputFiles.map(({ path }) => {
+    const entryPoint = getOriginalFilename(path);
+    setFilesMap(entryPoint, path);
   });
 
   // TODO: this should become another esbuild plugin
   // write out generated JS files from svelte files, and replace imports with js files too
   result.outputFiles.map((output) => {
-    const path = output.path.split(`/`).slice(0, -1).join(`/`);
-    ensureDirExists(path);
+    const dir = output.path.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
+    ensureDirExists(dir);
 
     Logger.verbose('buildSvelte', output.path);
 
@@ -162,6 +189,7 @@ const writeFiles = (
     ) {
       text = wrapHydratableComponents(text);
     }
+
     fs.writeFileSync(output.path, text, 'utf8');
   });
 };

@@ -20,6 +20,7 @@ export class BuilderCompiler extends BuilderBase {
   protected filesMap: FilesMap = {};
 
   protected setFilesMap = (key: string, value: string) => {
+    // Logger.log(`setFilesMap`, { key, value });
     if (!this.filesMap[key]) this.filesMap[key] = [];
     this.filesMap[key].push(value);
   };
@@ -98,6 +99,8 @@ export class BuilderCompiler extends BuilderBase {
     await this.copyDynamicFiles();
     bar.update(++counter);
     bar.stop();
+
+    // Logger.log(`setup`, this.filesMap);
   };
 
   private copyDynamicFiles = async () => {

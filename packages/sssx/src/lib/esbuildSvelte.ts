@@ -6,7 +6,7 @@ import { readFile, statSync } from 'fs';
 
 import type { CompileOptions, Warning } from 'svelte/types/compiler/interfaces';
 import type { PreprocessorGroup } from 'svelte/types/compiler/preprocess/types';
-import type { OnLoadResult, Plugin, PluginBuild } from 'esbuild';
+import type { OnLoadArgs, OnLoadResult, Plugin, PluginBuild } from 'esbuild';
 
 interface esbuildSvelteOptions {
   /**
@@ -23,9 +23,9 @@ interface esbuildSvelteOptions {
    * Attempts to cache compiled files if the mtime of the file hasn't changed since last run.
    * Only works with incremental or watch mode builds
    *
-   * "overzealous" - be agressive about which files trigger a cache expiration
+   * "agressive" - be agressive about which files trigger a cache expiration
    */
-  cache?: boolean | 'overzealous';
+  cache?: boolean | 'agressive';
 
   /**
    * Should esbuild-svelte create a binding to an html element for components given in the entryPoints list
@@ -81,7 +81,7 @@ const FAKE_CSS_FILTER = /\.esbuild-svelte-fake-css$/;
 export default function sveltePlugin(options?: esbuildSvelteOptions): Plugin {
   const svelteFilter = options?.include ?? SVELTE_FILTER;
   return {
-    name: 'esbuild-svelte',
+    name: 'esbuild:svelte',
     setup(build) {
       if (!options) {
         options = {};
@@ -109,6 +109,7 @@ export default function sveltePlugin(options?: esbuildSvelteOptions): Plugin {
       //check and see if trying to load svelte files directly
       build.onResolve({ filter: svelteFilter }, ({ path, kind }) => {
         if (kind === 'entry-point' && options?.fromEntryFile) {
+          console.log(`esbuildSvelte`, path);
           return { path, namespace: 'esbuild-svelte-direct-import' };
         }
       });
@@ -116,7 +117,8 @@ export default function sveltePlugin(options?: esbuildSvelteOptions): Plugin {
       //main loader
       build.onLoad(
         { filter: svelteFilter, namespace: 'esbuild-svelte-direct-import' },
-        async (args) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async (args: OnLoadArgs) => {
           return {
             errors: [
               {
@@ -287,7 +289,7 @@ export default function sveltePlugin(options?: esbuildSvelteOptions): Plugin {
       // code in this section can use esbuild features <= 0.11.15 because of `onEnd` check
       if (
         shouldCache(build) &&
-        options?.cache == 'overzealous' &&
+        options?.cache == 'agressive' &&
         typeof build.onEnd === 'function'
       ) {
         build.initialOptions.metafile = true; // enable the metafile to get the required information

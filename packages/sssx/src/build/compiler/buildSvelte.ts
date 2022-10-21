@@ -1,7 +1,7 @@
 import Logger from '@sssx/logger';
 import { config } from '@sssx/config';
 
-import { build } from 'esbuild';
+import { build, type BuildResult, type OutputFile } from 'esbuild';
 import type { LogLevel, Plugin } from 'esbuild';
 import sveltePreprocess from 'svelte-preprocess';
 import autoprefixer from 'autoprefixer';
@@ -13,10 +13,14 @@ import { wrapHydratableComponents } from '../wrapHydratableComponents.js';
 import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../../lib/esbuildSvelte.js';
-import sveltePlugin from '../../../dist/lib/esbuildSvelte';
+import { SEPARATOR } from '../../constants.js';
+
+type AllBuildResult = BuildResult & { outputFiles: OutputFile[] };
+
+type GenerateType = 'dom' | 'ssr' | false;
 
 type Options = {
-  generate?: 'dom' | 'ssr' | false;
+  generate: GenerateType;
   logLevel?: LogLevel;
   /** bundles CSS in JS */
   bundleCSSinJS?: boolean;
@@ -38,23 +42,54 @@ const defaultOptions: Options = {
 };
 
 export const buildSvelte = async (
+  /** all svelte files */
   entryPoints: string[],
   setFilesMap: (k: string, v: string) => void,
   buildOptions = defaultOptions
 ) => {
   const options = Object.assign({}, defaultOptions, buildOptions);
-  const { generate, logLevel } = options;
+
+  const result: AllBuildResult = await svelte2javascript(entryPoints, setFilesMap, options);
+
+  // compile second time, and get plugins applied to javasc
+  if (options.generate === 'dom') {
+    const javascriptEntryPoints = result.outputFiles.map(({ path }) => path);
+    Logger.log(`buildSvelte`, javascriptEntryPoints);
+
+    const { logLevel, minify, bundle } = options;
+    const outdir = [config.distDir, config.compiledRoot].join(SEPARATOR);
+
+    const newResult = await build({
+      entryPoints: javascriptEntryPoints,
+      ...BASE,
+      bundle: true,
+      outdir,
+      minify,
+      sourcemap: 'inline',
+      write: true,
+      allowOverwrite: true, // overwrite existing file
+      logLevel,
+      plugins: [skypackResolver()]
+    });
+  }
+};
+
+export const svelte2javascript = async (
+  /** all svelte files */
+  entryPoints: string[],
+  setFilesMap: (k: string, v: string) => void,
+  options: Options
+) => {
+  const { generate, logLevel, preserveComments, minify, bundle, bundleCSSinJS } = options;
   const outdir = `${config.distDir}/${generate === 'ssr' ? config.ssrRoot : config.compiledRoot}`;
   ensureDirExists(outdir);
-
-  const { preserveComments, minify, bundle } = options;
 
   const naming =
     generate === 'dom' ? { entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]` } : {};
 
   const sveltePlugin = esbuildSvelte({
     compilerOptions: {
-      css: options.bundleCSSinJS,
+      css: bundleCSSinJS,
       generate,
       preserveComments,
       hydratable: true
@@ -69,16 +104,14 @@ export const buildSvelte = async (
     ]
   });
 
-  let plugins: Plugin[] = [
+  const plugins: Plugin[] = [
     // postCssPlugin()
+    sveltePlugin
   ];
 
-  if (generate === 'dom') plugins = [sveltePlugin, skypackResolver()];
-  else plugins = [sveltePlugin];
-
+  // don't write to the file system from esbuild, because we need to do postprocessing later.
+  // TODO: ideally we build veerything via plugins and let esbuild just write to the file system.
   const write = false;
-
-  Logger.log(`plugins`, plugins);
 
   const result = await build({
     entryPoints,
@@ -93,11 +126,23 @@ export const buildSvelte = async (
     plugins
   });
 
+  writeFiles(result, generate, entryPoints, setFilesMap);
+
+  return result;
+};
+
+const writeFiles = (
+  result: AllBuildResult,
+  generate: GenerateType,
+  entryPoints: string[],
+  setFilesMap: (k: string, v: string) => void
+) => {
   // TODO: resturcutre to call it .ssr/compiled/component/filename/hash.js
   // passing back mapping for component/route.ts -> .ssr/compiled/component/filename-hash.js
   result.outputFiles.map((output, index) => {
     const entry = entryPoints[index].replace(`.svelte`, `.js`);
     setFilesMap(entry, output.path);
+    entryPoints[index] = entry;
   });
 
   // TODO: this should become another esbuild plugin

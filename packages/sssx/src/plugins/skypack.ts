@@ -13,17 +13,49 @@ const deps = {
   [key: string]: string;
 };
 
+const log = (...args: any[]) => {
+  fs.appendFileSync(`${process.cwd()}/esbuild.log`, JSON.stringify(args, null, 2) + `\n`, 'utf8');
+};
+
+const name = 'skypack:resolve';
+
 export const skypackResolver = (): Plugin => {
   const setup = (build: PluginBuild) => {
-    build.onResolve({ filter: REGEX }, async ({ path }): Promise<OnResolveResult> => {
-      Logger.log(`Skypack onresolve`, path);
-      const url = `${path}/hello/world`;
+    Logger.verbose(`Setting up ${name}`);
+
+    build.onResolve({ filter: /(.css|.js)/ }, async (args): Promise<OnResolveResult> => {
+      const path = args.path;
+      console.log('skypack:css', path, args.importer);
+      return { path, external: path.startsWith(process.cwd()) ? false : true };
+    });
+
+    build.onResolve({ filter: REGEX }, async (args): Promise<OnResolveResult> => {
+      const { path } = args;
+
+      console.log('skypack', path, args.importer);
+
+      if (
+        [`svelte/internal`, `svelte`].includes(path) ||
+        path.startsWith(`@sssx`) ||
+        path.includes('../') ||
+        path.endsWith('.css')
+      )
+        return { path, external: true };
+
+      const url = `https://cdn.skypack.dev/${path}`;
+
       return { path: url, external: true };
     });
+
+    build.onLoad({ filter: /\.css$/ }, () => ({ contents: '' }));
+
+    // build.onEnd((result) => {
+    //   Logger.log(`Finished ${name}`, result, array);
+    // });
   };
 
   return {
-    name: 'skypack',
+    name,
     setup
   };
 };

@@ -11,7 +11,7 @@
     "format": "prettier --write --ignore-path=../../.prettierignore ."
   },
   "engines": {
-    "node": "v18.x"
+    "node": "v19.x"
   },
   "keywords": [
     "SSSX",

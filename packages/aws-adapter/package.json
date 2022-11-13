@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "tsc"
   },
+  "engines": {
+    "node": "v19.x"
+  },
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
   "dependencies": {

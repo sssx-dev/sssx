@@ -1,0 +1,5 @@
+---
+'sssx': patch
+---
+
+updated readme

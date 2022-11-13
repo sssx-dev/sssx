@@ -1,6 +1,6 @@
 {
   "name": "sssx",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Svelte Static Site X – SSG/SSR focused on SEO, speed, and millions of pages",
   "type": "module",
   "main": "dist/index.js",

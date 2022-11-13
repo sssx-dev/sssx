@@ -13,7 +13,7 @@
     "wipe": "rm -rf dist .sssx"
   },
   "engines": {
-    "node": "v18.x"
+    "node": "v19.x"
   },
   "keywords": [
     "SSG",
@@ -35,7 +35,7 @@
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.4",
     "@tsconfig/svelte": "^3.0.0",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.11.9",
     "@types/require-from-string": "^1.2.1",
     "autoprefixer": "^10.4.7",
     "cssnano": "^5.1.12",

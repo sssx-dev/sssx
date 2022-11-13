@@ -1,6 +1,7 @@
-import { copyPublic } from './copyPublic.js';
+import { copyFiles } from './copyFiles.js';
 import { BuilderHTML } from './BuilderHTML.js';
 import { defaultRenderOptions, type RenderOptions } from '../types/index.js';
+import { config } from '@sssx/config';
 
 export class BuilderRenderer extends BuilderHTML {
   /**
@@ -16,6 +17,8 @@ export class BuilderRenderer extends BuilderHTML {
     await this.generateAllPaths();
     await this.generateRequests(options);
     await this.compileAllHTML(this.addedRoutes);
-    copyPublic(); // should we make a separate function somewhere?
+
+    copyFiles();
+    config.copyFiles.map(({ from, to }) => copyFiles(from, to));
   };
 }

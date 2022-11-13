@@ -13,6 +13,14 @@
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
   "dependencies": {
+    "fast-glob": "^3.2.12",
+    "rehype": "^12.0.1",
+    "rehype-slug": "^5.1.0",
+    "remark": "^14.0.2",
+    "remark-extract-frontmatter": "^3.2.0",
+    "remark-frontmatter": "^4.0.1",
+    "remark-gfm": "^3.0.1",
+    "remark-html": "^15.0.1",
     "sssx": "*"
   }
 }

@@ -104,4 +104,9 @@ export interface Config extends Record<string, unknown> {
    * @default 'sssx'
    */
   filenamesPrefix: string;
+
+  /**
+   * Copy directories with all the files recursively
+   */
+  copyFiles: Array<{ from: string; to?: string }>;
 }

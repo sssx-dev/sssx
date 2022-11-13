@@ -10,4 +10,4 @@ slug: /markdown/page1
 
 {{description}}
 
-![image](../images/sssx.jpg)
+![image](/images/sssx.jpg)

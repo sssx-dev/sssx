@@ -11,14 +11,15 @@ plugins['@sssx/sitemap-plugin'] = { origin };
 plugins['@sssx/aws-adapter'] = {};
 // }
 
-/** @type {import('sssx').Config} */
+/** @type {import('@sssx/config').Config} */
 const config = {
   origin,
   distDir: `.sssx`,
   outDir: `dist`,
   appDir: '__SSSX__',
   basePath: '',
-  plugins
+  plugins,
+  copyFiles: [{ from: 'assets/images', to: 'images' }]
 };
 
 export default config;

@@ -27,7 +27,8 @@
       "@sssx/eslint-config-sssx": ["./packages/eslint-config-sssx"],
       "@sssx/sitemap-plugin": ["./packages/sitemap-plugin"],
       "@sssx/logger": ["./packages/logger"],
-      "@sssx/aws-adapter": ["./packages/aws-adapter"]
+      "@sssx/aws-adapter": ["./packages/aws-adapter"],
+      "@sssx/markdown": ["./packages/markdown"]
     }
   }
 }

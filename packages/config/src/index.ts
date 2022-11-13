@@ -21,7 +21,8 @@ const defaultConfig: Partial<Config> = {
   plugins: {},
   ssrRoot: 'ssr',
   compiledRoot: 'compiled',
-  filenamesPrefix: 'sssx'
+  filenamesPrefix: 'sssx',
+  copyFiles: []
 };
 
 const loadConfig = async (input = path.resolve(process.cwd(), 'sssx.config.js')) => {

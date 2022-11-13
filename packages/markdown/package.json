@@ -1,0 +1,18 @@
+{
+  "name": "@sssx/markdown",
+  "version": "0.0.1",
+  "description": "Library to enable markdown files inside ",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc"
+  },
+  "engines": {
+    "node": "v19.x"
+  },
+  "author": "Eugene Hauptmann <eugene@sssx.dev>",
+  "license": "MIT",
+  "dependencies": {
+    "sssx": "*"
+  }
+}

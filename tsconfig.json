@@ -12,6 +12,7 @@
     { "path": "./packages/logger" },
     { "path": "./packages/dev-server" },
     { "path": "./packages/sitemap-plugin" },
-    { "path": "./packages/aws-adapter" }
+    { "path": "./packages/aws-adapter" },
+    { "path": "./packages/markdown" }
   ]
 }

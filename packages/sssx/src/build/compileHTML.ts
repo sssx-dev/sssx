@@ -12,6 +12,10 @@ import type { DataModule, Route } from '../types/Route.js';
 import { SEPARATOR } from '../constants.js';
 import { getBanner } from '../utils/getBanner.js';
 
+// import htmlPrettify from 'html-prettify';
+import htmlMinifier from 'html-minifier';
+import UglifyJS from 'uglify-js';
+
 // get all nodes between two nodes start and end
 const GET_TARGET_FN = `
 const getTarget = (prefix) => {
@@ -33,7 +37,11 @@ const LOAD_DYNAMIC_JS = (url: string) =>
 // TODO: offload data to files if bigger than x
 // TODO: load static CSS
 // TODO: generate CSS file from svelte pieces
-const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponentData) => {
+const getScript = (
+  filesMap: FilesMap,
+  { name, prefix, props }: VirtualComponentData,
+  minify = false
+) => {
   const COMPONENT_NAME = name;
   // const COMPONENT_PATH = `${ROOT_DIR}/${config.componentsPat}/${name.toLowerCase()}.js` // absolute
 
@@ -47,8 +55,6 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
     a.includes(`${SEPARATOR}${config.compiledRoot}${SEPARATOR}`)
   );
 
-  // Logger.log('getScript', { COMPONENT_NAME }, tmp);
-
   const absoluteComponentsPath = componentPaths[componentPaths.length - 1];
 
   const componentsPath = [
@@ -59,13 +65,18 @@ const getScript = (filesMap: FilesMap, { name, prefix, props }: VirtualComponent
 
   const componentParams = `{target, hydrate: true, props: ${JSON.stringify(props)}}`;
 
-  return `import ${COMPONENT_NAME} from "${componentsPath}";
-        (function(){
-            const target = getTarget('${prefix}')
-            const params = ${componentParams}
-            new ${COMPONENT_NAME}(params);
-        })()
-    `;
+  const script = `   import ${COMPONENT_NAME} from "${componentsPath}";
+    (function(){
+        const target = getTarget('${prefix}')
+        const params = ${componentParams}
+        new ${COMPONENT_NAME}(params);
+    })()
+`;
+
+  const minified =
+    minify && UglifyJS.minify(script, { toplevel: true, mangle: true, compress: { passes: 2 } });
+
+  return minified ? (!minified.error ? minified.code : script) : script;
 };
 
 const composeHTMLFile = (head: string[], html: string[], lang = 'en') => {
@@ -117,8 +128,6 @@ const defaultArgs: Partial<Args> = {
   minify: false
 };
 
-// TODO: minify HTML
-// TODO: minify JS
 export const compileHTML = async (input: Args) => {
   const args = Object.assign({}, defaultArgs, input);
   const { ssrModule, dataModule, outdir, route, filesMap, dynamic, prettify, minify } = args;
@@ -134,7 +143,7 @@ export const compileHTML = async (input: Args) => {
 
   const modules = components.map(({ name, prefix, props }) => {
     return `<script type="module">
-        ${getScript(filesMap, { name, prefix, props })}
+        ${getScript(filesMap, { name, prefix, props }, minify)}
         </script>`;
   });
 
@@ -163,6 +172,19 @@ export const compileHTML = async (input: Args) => {
   }
 
   const fullHTML = `<!-- ${getBanner()} -->\n` + composeHTMLFile(head, html);
-  const file = prettify ? pretty(fullHTML) : fullHTML;
+  const file = prettify
+    ? pretty(fullHTML)
+    : minify
+    ? htmlMinifier.minify(fullHTML, {
+        minifyJS: true,
+        minifyCSS: true,
+        collapseWhitespace: true,
+        preserveLineBreaks: true,
+        collapseInlineTagWhitespace: true
+      })
+    : fullHTML;
+
+  Logger.log(JSON.stringify({ prettify, minify }));
+
   await fs.writeFile(`${outdir}/index.html`, file, 'utf8');
 };

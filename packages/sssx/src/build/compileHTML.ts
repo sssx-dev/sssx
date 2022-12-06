@@ -184,7 +184,5 @@ export const compileHTML = async (input: Args) => {
       })
     : fullHTML;
 
-  Logger.log(JSON.stringify({ prettify, minify }));
-
   await fs.writeFile(`${outdir}/index.html`, file, 'utf8');
 };

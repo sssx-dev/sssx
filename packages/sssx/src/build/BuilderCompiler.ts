@@ -79,6 +79,8 @@ export class BuilderCompiler extends BuilderBase {
     const o = { filesMap: this.filesMap };
     const dst = [PREFIX, config.compiledRoot].join(SEPARATOR);
 
+    Logger.log(JSON.stringify(this.filesMap, null, 2));
+
     await Promise.all([
       replaceImports(this.componentsWildcard, { ...o, overwriteOriginal: true, dst: OUTDIR_SSSX }),
       replaceImports(this.routesWildcard, { ...o, dst }),

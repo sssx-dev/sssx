@@ -47,7 +47,7 @@ const replaceImportsToHashedImports = (
 ) => {
   const relativePath = getImportsURL(entry);
   const filename = relativePath.split(`/`).pop() || '';
-  const ext = filename.split(`.`).pop() || '';
+  // const ext = filename.split(`.`).pop() || '';
 
   if (
     relativePath !== `sssx` &&
@@ -77,11 +77,14 @@ const replaceImportsToHashedImports = (
       .filter((a) => a.length > 0)
       .join(`/`)
       .replaceAll(`/./`, `/`); // convert /src/routes/./blog/ into /src/routes/blog/
+
     Logger.verbose(`replaceImportsToHashedImports`, originalSourcePath);
+    // console.log(options.filesMap)
+
     try {
       const newFilename = getFilenameFromOptions(originalSourcePath, options.filesMap);
       const newRelativePath = relativePath.replace(filename, newFilename);
-      // console.log(`replaceImports`, {relativePath, newRelativePath})
+      // console.log(`replaceImports`, { relativePath, newRelativePath, originalSourcePath });
       code = code.replaceAll(`"${relativePath}"`, `"${newRelativePath}"`);
     } catch (err) {
       Logger.error(`replaceImportsToHashedImports err`, { originalSourcePath, file }, err);
@@ -103,7 +106,11 @@ const getFilenameFromOptions = (originalSourcePath: string, filesMap: FilesMap) 
     .map((a) => a.split(SEPARATOR).slice(-1)[0])
     .filter((a) => a !== originalFilename);
 
-  return array[0];
+  const result = array[0];
+
+  Logger.log('getFilenameFromOptions', { originalSourcePath, result });
+
+  return result;
 };
 
 const replaceFile = async (file: string, options: Options) => {
@@ -113,6 +120,7 @@ const replaceFile = async (file: string, options: Options) => {
   const coreSvelteName = options.filesMap[SVELTEJS][0].split(`/`).pop() || '';
 
   Logger.verbose('replaceFile -> matches', file, matches);
+  // Logger.log('replaceFile -> matches', file, matches);
 
   matches &&
     matches.map((entry) => {

@@ -4,6 +4,7 @@ import { BASE } from './base.js';
 import { config, PREFIX } from '@sssx/config';
 import { renamePlugin } from '../../plugins/renamePlugin.js';
 import { ensureDirExists } from '../../utils/ensureDirExists.js';
+import { sha1 } from '../../utils/sha1.js';
 
 export const buildTypeScript = async (
   entryPoints: string[],
@@ -12,7 +13,7 @@ export const buildTypeScript = async (
 ) => {
   const result = await build({
     entryPoints,
-    entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]`,
+    // entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]`,
     ...BASE,
     bundle: false,
     write: false,
@@ -30,10 +31,15 @@ export const buildTypeScript = async (
 
   await Promise.all(
     result.outputFiles.map(async (output) => {
-      const path = output.path.split(`/`).slice(0, -1).join(`/`);
+      const path = output.path.endsWith('dynamic.js')
+        ? output.path.split(`/`).slice(0, -1).join(`/`)
+        : output.path.replace('.js', '');
       ensureDirExists(path);
 
-      await fs.writeFile(output.path, output.text, { encoding: 'utf-8' });
+      const hash = sha1(output.text);
+      const newPath = output.path.endsWith('dynamic.js') ? output.path : `${path}/${hash}.js`; // skip for dynamic.js files
+
+      await fs.writeFile(newPath, output.text, 'utf8');
     })
   );
 };

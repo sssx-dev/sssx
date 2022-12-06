@@ -14,7 +14,7 @@ import { ensureDirExists } from '../../utils/ensureDirExists.js';
 
 import esbuildSvelte from '../../lib/esbuildSvelte.js';
 import { SEPARATOR } from '../../constants.js';
-import path from 'path';
+import { sha1 } from '../../utils/sha1.js';
 
 type AllBuildResult = BuildResult & { outputFiles: OutputFile[] };
 
@@ -92,8 +92,8 @@ export const svelte2javascript = async (
   const outdir = `${config.distDir}/${generate === 'ssr' ? config.ssrRoot : config.compiledRoot}`;
   ensureDirExists(outdir);
 
-  const naming =
-    generate === 'dom' ? { entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]` } : {};
+  // const naming =
+  //   generate === 'dom' ? { entryNames: `[dir]/${config.filenamesPrefix}-[name]-[hash]` } : {};
 
   const sveltePlugin = esbuildSvelte({
     compilerOptions: {
@@ -124,7 +124,7 @@ export const svelte2javascript = async (
   const result = await build({
     entryPoints,
     ...BASE,
-    ...naming,
+    // ...naming,
     bundle,
     outdir,
     minify,
@@ -172,13 +172,15 @@ const writeFiles = (
     setFilesMap(entryPoint, path);
   });
 
+  const shouldHash = generate === 'dom';
+
   // TODO: this should become another esbuild plugin
   // write out generated JS files from svelte files, and replace imports with js files too
   result.outputFiles.map((output) => {
     const dir = output.path.split(SEPARATOR).slice(0, -1).join(SEPARATOR);
     ensureDirExists(dir);
 
-    Logger.verbose('buildSvelte', output.path);
+    Logger.log('buildSvelte', output.path);
 
     let text = output.text.replaceAll(`.svelte`, `.js`);
 
@@ -190,6 +192,14 @@ const writeFiles = (
       text = wrapHydratableComponents(text);
     }
 
-    fs.writeFileSync(output.path, text, 'utf8');
+    let path = output.path;
+    if (shouldHash) {
+      const hash = sha1(text);
+      const newDir = path.replace('.js', ``);
+      ensureDirExists(newDir);
+      path = `${newDir}/${hash}.js`;
+    }
+
+    fs.writeFileSync(path, text, 'utf8');
   });
 };

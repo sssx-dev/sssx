@@ -50,10 +50,7 @@ export const buildSvelte = async (
 ) => {
   const options = Object.assign({}, defaultOptions, buildOptions);
 
-  // if (options.generate === 'dom')
-  //   entryPoints = entryPoints.filter(
-  //     (name) => !name.startsWith(config.sourceRoot + `/` + config.routesPath)
-  //   );
+  // Logger.log('buildSvelte', options.generate);
 
   const result: AllBuildResult = await svelte2javascript(entryPoints, setFilesMap, options);
 

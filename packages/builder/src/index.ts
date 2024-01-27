@@ -3,9 +3,7 @@ import * as fsExtra from "fs-extra";
 import esbuild, { type BuildOptions, type Plugin } from "esbuild";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
-import inlineImage from "esbuild-plugin-inline-image";
 import copyPlugin from "esbuild-plugin-copy";
-import htmlPlugin from "@chialab/esbuild-plugin-html";
 import pretty from "pretty";
 
 const outdir = `./dev`;
@@ -79,7 +77,7 @@ await esbuild
       }),
     ],
   })
-  .catch((reason) => {
+  .catch((reason: any) => {
     console.warn(`Errors: `, reason);
     process.exit(1);
   });
@@ -144,15 +142,5 @@ await esbuild
     console.warn(`Errors: `, reason);
     process.exit(1);
   });
-
-// get inspired https://chialab.github.io/rna/guide/
-// await esbuild.build({
-//   entryPoints: [`${outdir}/index.html`],
-//   outdir: finalOutdir,
-//   // assetNames: "assets/[name]-[hash]", // breaks images for now
-//   assetNames: "assets/[name]",
-//   chunkNames: "[ext]/[name]-[hash]",
-//   plugins: [htmlPlugin()],
-// });
 
 fs.cpSync(outdir, finalOutdir, { recursive: true });

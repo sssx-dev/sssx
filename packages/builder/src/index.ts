@@ -144,3 +144,6 @@ await esbuild
   });
 
 fs.cpSync(outdir, finalOutdir, { recursive: true });
+
+// add dev mode and SSR mode (same but sourcemap + debugging HMR injection)
+// add static build (URL by URL)

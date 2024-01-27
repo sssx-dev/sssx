@@ -30,3 +30,4 @@
 - [ ] abort if anything fails
 - [ ] figure out how to import images naturally `import logo from './assets/svelte.svg'`
 - [ ] add pretty errors for the `dev` mode – https://www.npmjs.com/package/youch
+- [ ] Treat MDSVEX as a first-class citizen (pages + routes + templates)

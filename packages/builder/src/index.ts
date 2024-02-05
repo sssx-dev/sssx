@@ -5,10 +5,7 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import copyPlugin from "esbuild-plugin-copy";
 import pretty from "pretty";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const cwd = process.cwd();
 
 const outdir = `${cwd}/dev`;

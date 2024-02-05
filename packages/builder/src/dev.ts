@@ -24,8 +24,9 @@ const imagesRegExp = /^(.*\.(?!(svg|png|jpeg|jpg|webp)$))?[^.]*$/i;
 
 // TOOD: remember to generate ambient types for svelte here
 let resolveImages = (copyAssets = false): Plugin => ({
-  name: "env",
+  name: "resolveImages",
   setup(build) {
+    const namespace = "images-namespace";
     build.onResolve({ filter: /\.svg$/ }, (args) => {
       //   console.log(`onResolve`, args);
 
@@ -43,11 +44,11 @@ let resolveImages = (copyAssets = false): Plugin => ({
 
       return {
         path: args.path,
-        namespace: "svg-namespace",
+        namespace,
       };
     });
 
-    build.onLoad({ filter: /.*/, namespace: "svg-namespace" }, (args) => {
+    build.onLoad({ filter: /.*/, namespace }, (args) => {
       //   console.log(`onLoad`, args);
 
       return {

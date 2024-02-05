@@ -1,4 +1,5 @@
 import esbuild, { type BuildOptions } from "esbuild";
+//@ts-ignore
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
@@ -14,9 +15,9 @@ export const generateSSR = async (
   entryPoint = `./src/App.svelte`,
   outfile: string,
   buildOptions: BuildOptions = {},
-  compilerOptions: CompileOptions = defaultCompilerOptions
+  compilerSSROptions: Partial<CompileOptions> = defaultCompilerOptions
 ) => {
-  compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
+  const compilerOptions = { ...defaultCompilerOptions, ...compilerSSROptions };
 
   // server
   await esbuild

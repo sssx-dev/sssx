@@ -4,26 +4,19 @@ import esbuild, { type BuildOptions, type Plugin } from "esbuild";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import copyPlugin from "esbuild-plugin-copy";
-import pretty from "pretty";
+import { generateSSR } from "./render/generateSSR";
+import { renderSSR } from "./render/renderSSR";
+import { rimraf } from "./utils/rimraf";
+import { getCommonBuildOptions } from "./utils/settings";
 
 const cwd = process.cwd();
 
 const outdir = `${cwd}/dev`;
 const finalOutdir = `${cwd}/dist`;
-const enableSourcemap = false;
-const logLevel = `info`;
-const sourcemap = "inline";
-const prettify = false;
+const ssrFile = `${outdir}/ssr.js`;
 
-if (!fs.existsSync(outdir)) {
-  fs.mkdirSync(outdir);
-} else {
-  fsExtra.emptyDirSync(outdir);
-}
-
-if (fs.existsSync(finalOutdir)) {
-  fsExtra.emptyDirSync(finalOutdir);
-}
+rimraf(outdir);
+rimraf(finalOutdir);
 
 const copyPlugins = [
   copyPlugin({
@@ -43,83 +36,10 @@ const copyPlugins = [
   }),
 ];
 
-let common: BuildOptions = {
-  entryPoints: [`./src/main.ts`],
-  bundle: true,
-  // outdir,
-  mainFields: ["svelte", "browser", "module", "main"],
-  conditions: ["svelte", "browser"],
-  logLevel,
-  minify: false, //so the resulting code is easier to understand
-  splitting: true,
-  write: true,
-  format: `esm`,
-};
+const common = getCommonBuildOptions(`./src/main.ts`);
 
-const ssrFile = `${outdir}/ssr.js`;
-
-// server
-await esbuild
-  .build({
-    ...common,
-    entryPoints: [`./src/App.svelte`],
-    //
-    outfile: ssrFile,
-    splitting: false,
-    //
-    plugins: [
-      sveltePlugin({
-        preprocess: sveltePreprocess(),
-        compilerOptions: {
-          generate: "ssr",
-          css: "injected",
-          hydratable: true,
-          // enableSourcemap,
-        },
-      }),
-    ],
-  })
-  .catch((reason: any) => {
-    console.warn(`Errors: `, reason);
-    process.exit(1);
-  });
-
-////////////////////////////////////////////////////////////
-
-const App = (await import(ssrFile)).default;
-const output = App.render();
-const title = `Custom Title Code`;
-
-const html = `
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${title}</title>
-
-    <!-- <link rel="preload" href="./main.css" as="style" /> -->
-    <link rel="preload" href="./main.js" as="script" />
-  
-    <link rel="stylesheet" href="./main.css">
-    <!-- <style>${output.css.code}</style> -->
-  </head>
-  <body>
-    <div id="app">${output.html}</div>
-    <script type="module" src="./main.js"></script>
-  </body>
-</html>
-`;
-
-fs.writeFileSync(`${outdir}/main.css`, output.css.code, "utf8");
-if (prettify) {
-  fs.writeFileSync(`${outdir}/index.html`, pretty(html), "utf8");
-} else {
-  fs.writeFileSync(`${outdir}/index.html`, html, "utf8");
-}
-
-////////////////////////////////////////////////////////////
+await generateSSR(`./src/App.svelte`, ssrFile, common);
+await renderSSR(ssrFile, outdir);
 
 // client
 await esbuild

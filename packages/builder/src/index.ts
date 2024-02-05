@@ -36,9 +36,9 @@ const copyPlugins = [
 
 const common = getCommonBuildOptions(`./src/main.ts`);
 
-await generateSSR(`./src/App.svelte`, ssrFile, common);
-// await renderSSR(ssrFile, outdir);
-// await generateClient(outdir, common, {}, copyPlugins);
+await generateSSR(`${cwd}/src/App.svelte`, ssrFile, common);
+await renderSSR(ssrFile, outdir);
+await generateClient(outdir, common, {}, copyPlugins);
 
 // fs.cpSync(outdir, finalOutdir, { recursive: true });
 

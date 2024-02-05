@@ -8,7 +8,7 @@ const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
   css: "injected",
   hydratable: true,
-  enableSourcemap: false,
+  // enableSourcemap: false, // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
 };
 
 export const generateSSR = async (

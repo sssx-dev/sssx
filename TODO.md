@@ -1,3 +1,9 @@
+## Strategy
+
+- [ ] Basic URL -> HTML generator
+- [ ] Content editor App via Git
+- [ ] Hosting CDN for static content and functions
+
 ## Major steps
 
 - [ ] Connect to the routing API section

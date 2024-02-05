@@ -2,7 +2,7 @@
   "ts-node": {
     "esm": true
   },
-  "extends": "./node_modules/@tsconfig/svelte/tsconfig.json",
+  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
@@ -18,8 +18,7 @@
     "checkJs": true,
     "isolatedModules": true,
     // for build.ts
-    "esModuleInterop":true
+    "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }

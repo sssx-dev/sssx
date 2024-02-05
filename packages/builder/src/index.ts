@@ -5,9 +5,14 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import copyPlugin from "esbuild-plugin-copy";
 import pretty from "pretty";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const outdir = `./dev`;
-const finalOutdir = `./dist`;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const cwd = process.cwd();
+
+const outdir = `${cwd}/dev`;
+const finalOutdir = `${cwd}/dist`;
 const enableSourcemap = false;
 const logLevel = `info`;
 const sourcemap = "inline";

@@ -22,6 +22,7 @@ let plugins: Plugin[] = [];
 
 const imagesRegExp = /^(.*\.(?!(svg|png|jpeg|jpg|webp)$))?[^.]*$/i;
 
+// TOOD: remember to generate ambient types for svelte here
 let resolveImages = (copyAssets = false): Plugin => ({
   name: "env",
   setup(build) {
@@ -66,7 +67,7 @@ await generateClient(outdir, common, {}, [resolveImages()]);
 
 // TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content
-// TODO: replace import images with the string URLs and copy files to a destination using esbuild plugin
+// TODO: add watch functionlaity and reload
 
 app.use(express.static(outdir));
 const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;

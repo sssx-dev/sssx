@@ -69,6 +69,7 @@ await generateClient(outdir, common, {}, [resolveImages()]);
 // TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content
 // TODO: add watch functionlaity and reload
+// TODO: start looking into adding tailwind support
 
 app.use(express.static(outdir));
 const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;

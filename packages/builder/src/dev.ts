@@ -20,9 +20,7 @@ rimraf(outdir);
 
 let plugins: Plugin[] = [];
 
-// const imagesRegExp = /^(.*\.(?!(svg|png|jpeg|jpg|webp)$))?[^.]*$/i;
 const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)$/;
-// const imagesRegExp = /\.svg$/
 
 // TOOD: remember to generate ambient types for svelte here
 let resolveImages = (copyAssets = false): Plugin => ({

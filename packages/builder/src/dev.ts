@@ -5,7 +5,6 @@ import { buildRoute } from "./render";
 const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
-const ssrFile = `${outdir}/ssr.js`;
 
 // TODO: replace App.svelte based on the route pages/path, and later content
 // TODO: add watch functionlaity and reload
@@ -14,7 +13,7 @@ const ssrFile = `${outdir}/ssr.js`;
 
 app.get("*", async (req, res) => {
   const base = `${cwd}/src/pages`;
-  await buildRoute(outdir, ssrFile, base, "+page.svelte");
+  await buildRoute(outdir, base, "+page.svelte");
 
   const { url } = req;
   let filename = "index.html";

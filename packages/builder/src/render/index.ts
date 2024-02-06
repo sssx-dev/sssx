@@ -7,10 +7,11 @@ import { renderSSR } from "./renderSSR";
 
 export const buildRoute = async (
   outdir: string,
-  ssrFile: string,
   base: string,
   entryPoint: string
 ) => {
+  const ssrFile = `${outdir}/ssr.js`;
+
   rimraf(outdir);
 
   const common = getCommonBuildOptions();

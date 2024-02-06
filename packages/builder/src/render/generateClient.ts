@@ -31,16 +31,18 @@ export const generateClient = async (
 ) => {
   compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
 
+  const stdin: esbuild.StdinOptions = {
+    contents: getMainCode(entryPoint),
+    loader: "ts",
+    resolveDir: basedir, //".",
+    sourcefile: "main.ts",
+  };
+
   await esbuild
     .build({
       ...buildOptions,
       ///
-      stdin: {
-        contents: getMainCode(entryPoint),
-        loader: "ts",
-        resolveDir: basedir, //".",
-        sourcefile: "main.ts",
-      },
+      stdin,
       ///
       // sourcemap,
       outfile: `${outdir}/main.js`,

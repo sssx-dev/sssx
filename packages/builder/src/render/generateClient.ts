@@ -9,9 +9,8 @@ const defaultCompilerOptions: CompileOptions = {
   hydratable: true,
 };
 
-const getMainCode = (svelte = `App.svelte`, css = `app.css`, hydrate = true) =>
-  `import "../${css}";
-import App from "./${svelte}";
+const getMainCode = (svelte = `App.svelte`, hydrate = true) =>
+  `import App from "./${svelte}";
 
 const app = new App({
   target: document.getElementById("app")!,

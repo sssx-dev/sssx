@@ -13,7 +13,11 @@ const outdir = `${cwd}/dev`;
 app.get("*", async (req, res) => {
   const { url } = req;
   const base = `${cwd}/src/pages`;
-  await buildRoute(outdir, base, "+page.svelte");
+
+  // generate build only on main route request
+  if (url.endsWith("/")) {
+    await buildRoute(url, outdir, base);
+  }
 
   // serve the requested file from the filesystem
   let filename = url !== "/" ? url : "index.html";

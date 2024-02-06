@@ -7,6 +7,8 @@ export const renderSSR = async (
   title = `Custom Title Code`,
   prettify = false
 ) => {
+  // TODO: delete ssrFile here
+
   const App = (await import(ssrFile)).default;
   const output = App.render();
 

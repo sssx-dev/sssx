@@ -1,13 +1,11 @@
 import fs from "fs";
-import path from "path";
+import open from "open";
+import express from "express";
 import { generateSSR } from "./render/generateSSR";
 import { renderSSR } from "./render/renderSSR";
 import { rimraf } from "./utils/rimraf";
 import { getCommonBuildOptions } from "./utils/settings";
 import { generateClient } from "./render/generateClient";
-import express from "express";
-import open from "open";
-import { Plugin } from "esbuild";
 import { resolveImages } from "./plugins/resolveImages";
 
 const app = express();
@@ -30,8 +28,17 @@ await generateClient(outdir, common, {}, [resolveImages(outdir)]);
 // TODO: replace App.svelte based on the route pages/path, and later content
 // TODO: add watch functionlaity and reload
 // TODO: start looking into adding tailwind support
+// TODO: always trailing slash policy
 
-app.use(express.static(outdir));
+app.get("*", (req, res) => {
+  const { url } = req;
+  let filename = "index.html";
+  if (url !== "/") {
+    filename = url;
+  }
+  res.sendFile(`${outdir}/${filename}`);
+});
+
 const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 const host = "127.0.0.1";
 

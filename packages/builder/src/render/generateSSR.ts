@@ -12,7 +12,8 @@ const defaultCompilerOptions: CompileOptions = {
 };
 
 export const generateSSR = async (
-  entryPoint = `./src/App.svelte`,
+  basedir: string,
+  entryPoint: string,
   outfile: string,
   buildOptions: BuildOptions = {},
   plugins: Plugin[] = [],
@@ -24,7 +25,7 @@ export const generateSSR = async (
   await esbuild
     .build({
       ...buildOptions,
-      entryPoints: [entryPoint],
+      entryPoints: [`${basedir}/${entryPoint}`],
       //
       outfile,
       splitting: false,

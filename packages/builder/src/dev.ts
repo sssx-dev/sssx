@@ -17,11 +17,13 @@ const base = `${cwd}/src`;
 rimraf(outdir);
 
 const common = getCommonBuildOptions();
-await generateSSR(`${base}/App.svelte`, ssrFile, common, [
+await generateSSR(base, `App.svelte`, ssrFile, common, [
   resolveImages(outdir, true),
 ]);
 await renderSSR(ssrFile, outdir);
-await generateClient(base, outdir, common, {}, [resolveImages(outdir)]);
+await generateClient(base, `App.svelte`, outdir, common, {}, [
+  resolveImages(outdir),
+]);
 
 // TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content

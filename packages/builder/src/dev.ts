@@ -20,14 +20,16 @@ rimraf(outdir);
 
 let plugins: Plugin[] = [];
 
-const imagesRegExp = /^(.*\.(?!(svg|png|jpeg|jpg|webp)$))?[^.]*$/i;
+// const imagesRegExp = /^(.*\.(?!(svg|png|jpeg|jpg|webp)$))?[^.]*$/i;
+const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)$/;
+// const imagesRegExp = /\.svg$/
 
 // TOOD: remember to generate ambient types for svelte here
 let resolveImages = (copyAssets = false): Plugin => ({
   name: "resolveImages",
   setup(build) {
     const namespace = "images-namespace";
-    build.onResolve({ filter: /\.svg$/ }, (args) => {
+    build.onResolve({ filter: imagesRegExp }, (args) => {
       //   console.log(`onResolve`, args);
 
       // TODO: this would be the place to introduce hashing hash/original_name.jpeg

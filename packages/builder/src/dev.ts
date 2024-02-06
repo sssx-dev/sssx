@@ -1,32 +1,12 @@
-import fs from "fs";
 import open from "open";
 import express from "express";
-import { generateSSR } from "./render/generateSSR";
-import { renderSSR } from "./render/renderSSR";
-import { rimraf } from "./utils/rimraf";
-import { getCommonBuildOptions } from "./utils/settings";
-import { generateClient } from "./render/generateClient";
-import { resolveImages } from "./plugins/resolveImages";
+import { buildRoute } from "./render";
 
 const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
 const ssrFile = `${outdir}/ssr.js`;
 
-const buildRoute = async (base: string, entryPoint: string) => {
-  rimraf(outdir);
-
-  const common = getCommonBuildOptions();
-  await generateSSR(base, entryPoint, ssrFile, common, [
-    resolveImages(outdir, true),
-  ]);
-  await renderSSR(ssrFile, outdir);
-  await generateClient(base, entryPoint, outdir, common, {}, [
-    resolveImages(outdir),
-  ]);
-};
-
-// TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content
 // TODO: add watch functionlaity and reload
 // TODO: start looking into adding tailwind support
@@ -34,7 +14,7 @@ const buildRoute = async (base: string, entryPoint: string) => {
 
 app.get("*", async (req, res) => {
   const base = `${cwd}/src/pages`;
-  await buildRoute(base, "+page.svelte");
+  await buildRoute(outdir, ssrFile, base, "+page.svelte");
 
   const { url } = req;
   let filename = "index.html";

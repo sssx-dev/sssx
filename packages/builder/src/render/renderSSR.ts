@@ -4,11 +4,11 @@ import pretty from "pretty";
 export const renderSSR = async (
   ssrFile: string,
   outdir: string,
+  title = `Custom Title Code`,
   prettify = false
 ) => {
   const App = (await import(ssrFile)).default;
   const output = App.render();
-  const title = `Custom Title Code`;
 
   const html = `
 <!doctype html>

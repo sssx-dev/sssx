@@ -16,7 +16,9 @@ export const resolveImages = (outdir: string, copyAssets = false): Plugin => ({
       if (copyAssets) {
         const srcDir = path.dirname(args.importer);
         const src = path.normalize(`${srcDir}/${args.path}`);
-        const dst = path.normalize(`${outdir}/${args.path}`);
+        const dst = path.normalize(
+          `${outdir}/${args.path.replaceAll("../", "/")}` // should always go into `outdir`
+        );
         const dir = path.dirname(dst);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir, { recursive: true });

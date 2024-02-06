@@ -12,18 +12,19 @@ const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
 const ssrFile = `${outdir}/ssr.js`;
-const base = `${cwd}/src`;
 
-rimraf(outdir);
+const buildRoute = async (base: string, entryPoint: string) => {
+  rimraf(outdir);
 
-const common = getCommonBuildOptions();
-await generateSSR(base, `App.svelte`, ssrFile, common, [
-  resolveImages(outdir, true),
-]);
-await renderSSR(ssrFile, outdir);
-await generateClient(base, `App.svelte`, outdir, common, {}, [
-  resolveImages(outdir),
-]);
+  const common = getCommonBuildOptions();
+  await generateSSR(base, entryPoint, ssrFile, common, [
+    resolveImages(outdir, true),
+  ]);
+  await renderSSR(ssrFile, outdir);
+  await generateClient(base, entryPoint, outdir, common, {}, [
+    resolveImages(outdir),
+  ]);
+};
 
 // TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content
@@ -31,7 +32,10 @@ await generateClient(base, `App.svelte`, outdir, common, {}, [
 // TODO: start looking into adding tailwind support
 // TODO: always trailing slash policy
 
-app.get("*", (req, res) => {
+app.get("*", async (req, res) => {
+  const base = `${cwd}/src/pages`;
+  await buildRoute(base, "+page.svelte");
+
   const { url } = req;
   let filename = "index.html";
   if (url !== "/") {

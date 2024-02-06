@@ -10,7 +10,7 @@ const defaultCompilerOptions: CompileOptions = {
 };
 
 const getMainCode = (svelte = `App.svelte`, css = `app.css`, hydrate = true) =>
-  `import "./${css}";
+  `import "../${css}";
 import App from "./${svelte}";
 
 const app = new App({

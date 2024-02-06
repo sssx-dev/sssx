@@ -6,7 +6,6 @@ const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
 
-// TODO: replace App.svelte based on the route pages/path, and later content
 // TODO: add watch functionlaity and reload
 // TODO: start looking into adding tailwind support
 // TODO: always trailing slash policy

@@ -14,7 +14,7 @@
 
 - [ ] generate sitemap
 - [ ] generate robots.txt
-- [ ] Simple file system that looks obvious (i.e. SvelteKit)
+- [x] Simple file system that looks obvious (i.e. SvelteKit)
 
 ## TODO
 
@@ -34,6 +34,6 @@
 - [ ] get the ssr -> html rendering as a standalone function
 - [ ] add logging and error reporting
 - [ ] abort if anything fails
-- [ ] figure out how to import images naturally `import logo from './assets/svelte.svg'`
+- [x] figure out how to import images naturally `import logo from './assets/svelte.svg'`
 - [ ] add pretty errors for the `dev` mode – https://www.npmjs.com/package/youch
 - [ ] Treat MDSVEX as a first-class citizen (pages + routes + templates)

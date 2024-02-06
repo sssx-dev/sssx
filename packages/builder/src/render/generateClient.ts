@@ -39,6 +39,7 @@ export const generateClient = async (
         contents: getMainCode(entryPoint),
         loader: "ts",
         resolveDir: basedir, //".",
+        sourcefile: "main.ts",
       },
       ///
       // sourcemap,

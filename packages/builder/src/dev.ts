@@ -9,20 +9,19 @@ import { generateClient } from "./render/generateClient";
 import { resolveImages } from "./plugins/resolveImages";
 
 const app = express();
-
 const cwd = process.cwd();
-
 const outdir = `${cwd}/dev`;
 const ssrFile = `${outdir}/ssr.js`;
+const base = `${cwd}/src`;
 
 rimraf(outdir);
 
-const common = getCommonBuildOptions(`./src/main.ts`);
-await generateSSR(`${cwd}/src/App.svelte`, ssrFile, common, [
+const common = getCommonBuildOptions();
+await generateSSR(`${base}/App.svelte`, ssrFile, common, [
   resolveImages(outdir, true),
 ]);
 await renderSSR(ssrFile, outdir);
-await generateClient(outdir, common, {}, [resolveImages(outdir)]);
+await generateClient(base, outdir, common, {}, [resolveImages(outdir)]);
 
 // TODO: generate main.ts on the fly
 // TODO: replace App.svelte based on the route pages/path, and later content

@@ -9,7 +9,24 @@ const defaultCompilerOptions: CompileOptions = {
   hydratable: true,
 };
 
+const getMainCode = (
+  css = `./app.css`,
+  svelte = `./App.svelte`,
+  hydrate = true
+) =>
+  `import "${css}";
+import App from "${svelte}";
+
+const app = new App({
+  target: document.getElementById("app")!,
+  hydrate: ${hydrate},
+});
+
+export default app;
+`;
+
 export const generateClient = async (
+  basedir: string,
   outdir: string,
   buildOptions: BuildOptions = {},
   compilerOptions: Partial<CompileOptions> = defaultCompilerOptions,
@@ -20,6 +37,13 @@ export const generateClient = async (
   await esbuild
     .build({
       ...buildOptions,
+      ///
+      stdin: {
+        contents: getMainCode(),
+        loader: "ts",
+        resolveDir: basedir, //".",
+      },
+      ///
       // sourcemap,
       outfile: `${outdir}/main.js`,
       splitting: false,

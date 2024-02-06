@@ -22,7 +22,7 @@ export const buildRoute = async (
     resolveImages(outdir, true),
   ]);
   await renderSSR(ssrFile, outdir);
-  await generateClient(base, entryPoint, outdir, common, {}, [
+  await generateClient(base, `pages/${entryPoint}`, outdir, common, {}, [
     resolveImages(outdir),
   ]);
 };

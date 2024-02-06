@@ -12,7 +12,7 @@ const outdir = `${cwd}/dev`;
 
 app.get("*", async (req, res) => {
   const { url } = req;
-  const base = `${cwd}/src/pages`;
+  const base = `${cwd}/src/`;
 
   // generate build only on main route request
   if (url.endsWith("/")) {

@@ -10,7 +10,10 @@ export const renderSSR = async (
   // TODO: delete ssrFile here
 
   const App = (await import(ssrFile)).default;
+
   const output = App.render();
+
+  // ssr.css placed as a file
 
   const html = `
 <!doctype html>
@@ -25,6 +28,7 @@ export const renderSSR = async (
     <link rel="preload" href="./main.js" as="script" />
   
     <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./ssr.css">
     <!-- <style>${output.css.code}</style> -->
   </head>
   <body>

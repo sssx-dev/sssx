@@ -11,14 +11,12 @@ const outdir = `${cwd}/dev`;
 // TODO: always trailing slash policy
 
 app.get("*", async (req, res) => {
+  const { url } = req;
   const base = `${cwd}/src/pages`;
   await buildRoute(outdir, base, "+page.svelte");
 
-  const { url } = req;
-  let filename = "index.html";
-  if (url !== "/") {
-    filename = url;
-  }
+  // serve the requested file from the filesystem
+  let filename = url !== "/" ? url : "index.html";
   res.sendFile(`${outdir}/${filename}`);
 });
 

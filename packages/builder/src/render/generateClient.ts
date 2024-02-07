@@ -3,22 +3,12 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 //@ts-ignore
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
+import { generateEntryPoint } from "./generateEntryPoint";
 
 const defaultCompilerOptions: CompileOptions = {
   // css: 'none',
   hydratable: true,
 };
-
-const getMainCode = (svelte = `App.svelte`, hydrate = true) =>
-  `import App from "./${svelte}";
-
-const app = new App({
-  target: document.getElementById("app")!,
-  hydrate: ${hydrate},
-});
-
-export default app;
-`;
 
 export const generateClient = async (
   basedir: string,
@@ -31,7 +21,7 @@ export const generateClient = async (
   compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
 
   const stdin: esbuild.StdinOptions = {
-    contents: getMainCode(entryPoint),
+    contents: generateEntryPoint(false, compilerOptions),
     loader: "ts",
     resolveDir: basedir, //".",
     sourcefile: "main.ts",

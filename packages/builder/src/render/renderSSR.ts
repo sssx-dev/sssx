@@ -5,15 +5,18 @@ export const renderSSR = async (
   ssrFile: string,
   outdir: string,
   title = `Custom Title Code`,
-  prettify = false
+  prettify = false,
+  includeCSS = true,
+  cleanSSRfiles = true
 ) => {
-  // TODO: delete ssrFile here
-
   const App = (await import(ssrFile)).default;
-
   const output = App.render();
 
-  // ssr.css placed as a file
+  let head = "";
+  head += output.head + `\n`;
+  if (includeCSS) {
+    head += `<style>${output.css.code}</style>\n`;
+  }
 
   const html = `
 <!doctype html>
@@ -28,10 +31,8 @@ export const renderSSR = async (
     <link rel="preload" href="./main.js" as="script" />
   
     <link rel="stylesheet" href="./main.css">
-    <link rel="stylesheet" href="./ssr.css">
-    <!-- <style>${output.css.code}</style> -->
 
-    ${output.head}
+    ${head}
   </head>
   <body>
     <div id="app">${output.html}</div>
@@ -47,4 +48,15 @@ export const renderSSR = async (
     prettify ? pretty(html) : html,
     "utf8"
   );
+
+  if (cleanSSRfiles) {
+    if (fs.existsSync(ssrFile)) {
+      fs.rmSync(ssrFile);
+    }
+
+    const cssFile = ssrFile.replace(".js", ".css");
+    if (fs.existsSync(cssFile)) {
+      fs.rmSync(cssFile);
+    }
+  }
 };

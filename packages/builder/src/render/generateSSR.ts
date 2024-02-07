@@ -22,7 +22,7 @@ export const generateSSR = async (
 ) => {
   const compilerOptions = { ...defaultCompilerOptions, ...compilerSSROptions };
 
-  const contents = generateEntryPoint(compilerOptions);
+  const contents = generateEntryPoint(true, compilerOptions);
 
   // console.log("//////////////////////////////////////////////////////");
   // console.log(contents);

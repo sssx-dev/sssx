@@ -12,6 +12,7 @@ const defaultCompilerOptions: CompileOptions = {
   // enableSourcemap: false, // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
 };
 
+// TODO: improve this, because it also generates ssr.css, but client side generates main.css instead later.
 export const generateSSR = async (
   basedir: string,
   entryPoint: string,
@@ -24,12 +25,6 @@ export const generateSSR = async (
 
   const contents = generateEntryPoint(true, compilerOptions);
 
-  // console.log("//////////////////////////////////////////////////////");
-  // console.log(contents);
-  // console.log("//////////////////////////////////////////////////////");
-
-  // console.log({ basedir });
-
   const stdin: esbuild.StdinOptions = {
     contents,
     loader: "js",
@@ -41,7 +36,7 @@ export const generateSSR = async (
   await esbuild
     .build({
       ...buildOptions,
-      // entryPoints: [`${basedir}/${entryPoint}`],
+      //
       stdin,
       //
       outfile,

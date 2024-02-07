@@ -14,7 +14,8 @@ app.get("*", async (req, res) => {
   const { url } = req;
   const base = `${cwd}/src/`;
 
-  // generate build only on main route request
+  // TODO: generate build only on main route request
+  // TODO: find a way to match route with a template
   if (url.endsWith("/")) {
     const pageProps = {
       name: "John Lastname",

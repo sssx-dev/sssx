@@ -9,6 +9,7 @@ const outdir = `${cwd}/dev`;
 // TODO: add watch functionlaity and reload
 // TODO: start looking into adding tailwind support
 // TODO: always trailing slash policy
+// TODO(DX): look into $lib functionality
 
 app.get("*", async (req, res) => {
   const { url } = req;

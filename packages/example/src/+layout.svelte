@@ -9,5 +9,8 @@
 <style>
   .gray {
     background-color: gray;
+    border-width: 2px;
+    border-color: red;
+    padding: 10px;
   }
 </style>

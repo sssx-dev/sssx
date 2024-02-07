@@ -30,6 +30,8 @@ export const renderSSR = async (
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="./ssr.css">
     <!-- <style>${output.css.code}</style> -->
+
+    ${output.head}
   </head>
   <body>
     <div id="app">${output.html}</div>

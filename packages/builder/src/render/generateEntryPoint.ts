@@ -1,4 +1,6 @@
 import * as svelte from "svelte/compiler";
+
+// TODO: check if +layout exists
 const getMainSSRCode = () =>
   `<script lang="ts">
   import Layout from './+layout.svelte';

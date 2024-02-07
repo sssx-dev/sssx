@@ -36,7 +36,13 @@ const routeToFileSystem = async (srcDir: string) => {
     };
   });
 
-  console.log("routeToFileSystem", array);
+  console.log(
+    "////////////////////////////////////////// routeToFileSystem start"
+  );
+  array.map((line) => console.log(line));
+  console.log(
+    "////////////////////////////////////////// routeToFileSystem end"
+  );
 };
 
 export const buildRoute = async (

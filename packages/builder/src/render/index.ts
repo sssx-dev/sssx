@@ -13,7 +13,30 @@ const routeToFileSystem = async (srcDir: string) => {
   const list = (await globby(`${srcDir}/**/+page.svelte`)).map((path) =>
     path.replace(srcDir, "")
   );
-  console.log("routeToFileSystem", list);
+
+  const array = list.map((origin) => {
+    const path = origin
+      .split("/")
+      .filter((a) => !a.startsWith("("))
+      .join("/");
+    let route = path.split("/").slice(0, -1).join("/");
+
+    if (!route.startsWith("/")) {
+      route = `/` + route;
+    }
+
+    if (!route.endsWith("/")) {
+      route += `/`;
+    }
+
+    return {
+      origin,
+      path,
+      route,
+    };
+  });
+
+  console.log("routeToFileSystem", array);
 };
 
 export const buildRoute = async (

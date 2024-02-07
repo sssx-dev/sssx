@@ -15,6 +15,11 @@ export const buildRoute = async (
   const route = getRoute(url);
   const ssrFile = `${outdir}/ssr.js`;
 
+  console.log({ route });
+
+  // creating this inside outdir
+  if (route !== "/") outdir += route;
+
   rimraf(outdir);
 
   const common = getCommonBuildOptions();

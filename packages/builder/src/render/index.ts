@@ -10,7 +10,8 @@ export const buildRoute = async (
   url: string,
   outdir: string,
   base: string,
-  entryPoint: string = "+page.svelte"
+  entryPoint: string = "+page.svelte",
+  props: Record<string, any> = {}
 ) => {
   const route = getRoute(url);
   const ssrFile = `${outdir}/ssr.js`;
@@ -21,8 +22,14 @@ export const buildRoute = async (
   await generateSSR(base, entryPoint, ssrFile, common, [
     resolveImages(outdir, true),
   ]);
-  await renderSSR(ssrFile, outdir);
-  await generateClient(base, `pages/${entryPoint}`, outdir, common, {}, [
-    resolveImages(outdir),
-  ]);
+  await renderSSR(ssrFile, outdir, props);
+  await generateClient(
+    base,
+    `pages/${entryPoint}`,
+    outdir,
+    common,
+    {},
+    [resolveImages(outdir)],
+    props
+  );
 };

@@ -2,6 +2,8 @@
   import svelteLogo from "../assets/svelte.svg";
   import viteLogo from "../assets/vite.svg";
   import Counter from "../lib/Counter.svelte";
+
+  export let name = "Name";
 </script>
 
 <main>
@@ -14,6 +16,8 @@
     </a>
   </div>
   <h1>Vite + Svelte</h1>
+
+  <h2>Prop name: {name}</h2>
 
   <div class="card">
     <Counter />

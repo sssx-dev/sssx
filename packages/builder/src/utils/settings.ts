@@ -4,6 +4,7 @@ export const enableSourcemap = false;
 export const logLevel = `info`; // TODO: get this from env variable
 export const sourcemap = "inline";
 export const prettify = false;
+export const minify = true;
 
 export const getCommonBuildOptions = () => {
   return {

@@ -4,13 +4,14 @@ import pretty from "pretty";
 export const renderSSR = async (
   ssrFile: string,
   outdir: string,
+  props: Record<string, any> = {},
   title = `Custom Title Code`,
   prettify = false,
   includeCSS = true,
   cleanSSRfiles = true
 ) => {
   const App = (await import(ssrFile)).default;
-  const output = App.render();
+  const output = App.render(props);
 
   let head = "";
   head += output.head + `\n`;

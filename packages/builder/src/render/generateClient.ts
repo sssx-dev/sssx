@@ -4,6 +4,7 @@ import sveltePreprocess from "svelte-preprocess";
 //@ts-ignore
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import { generateEntryPoint } from "./generateEntryPoint";
+import { minify } from "../utils/settings";
 
 const defaultCompilerOptions: CompileOptions = {
   // css: 'none',
@@ -16,12 +17,13 @@ export const generateClient = async (
   outdir: string,
   buildOptions: BuildOptions = {},
   compilerOptions: Partial<CompileOptions> = defaultCompilerOptions,
-  plugins: Plugin[] = []
+  plugins: Plugin[] = [],
+  props: Record<string, any> = {}
 ) => {
   compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
 
   const stdin: esbuild.StdinOptions = {
-    contents: generateEntryPoint(false, compilerOptions),
+    contents: generateEntryPoint(false, compilerOptions, props),
     loader: "ts",
     resolveDir: basedir, //".",
     sourcefile: "main.ts",
@@ -36,7 +38,8 @@ export const generateClient = async (
       // sourcemap,
       outfile: `${outdir}/main.js`,
       splitting: false,
-      minify: true,
+      // minify: true,
+      minify: false,
       plugins: [
         ...plugins,
         sveltePlugin({

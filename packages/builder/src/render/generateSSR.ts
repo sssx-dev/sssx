@@ -15,7 +15,7 @@ const defaultCompilerOptions: CompileOptions = {
 // TODO: improve this, because it also generates ssr.css, but client side generates main.css instead later.
 export const generateSSR = async (
   basedir: string,
-  entryPoint: string,
+  route: string,
   outfile: string,
   buildOptions: BuildOptions = {},
   plugins: Plugin[] = [],
@@ -23,7 +23,7 @@ export const generateSSR = async (
 ) => {
   const compilerOptions = { ...defaultCompilerOptions, ...compilerSSROptions };
 
-  const contents = generateEntryPoint(true, compilerOptions);
+  const contents = generateEntryPoint(true, compilerOptions, route);
 
   const stdin: esbuild.StdinOptions = {
     contents,

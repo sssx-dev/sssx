@@ -13,7 +13,7 @@ const defaultCompilerOptions: CompileOptions = {
 
 export const generateClient = async (
   basedir: string,
-  entryPoint: string,
+  route: string,
   outdir: string,
   buildOptions: BuildOptions = {},
   compilerOptions: Partial<CompileOptions> = defaultCompilerOptions,
@@ -23,7 +23,7 @@ export const generateClient = async (
   compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
 
   const stdin: esbuild.StdinOptions = {
-    contents: generateEntryPoint(false, compilerOptions, props),
+    contents: generateEntryPoint(false, compilerOptions, route, props),
     loader: "ts",
     resolveDir: basedir, //".",
     sourcefile: "main.ts",

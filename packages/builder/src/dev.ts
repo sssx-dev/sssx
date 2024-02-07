@@ -19,7 +19,7 @@ app.get("*", async (req, res) => {
     const pageProps = {
       name: "John Lastname",
     };
-    await buildRoute(url, outdir, base, "+page.svelte", pageProps);
+    await buildRoute(url, outdir, base, pageProps);
   }
 
   // serve the requested file from the filesystem

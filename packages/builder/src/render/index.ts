@@ -10,7 +10,6 @@ export const buildRoute = async (
   url: string,
   outdir: string,
   base: string,
-  entryPoint: string = "+page.svelte",
   props: Record<string, any> = {}
 ) => {
   const route = getRoute(url);
@@ -19,13 +18,13 @@ export const buildRoute = async (
   rimraf(outdir);
 
   const common = getCommonBuildOptions();
-  await generateSSR(base, entryPoint, ssrFile, common, [
+  await generateSSR(base, route, ssrFile, common, [
     resolveImages(outdir, true),
   ]);
   await renderSSR(ssrFile, outdir, props);
   await generateClient(
     base,
-    `pages/${entryPoint}`,
+    route,
     outdir,
     common,
     {},

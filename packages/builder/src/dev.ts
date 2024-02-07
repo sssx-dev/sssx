@@ -16,9 +16,10 @@ app.get("*", async (req, res) => {
 
   // generate build only on main route request
   if (url.endsWith("/")) {
-    await buildRoute(url, outdir, base, "+page.svelte", {
+    const pageProps = {
       name: "John Lastname",
-    });
+    };
+    await buildRoute(url, outdir, base, "+page.svelte", pageProps);
   }
 
   // serve the requested file from the filesystem

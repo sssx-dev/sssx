@@ -6,6 +6,7 @@ export const renderSSR = async (
   outdir: string,
   props: Record<string, any> = {},
   title = `Custom Title Code`,
+  lang = "en",
   prettify = false,
   includeCSS = true,
   cleanSSRfiles = true
@@ -19,14 +20,17 @@ export const renderSSR = async (
     head += `<style>${output.css.code}</style>\n`;
   }
 
+  if (!head.includes("<title>")) {
+    head = `<title>${title}</title>\n${head}`;
+  }
+
   const html = `
 <!doctype html>
-<html lang="en">
+<html lang="${lang}">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${title}</title>
 
     <!-- <link rel="preload" href="./main.css" as="style" /> -->
     <link rel="preload" href="./main.js" as="script" />

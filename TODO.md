@@ -18,23 +18,25 @@
 
 ## TODO
 
-- [ ] Research Astro, Svelte, Next layouts
-- [ ] Research esbuild plugins with virtual file system, and custom inputs
-- [ ] Develop separate systems for dev and build (vite style preview) to run separate modes
-- [ ] https://kit.svelte.dev/docs/advanced-routing
+- [x] Research Astro, Svelte, Next layouts
+- [x] Research esbuild plugins with virtual file system, and custom inputs
+- [x] Develop separate systems for dev (vite dev) to run separate modes
+- [ ] Develop separate systems for build (vite preview) to run separate modes
+- [x] https://kit.svelte.dev/docs/advanced-routing
 
 ## General list
 
-- [ ] Add javascript uglifier (compress too)
-- [ ] Enable assets (image) hashes
-- [ ] Clearly separate public assets in `public` folder and inside `src/assets`
+- [x] Add javascript uglifier (compress too)
+- [x] Enable assets (image)
+- [ ] Enable assets (image) hashes (root dir and sub dirs)
 - [ ] optimize for lighthouse performance: First Contentful Paint (FCP)
-- [ ] improve hashing of names
-- [ ] decide how to serve CSS
+- [x] decide how to serve CSS (serve via files)
 - [ ] add tailwind support
-- [ ] get the ssr -> html rendering as a standalone function
+- [x] get the ssr -> html rendering as a standalone function
 - [ ] add logging and error reporting
 - [ ] abort if anything fails
 - [x] figure out how to import images naturally `import logo from './assets/svelte.svg'`
 - [ ] add pretty errors for the `dev` mode – https://www.npmjs.com/package/youch
 - [ ] Treat MDSVEX as a first-class citizen (pages + routes + templates)
+- [ ] add measure for each build step, so we can perf and optimize later
+- [ ] add binary tree for hashes to find a relevant url fast

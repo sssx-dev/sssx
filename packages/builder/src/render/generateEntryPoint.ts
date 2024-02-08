@@ -6,7 +6,7 @@ const getMainSSRCode = (route = `/`) =>
   import Layout from './+layout.svelte';
   import Page from './pages${route}+page.svelte';
 
-  export let page:any = {}
+  export let page = {}
 </script>
 
 <Layout>

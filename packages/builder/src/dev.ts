@@ -6,17 +6,11 @@ const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
 
-// TODO: add watch functionlaity and reload
-// TODO: start looking into adding tailwind support
-// TODO: always trailing slash policy
-// TODO(DX): look into $lib functionality
-
 app.get("*", async (req, res) => {
   const { url } = req;
   const base = `${cwd}/src/`;
 
-  // TODO: generate build only on main route request
-  // TODO: find a way to match route with a template
+  // generate build only on main route request
   if (url.endsWith("/")) {
     const pageProps = {
       name: "John Lastname",

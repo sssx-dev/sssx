@@ -40,3 +40,8 @@
 - [ ] Treat MDSVEX as a first-class citizen (pages + routes + templates)
 - [ ] add measure for each build step, so we can perf and optimize later
 - [ ] add binary tree for hashes to find a relevant url fast
+
+## Developer Experience
+
+- [ ] add watch functionlaity and reload for `dev`
+- [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias

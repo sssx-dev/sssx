@@ -13,6 +13,9 @@ app.get("*", async (req, res) => {
   // generate build only on main route request
   if (url.endsWith("/")) {
     await buildRoute(url, outdir, base);
+  } else if (url.indexOf(".") === -1) {
+    // redirect /about to /about/
+    return res.redirect(`${url}/`);
   }
 
   // serve the requested file from the filesystem

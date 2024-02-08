@@ -48,6 +48,18 @@ export const getAllRoutes = async (srcDir: string) => {
   return all;
 };
 
+const checkSlashes = (input: string) => {
+  if (!input.startsWith("/")) {
+    input = `/` + input;
+  }
+
+  if (!input.endsWith("/")) {
+    input += `/`;
+  }
+
+  return input;
+};
+
 const getPlainRoutes = async (srcDir: string) => {
   const list = (await globby(`${srcDir}/**/${PAGE_SVELTE}`)).map((path) =>
     path.replace(srcDir, "")
@@ -55,26 +67,22 @@ const getPlainRoutes = async (srcDir: string) => {
 
   const array: RouteInfo[] = list
     .map((file) => {
-      const path = file
-        .split("/")
-        .filter((a) => !a.startsWith("("))
-        .join("/");
-      let route = path.split("/").slice(0, -1).join("/");
+      let route = file.split("/").slice(0, -1).join("/");
+      const permalink = checkSlashes(
+        route
+          .split("/")
+          // filtering out /some/(group)/slug -> /some//slug
+          .filter((a) => !a.startsWith("("))
+          .join("/")
+      );
 
-      if (!route.startsWith("/")) {
-        route = `/` + route;
-      }
-
-      if (!route.endsWith("/")) {
-        route += `/`;
-      }
+      route = checkSlashes(route);
 
       return {
         // TODO: is there a nicer way to do this, instead re-attaching the path again
         file: `${srcDir}${file}`,
-        // path,
         route,
-        permalink: route,
+        permalink,
         param: {},
       };
     })
@@ -88,16 +96,29 @@ const getPlainRoutes = async (srcDir: string) => {
 
 // TODO: turn this into a proper matching logic
 // https://kit.svelte.dev/docs/advanced-routing
-export const routeToFileSystem = async (srcDir: string) => {
+export const routeToFileSystem = async (
+  srcDir: string,
+  route: string
+): Promise<RouteInfo | undefined> => {
   const all = await getAllRoutes(srcDir);
   const plain = await getPlainRoutes(srcDir);
   const array = [...all, ...plain];
 
-  console.log(
-    "////////////////////////////////////////// routeToFileSystem start"
-  );
-  console.log(array);
-  console.log(
-    "////////////////////////////////////////// routeToFileSystem end"
-  );
+  const filtered = array.filter((segment) => segment.permalink === route);
+
+  // console.log(
+  //   "////////////////////////////////////////// routeToFileSystem start"
+  // );
+  // console.log(array);
+  // console.log(filtered);
+  // console.log(
+  //   "////////////////////////////////////////// routeToFileSystem end"
+  // );
+
+  // return first found mathcing permalink
+  if (filtered.length > 0) {
+    return filtered[0];
+  }
+
+  return undefined;
 };

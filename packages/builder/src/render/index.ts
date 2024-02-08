@@ -7,36 +7,35 @@ import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
 import { routeToFileSystem } from "./routes";
 
-export const buildRoute = async (
-  url: string,
-  outdir: string,
-  base: string,
-  props: Record<string, any> = {}
-) => {
+export const buildRoute = async (url: string, outdir: string, base: string) => {
   const route = getRoute(url);
   const ssrFile = `${outdir}/ssr.js`;
 
-  await routeToFileSystem(`${base}pages/`);
+  const segment = await routeToFileSystem(`${base}pages/`, route);
+  console.log(segment);
 
-  console.log({ route });
+  if (segment) {
+    // TODO: query `module.data(param)` to get data here
+    const props = segment.param;
 
-  // creating this inside outdir
-  if (route !== "/") outdir += route;
+    // creating this inside outdir
+    if (route !== "/") outdir += route;
 
-  rimraf(outdir);
+    rimraf(outdir);
 
-  const common = getCommonBuildOptions();
-  await generateSSR(base, route, ssrFile, common, [
-    resolveImages(outdir, true),
-  ]);
-  await renderSSR(ssrFile, outdir, props);
-  await generateClient(
-    base,
-    route,
-    outdir,
-    common,
-    {},
-    [resolveImages(outdir)],
-    props
-  );
+    const common = getCommonBuildOptions();
+    await generateSSR(base, segment.route, ssrFile, common, [
+      resolveImages(outdir, true),
+    ]);
+    await renderSSR(ssrFile, outdir, props);
+    await generateClient(
+      base,
+      segment.route,
+      outdir,
+      common,
+      {},
+      [resolveImages(outdir)],
+      props
+    );
+  }
 };

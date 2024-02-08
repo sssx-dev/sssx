@@ -12,10 +12,7 @@ app.get("*", async (req, res) => {
 
   // generate build only on main route request
   if (url.endsWith("/")) {
-    const pageProps = {
-      name: "John Lastname",
-    };
-    await buildRoute(url, outdir, base, pageProps);
+    await buildRoute(url, outdir, base);
   }
 
   // serve the requested file from the filesystem

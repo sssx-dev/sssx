@@ -1,3 +1,5 @@
+export const permalink = `/:dog/`;
+
 export const all = () => {
   return [{ dog: "dog1" }, { dog: "dog2" }, { dog: "dog3" }];
 };

@@ -11,7 +11,12 @@ import { renderSSR } from "./renderSSR";
 // https://kit.svelte.dev/docs/advanced-routing
 // pull +page.ts files
 const routeToFileSystem = async (srcDir: string) => {
-  const indexes = await globby(`${srcDir}/**/+page.ts`);
+  const indexFiles = await globby(`${srcDir}/**/+page.ts`);
+  const indexes = await Promise.all(
+    indexFiles.map(async (file) => await import(file))
+  );
+  const all = indexes.map((module) => module.all());
+
   const list = (await globby(`${srcDir}/**/+page.svelte`)).map((path) =>
     path.replace(srcDir, "")
   );
@@ -42,6 +47,8 @@ const routeToFileSystem = async (srcDir: string) => {
     "////////////////////////////////////////// routeToFileSystem start"
   );
   console.log(indexes);
+  console.log("//////////////////////////////////////////");
+  console.log(all);
   console.log("//////////////////////////////////////////");
   array.map((line) => console.log(line));
   console.log(

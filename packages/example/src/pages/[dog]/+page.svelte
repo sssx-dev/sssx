@@ -1,6 +1,6 @@
 <script lang="ts">
   // TODO: add the dynamic types like in SvelteKit
-  const data: any = {};
+  export let data: any = {};
 
   const { dog } = data;
 </script>

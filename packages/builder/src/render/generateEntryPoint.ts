@@ -6,11 +6,11 @@ const getMainSSRCode = (route = `/`) =>
   import Layout from './+layout.svelte';
   import Page from './pages${route}+page.svelte';
 
-  export let page = {}
+  export let data = {}
 </script>
 
 <Layout>
-  <Page {...page}/>
+  <Page {data}/>
 </Layout>
 `;
 
@@ -22,7 +22,7 @@ const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
   target: document.getElementById("app")!,
   hydrate: ${hydrate},
   props: {
-    page: ${JSON.stringify(props, null, 2)}
+    data: ${JSON.stringify(props, null, 2)}
   }
 });
 

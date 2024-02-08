@@ -11,12 +11,15 @@ export const buildRoute = async (url: string, outdir: string, base: string) => {
   const route = getRoute(url);
   const ssrFile = `${outdir}/ssr.js`;
 
+  // march route coming from dev server like /some/slug/ into a segment
+  // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
   const segment = await routeToFileSystem(`${base}pages/`, route);
-  console.log(segment);
+  console.log({ segment });
 
   if (segment) {
     // TODO: query `module.data(param)` to get data here
     const props = segment.param;
+    console.log({ props });
 
     // creating this inside outdir
     if (route !== "/") outdir += route;

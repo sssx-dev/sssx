@@ -11,7 +11,7 @@ const PAGE_FILE = `+page.ts`;
 
 // pull +page.ts files
 export const getAllRoutes = async (srcDir: string) => {
-  const indexFiles = await globby(`${srcDir}/**/+page.ts`);
+  const indexFiles = await globby(`${srcDir}/**/${PAGE_FILE}`);
   const indexes = await Promise.all(
     indexFiles.map(async (file) => await import(file))
   );

@@ -18,6 +18,7 @@ export const getAllRoutes = async (srcDir: string) => {
       const { permalink } = module;
       return module.all().map((param: any) => {
         let singlePermalink = "";
+        const file = indexFiles[index];
 
         // if permalink is a fuction, then just call it
         // if (typeof permalink == "function") {
@@ -32,10 +33,12 @@ export const getAllRoutes = async (srcDir: string) => {
         //   });
         // }
 
+        // TODO: refactor permalinks using the file system url
+
         return {
           //   permalink: singlePermalink,
           param,
-          file: indexFiles[index],
+          file,
         };
       });
     })

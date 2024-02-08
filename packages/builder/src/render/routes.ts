@@ -20,20 +20,20 @@ export const getAllRoutes = async (srcDir: string) => {
         let singlePermalink = "";
 
         // if permalink is a fuction, then just call it
-        if (typeof permalink == "function") {
-          singlePermalink = permalink(param);
-        } else {
-          // if it's a string literal, then we need to replace each parameter there
-          // TODO: add safety checks here, like a missing key somewhere
-          // TODO: do not allow semicolons for production
-          singlePermalink = permalink;
-          Object.keys(param).map((key) => {
-            singlePermalink = singlePermalink.replace(`:${key}`, param[key]);
-          });
-        }
+        // if (typeof permalink == "function") {
+        //   singlePermalink = permalink(param);
+        // } else {
+        //   // if it's a string literal, then we need to replace each parameter there
+        //   // TODO: add safety checks here, like a missing key somewhere
+        //   // TODO: do not allow semicolons for production
+        //   singlePermalink = permalink;
+        //   Object.keys(param).map((key) => {
+        //     singlePermalink = singlePermalink.replace(`:${key}`, param[key]);
+        //   });
+        // }
 
         return {
-          permalink: singlePermalink,
+          //   permalink: singlePermalink,
           param,
           file: indexFiles[index],
         };

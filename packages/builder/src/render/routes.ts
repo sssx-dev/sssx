@@ -4,10 +4,12 @@ export type RouteInfo = {
   permalink: string;
   param: Record<string, any>;
   file: string;
+  route: string;
 };
 
 const PREFIX = `src/pages`;
 const PAGE_FILE = `+page.ts`;
+const PAGE_SVELTE = `+page.svelte`;
 
 // pull +page.ts files
 export const getAllRoutes = async (srcDir: string) => {
@@ -36,6 +38,7 @@ export const getAllRoutes = async (srcDir: string) => {
         return {
           permalink,
           param,
+          route,
           file,
         };
       });
@@ -45,42 +48,55 @@ export const getAllRoutes = async (srcDir: string) => {
   return all;
 };
 
+const getPlainRoutes = async (srcDir: string) => {
+  const list = (await globby(`${srcDir}/**/${PAGE_SVELTE}`)).map((path) =>
+    path.replace(srcDir, "")
+  );
+
+  const array: RouteInfo[] = list
+    .map((file) => {
+      const path = file
+        .split("/")
+        .filter((a) => !a.startsWith("("))
+        .join("/");
+      let route = path.split("/").slice(0, -1).join("/");
+
+      if (!route.startsWith("/")) {
+        route = `/` + route;
+      }
+
+      if (!route.endsWith("/")) {
+        route += `/`;
+      }
+
+      return {
+        // TODO: is there a nicer way to do this, instead re-attaching the path again
+        file: `${srcDir}${file}`,
+        // path,
+        route,
+        permalink: route,
+        param: {},
+      };
+    })
+    .filter((segment) => {
+      // filtering out /some/[slug]/route
+      return segment.route.indexOf("[") === -1;
+    });
+
+  return array;
+};
+
 // TODO: turn this into a proper matching logic
 // https://kit.svelte.dev/docs/advanced-routing
 export const routeToFileSystem = async (srcDir: string) => {
   const all = await getAllRoutes(srcDir);
-  const list = (await globby(`${srcDir}/**/+page.svelte`)).map((path) =>
-    path.replace(srcDir, "")
-  );
-
-  const array = list.map((origin) => {
-    const path = origin
-      .split("/")
-      .filter((a) => !a.startsWith("("))
-      .join("/");
-    let route = path.split("/").slice(0, -1).join("/");
-
-    if (!route.startsWith("/")) {
-      route = `/` + route;
-    }
-
-    if (!route.endsWith("/")) {
-      route += `/`;
-    }
-
-    return {
-      origin,
-      path,
-      route,
-    };
-  });
+  const plain = await getPlainRoutes(srcDir);
+  const array = [...all, ...plain];
 
   console.log(
     "////////////////////////////////////////// routeToFileSystem start"
   );
-  console.log(all);
-  console.log("//////////////////////////////////////////");
-  array.map((line) => console.log(line));
+  console.log(array);
   console.log(
     "////////////////////////////////////////// routeToFileSystem end"
   );

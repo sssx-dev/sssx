@@ -8,7 +8,7 @@
 
 <style>
   .gray {
-    background-color: gray;
+    background-color: lightgray;
     border-width: 2px;
     border-color: red;
     padding: 10px;

@@ -6,6 +6,9 @@ export type RouteInfo = {
   file: string;
 };
 
+const PREFIX = `src/pages`;
+const PAGE_FILE = `+page.ts`;
+
 // pull +page.ts files
 export const getAllRoutes = async (srcDir: string) => {
   const indexFiles = await globby(`${srcDir}/**/+page.ts`);
@@ -15,28 +18,23 @@ export const getAllRoutes = async (srcDir: string) => {
 
   const all: RouteInfo[] = indexes
     .map((module, index) => {
-      const { permalink } = module;
       return module.all().map((param: any) => {
-        let singlePermalink = "";
         const file = indexFiles[index];
+        const route = file.split(PREFIX)[1].replace(PAGE_FILE, "");
+        let permalink = route
+          .split("/")
+          .filter((a) => !a.startsWith("("))
+          .join("/"); // filter out `(group)` folders
 
-        // if permalink is a fuction, then just call it
-        // if (typeof permalink == "function") {
-        //   singlePermalink = permalink(param);
-        // } else {
-        //   // if it's a string literal, then we need to replace each parameter there
-        //   // TODO: add safety checks here, like a missing key somewhere
-        //   // TODO: do not allow semicolons for production
-        //   singlePermalink = permalink;
-        //   Object.keys(param).map((key) => {
-        //     singlePermalink = singlePermalink.replace(`:${key}`, param[key]);
-        //   });
-        // }
-
-        // TODO: refactor permalinks using the file system url
+        // if it's a string literal, then we need to replace each parameter there
+        // TODO: add safety checks here, like a missing key somewhere
+        // TODO: do not allow semicolons for production
+        Object.keys(param).map((key) => {
+          permalink = permalink.replace(`[${key}]`, param[key]);
+        });
 
         return {
-          //   permalink: singlePermalink,
+          permalink,
           param,
           file,
         };

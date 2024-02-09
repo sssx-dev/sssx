@@ -9,11 +9,10 @@ const isDev = true; // TODO: get this from the environment
 
 app.get("*", async (req, res) => {
   const { url } = req;
-  const base = `${cwd}/src/`;
 
   // generate build only on main route request
   if (url.endsWith("/")) {
-    await buildRoute(url, outdir, base, isDev);
+    await buildRoute(url, outdir, cwd, isDev);
   } else if (url.indexOf(".") === -1) {
     // redirect /about to /about/
     return res.redirect(`${url}/`);

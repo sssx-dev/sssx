@@ -20,5 +20,5 @@
     // for build.ts
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "sssx.config.ts"]
 }

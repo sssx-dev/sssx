@@ -9,7 +9,8 @@ import { routeToFileSystem } from "./routes";
 
 export const buildRoute = async (url: string, outdir: string, base: string) => {
   const route = getRoute(url);
-  const ssrFile = `${outdir}/ssr.js`;
+  const rand = Math.random().toString().slice(2);
+  const ssrFile = `${outdir}/ssr.${rand}.js`;
 
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte

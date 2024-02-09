@@ -53,14 +53,14 @@ export const renderSSR = async (
     "utf8"
   );
 
-  // if (cleanSSRfiles) {
-  //   if (fs.existsSync(ssrFile)) {
-  //     fs.rmSync(ssrFile);
-  //   }
+  if (cleanSSRfiles) {
+    if (fs.existsSync(ssrFile)) {
+      fs.rmSync(ssrFile);
+    }
 
-  //   const cssFile = ssrFile.replace(".js", ".css");
-  //   if (fs.existsSync(cssFile)) {
-  //     fs.rmSync(cssFile);
-  //   }
-  // }
+    const cssFile = ssrFile.replace(".js", ".css");
+    if (fs.existsSync(cssFile)) {
+      fs.rmSync(cssFile);
+    }
+  }
 };

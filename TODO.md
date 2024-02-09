@@ -39,9 +39,9 @@
 - [ ] add binary tree for hashes to find a relevant url fast
 - [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 - [ ] add no JS option, so pages would not be hydrated
+- [x] robots.txt
 
 - [ ] sitemap (implement as sitemap.ts and allow to "eject" it if needed for editing)
-- [x] robots.txt
 - [ ] add tailwind support
 - [ ] content URLs generated from `content`
 - [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )

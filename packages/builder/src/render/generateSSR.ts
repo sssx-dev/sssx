@@ -1,13 +1,11 @@
 import esbuild, { Plugin, type BuildOptions } from "esbuild";
-//@ts-ignore
-import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
+import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
-  // css: "injected",
   css: "none",
   hydratable: true,
 };

@@ -1,3 +1,7 @@
+// draw inspirations from:
+// https://nextjs.org/docs/app/api-reference/next-config-js
+// https://kit.svelte.dev/docs/configuration
+// https://elderguide.com/tech/elderjs/#config-elderconfigjs
 export type Config = {
   title?: string;
   assets: string;

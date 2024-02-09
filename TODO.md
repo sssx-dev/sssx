@@ -21,7 +21,7 @@
 - [x] Research Astro, Svelte, Next layouts
 - [x] Research esbuild plugins with virtual file system, and custom inputs
 - [x] Develop separate systems for dev (vite dev) to run separate modes
-- [ ] Develop separate systems for build (vite preview) to run separate modes
+- [x] Develop separate systems for build (vite preview) to run separate modes
 - [x] https://kit.svelte.dev/docs/advanced-routing
 
 ## General list

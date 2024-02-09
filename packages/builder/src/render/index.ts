@@ -19,8 +19,6 @@ export const buildRoute = async (
 ) => {
   const base = `${cwd}/src/`;
   const route = getRoute(url);
-  const rand = Math.random().toString().slice(2);
-  const ssrFile = `${outdir}/ssr.${rand}.js`;
   const isRoot = route === "/";
 
   // march route coming from dev server like /some/slug/ into a segment
@@ -46,16 +44,15 @@ export const buildRoute = async (
     }
 
     const common = getCommonBuildOptions();
-    await generateSSR(
+    const output = await generateSSR(
       base,
       segment.route,
-      ssrFile,
       common,
       [resolveImages(outdir, true)],
       {},
       isDev
     );
-    await renderSSR(ssrFile, outdir, props, config.title);
+    await renderSSR(output, outdir, props, config.title);
     await generateClient(
       base,
       segment.route,

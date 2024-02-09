@@ -2,16 +2,18 @@ import fs from "fs";
 import pretty from "pretty";
 
 export const renderSSR = async (
-  ssrFile: string,
+  js: string,
   outdir: string,
   props: Record<string, any> = {},
   title = `Custom Title Code`,
   lang = "en",
   prettify = false,
-  includeCSS = true,
-  cleanSSRfiles = true
+  includeCSS = true
 ) => {
-  const App = (await import(ssrFile)).default;
+  const dataUri =
+    "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
+
+  const App = (await import(dataUri)).default;
   const output = App.render(props);
 
   let head = "";
@@ -52,15 +54,4 @@ export const renderSSR = async (
     prettify ? pretty(html) : html,
     "utf8"
   );
-
-  if (cleanSSRfiles) {
-    if (fs.existsSync(ssrFile)) {
-      fs.rmSync(ssrFile);
-    }
-
-    const cssFile = ssrFile.replace(".js", ".css");
-    if (fs.existsSync(cssFile)) {
-      fs.rmSync(cssFile);
-    }
-  }
 };

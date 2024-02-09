@@ -11,11 +11,9 @@ const defaultCompilerOptions: CompileOptions = {
   hydratable: true,
 };
 
-// TODO: improve this, because it also generates ssr.css, but client side generates main.css instead later.
 export const generateSSR = async (
   basedir: string,
   route: string,
-  outfile: string,
   buildOptions: BuildOptions = {},
   plugins: Plugin[] = [],
   compilerSSROptions: Partial<CompileOptions> = {},
@@ -40,25 +38,31 @@ export const generateSSR = async (
   };
 
   // server
-  await esbuild
-    .build({
-      ...buildOptions,
-      //
-      stdin,
-      //
-      outfile,
-      splitting: false,
-      //
-      plugins: [
-        ...plugins,
-        sveltePlugin({
-          preprocess: sveltePreprocess(),
-          compilerOptions,
-        }),
-      ],
-    })
-    .catch((reason: any) => {
-      console.warn(`Errors: `, reason);
-      process.exit(1);
-    });
+  const result = await esbuild.build({
+    ...buildOptions,
+    // output is in memory, not file system
+    write: false,
+    //
+    stdin,
+    //
+    outfile: "./ssr.js",
+    splitting: false,
+    //
+    plugins: [
+      ...plugins,
+      sveltePlugin({
+        preprocess: sveltePreprocess(),
+        compilerOptions,
+      }),
+    ],
+  });
+  // .catch((reason: any) => {
+  //   console.warn(`Errors: `, reason);
+  //   process.exit(1);
+  // });
+
+  // TODO: check for warnings
+  const output = result.outputFiles[0].text;
+
+  return output;
 };

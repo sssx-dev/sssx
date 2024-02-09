@@ -7,7 +7,7 @@ const app = express();
 const cwd = process.cwd();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
-const isDev = true; // TODO: get this from the environment
+const isDev = true;
 
 app.get("*", async (req, res) => {
   const { url } = req;

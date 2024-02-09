@@ -29,7 +29,6 @@
 - [ ] Enable assets hashed assets (`image.png?hashed` that will be stored in a root)
 - [ ] optimize for lighthouse performance: First Contentful Paint (FCP)
 - [x] decide how to serve CSS (serve via files)
-- [ ] add tailwind support
 - [x] get the ssr -> html rendering as a standalone function
 - [ ] add logging and error reporting
 - [ ] abort if anything fails
@@ -40,6 +39,10 @@
 - [ ] add binary tree for hashes to find a relevant url fast
 - [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 - [ ] add no JS option, so pages would not be hydrated
+
+- [ ] add tailwind support
+- [ ] sitemap
+- [ ] robots.txt
 - [ ] content URLs generated from `content`
 - [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 

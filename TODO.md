@@ -12,7 +12,7 @@
 
 ## Good to have
 
-- [ ] generate sitemap
+- [ ] generate sitemap (can it be generated as a page like in SvelteKit?)
 - [ ] generate robots.txt
 - [x] Simple file system that looks obvious (i.e. SvelteKit)
 

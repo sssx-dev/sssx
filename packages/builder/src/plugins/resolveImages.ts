@@ -35,8 +35,9 @@ export const resolveImages = (outdir: string, copyAssets = false): Plugin => ({
     build.onLoad({ filter: /.*/, namespace }, (args) => {
       //   console.log(`onLoad`, args);
 
+      const contents = args.path.replace("../", "./");
       return {
-        contents: args.path,
+        contents,
         loader: "text",
       };
     });

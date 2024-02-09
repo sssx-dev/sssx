@@ -24,16 +24,15 @@ export const renderSSR = async (
     head = `<title>${title}</title>\n${head}`;
   }
 
+  // <link rel="preload" href="./main.css" as="style" />
+  // <link rel="preload" href="./main.js" as="script" />
+
   const html = `
 <!doctype html>
 <html lang="${lang}">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- <link rel="preload" href="./main.css" as="style" /> -->
-    <link rel="preload" href="./main.js" as="script" />
   
     <link rel="stylesheet" href="./main.css">
 
@@ -54,14 +53,14 @@ export const renderSSR = async (
     "utf8"
   );
 
-  if (cleanSSRfiles) {
-    if (fs.existsSync(ssrFile)) {
-      fs.rmSync(ssrFile);
-    }
+  // if (cleanSSRfiles) {
+  //   if (fs.existsSync(ssrFile)) {
+  //     fs.rmSync(ssrFile);
+  //   }
 
-    const cssFile = ssrFile.replace(".js", ".css");
-    if (fs.existsSync(cssFile)) {
-      fs.rmSync(cssFile);
-    }
-  }
+  //   const cssFile = ssrFile.replace(".js", ".css");
+  //   if (fs.existsSync(cssFile)) {
+  //     fs.rmSync(cssFile);
+  //   }
+  // }
 };

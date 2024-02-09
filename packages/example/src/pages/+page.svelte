@@ -1,9 +1,7 @@
 <script lang="ts">
   import svelteLogo from "../assets/svelte.svg";
-  import viteLogo from "../assets/vite.svg";
+  import esbuildLogo from "../assets/esbuild.svg";
   import Counter from "../lib/Counter.svelte";
-
-  export let name = "Name";
 </script>
 
 <svelte:head>
@@ -12,16 +10,14 @@
 
 <main>
   <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
+    <a href="https://esbuild.github.io" target="_blank" rel="noreferrer">
+      <img src={esbuildLogo} class="logo" alt="Esbuild Logo" />
     </a>
     <a href="https://svelte.dev" target="_blank" rel="noreferrer">
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>Vite + Svelte</h1>
-
-  <h2>Prop name: {name}</h2>
+  <h1>Esbuild + Svelte</h1>
 
   <div class="card">
     <Counter />
@@ -34,7 +30,9 @@
     Svelte.
   </p>
 
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
+  <p class="read-the-docs">
+    Click on the Esbuild and Svelte logos to learn more
+  </p>
 </main>
 
 <style>
@@ -45,7 +43,7 @@
     transition: filter 300ms;
   }
   .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+    filter: drop-shadow(0 0 2em #ffcf00aa);
   }
   .logo.svelte:hover {
     filter: drop-shadow(0 0 2em #ff3e00aa);

@@ -2,6 +2,11 @@
   import "./app.css";
 </script>
 
+<svelte:head>
+  <title>Default Title</title>
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+</svelte:head>
+
 <div class="gray">
   <slot />
 </div>

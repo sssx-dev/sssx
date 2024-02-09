@@ -6,8 +6,8 @@
 
 ## Major steps
 
-- [ ] Connect to the routing API section
-- [ ] Create server that requests URL and renders it using Svelte templates and this build system
+- [x] Connect to the routing API section
+- [x] Create server that requests URL and renders it using Svelte templates and this build system
 - [ ] add option to upload assets online
 
 ## Good to have
@@ -44,5 +44,6 @@
 ## Developer Experience
 
 - [ ] Add `sssx.config.ts` configuration file
+- [ ] add `static` folder
 - [ ] add watch functionlaity and reload for `dev`
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias

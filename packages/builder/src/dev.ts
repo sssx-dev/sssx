@@ -5,6 +5,7 @@ import { buildRoute } from "./render";
 const app = express();
 const cwd = process.cwd();
 const outdir = `${cwd}/dev`;
+const isDev = true; // TODO: get this from the environment
 
 app.get("*", async (req, res) => {
   const { url } = req;
@@ -12,7 +13,7 @@ app.get("*", async (req, res) => {
 
   // generate build only on main route request
   if (url.endsWith("/")) {
-    await buildRoute(url, outdir, base);
+    await buildRoute(url, outdir, base, isDev);
   } else if (url.indexOf(".") === -1) {
     // redirect /about to /about/
     return res.redirect(`${url}/`);

@@ -43,5 +43,6 @@
 
 ## Developer Experience
 
+- [ ] Add `sssx.config.ts` configuration file
 - [ ] add watch functionlaity and reload for `dev`
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias

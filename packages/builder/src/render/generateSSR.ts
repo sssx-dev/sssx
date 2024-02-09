@@ -9,7 +9,6 @@ const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
   css: "injected",
   hydratable: true,
-  // enableSourcemap: false, // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
 };
 
 // TODO: improve this, because it also generates ssr.css, but client side generates main.css instead later.
@@ -19,10 +18,18 @@ export const generateSSR = async (
   outfile: string,
   buildOptions: BuildOptions = {},
   plugins: Plugin[] = [],
-  compilerSSROptions: Partial<CompileOptions> = defaultCompilerOptions
+  compilerSSROptions: Partial<CompileOptions> = {},
+  isDev: boolean
 ) => {
-  const compilerOptions = { ...defaultCompilerOptions, ...compilerSSROptions };
-
+  const compilerOptions: CompileOptions = {
+    ...defaultCompilerOptions,
+    ...compilerSSROptions,
+  };
+  if (isDev) {
+    compilerOptions.dev = isDev;
+    // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
+    compilerOptions.enableSourcemap = true;
+  }
   const contents = generateEntryPoint(true, compilerOptions, route);
 
   const stdin: esbuild.StdinOptions = {

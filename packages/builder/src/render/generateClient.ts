@@ -16,11 +16,19 @@ export const generateClient = async (
   route: string,
   outdir: string,
   buildOptions: BuildOptions = {},
-  compilerOptions: Partial<CompileOptions> = defaultCompilerOptions,
+  compilerClientOptions: Partial<CompileOptions> = {},
   plugins: Plugin[] = [],
-  props: Record<string, any> = {}
+  props: Record<string, any> = {},
+  isDev: boolean
 ) => {
-  compilerOptions = { ...defaultCompilerOptions, ...compilerOptions };
+  const compilerOptions: CompileOptions = {
+    ...defaultCompilerOptions,
+    ...compilerClientOptions,
+  };
+
+  if (isDev) {
+    compilerOptions.dev = isDev;
+  }
 
   const stdin: esbuild.StdinOptions = {
     contents: generateEntryPoint(false, compilerOptions, route, props),

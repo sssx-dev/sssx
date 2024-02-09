@@ -7,7 +7,12 @@ import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
 import { routeToFileSystem } from "./routes";
 
-export const buildRoute = async (url: string, outdir: string, base: string) => {
+export const buildRoute = async (
+  url: string,
+  outdir: string,
+  base: string,
+  isDev: boolean
+) => {
   const route = getRoute(url);
   const rand = Math.random().toString().slice(2);
   const ssrFile = `${outdir}/ssr.${rand}.js`;
@@ -28,9 +33,15 @@ export const buildRoute = async (url: string, outdir: string, base: string) => {
     rimraf(outdir);
 
     const common = getCommonBuildOptions();
-    await generateSSR(base, segment.route, ssrFile, common, [
-      resolveImages(outdir, true),
-    ]);
+    await generateSSR(
+      base,
+      segment.route,
+      ssrFile,
+      common,
+      [resolveImages(outdir, true)],
+      {},
+      isDev
+    );
     await renderSSR(ssrFile, outdir, props);
     await generateClient(
       base,
@@ -39,7 +50,8 @@ export const buildRoute = async (url: string, outdir: string, base: string) => {
       common,
       {},
       [resolveImages(outdir)],
-      props
+      props,
+      isDev
     );
   }
 };

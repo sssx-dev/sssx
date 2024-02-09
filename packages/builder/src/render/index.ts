@@ -25,7 +25,7 @@ export const buildRoute = async (
 
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
-  const segment = await routeToFileSystem(`${base}pages/`, route);
+  const segment = await routeToFileSystem(cwd, route);
   // console.log({ segment });
 
   if (segment) {

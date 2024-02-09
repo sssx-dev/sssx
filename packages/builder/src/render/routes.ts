@@ -100,7 +100,8 @@ const getPlainRoutes = async (srcDir: string) => {
   return array;
 };
 
-export const getAllRoutes = async (srcDir: string) => {
+export const getAllRoutes = async (cwd: string) => {
+  const srcDir = `${cwd}/src/pages`;
   const all = await getFileSystemRoutes(srcDir);
   const plain = await getPlainRoutes(srcDir);
   const array = [...all, ...plain];
@@ -111,10 +112,10 @@ export const getAllRoutes = async (srcDir: string) => {
 // TODO: turn this into a proper matching logic
 // https://kit.svelte.dev/docs/advanced-routing
 export const routeToFileSystem = async (
-  srcDir: string,
+  cwd: string,
   route: string
 ): Promise<RouteInfo | undefined> => {
-  const all = await getAllRoutes(srcDir);
+  const all = await getAllRoutes(cwd);
 
   const filtered = all.filter((segment) => segment.permalink === route);
 

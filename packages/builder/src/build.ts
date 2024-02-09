@@ -7,7 +7,7 @@ const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
 
-const routes = (await getAllRoutes(`${cwd}/src/pages`)).map((s) => s.permalink);
+const routes = (await getAllRoutes(cwd)).map((s) => s.permalink);
 
 await Promise.all(
   routes.map((url) => buildRoute(url, outdir, cwd, config, isDev))

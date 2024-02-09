@@ -1,6 +1,7 @@
 <script lang="ts">
-  // TODO: add the dynamic types like in SvelteKit
-  export let data: any = {};
+  import type { Props } from "./+page";
+
+  export let data: Props;
 
   const { slug } = data;
 </script>

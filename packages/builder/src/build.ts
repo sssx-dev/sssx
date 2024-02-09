@@ -12,6 +12,8 @@ const isDev = false; // TODO: get this from the environment
 
 const routes = (await getAllRoutes(`${cwd}/src/pages`)).map((s) => s.permalink);
 
-const renderArray = await Promise.all(
+await Promise.all(
   routes.map((url) => buildRoute(url, outdir, cwd, config, isDev))
 );
+
+console.log("DONE");

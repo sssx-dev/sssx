@@ -29,8 +29,9 @@ export const buildRoute = async (
   // console.log({ segment });
 
   if (segment) {
-    // TODO: query `module.data(param)` to get data here
-    const props = segment.param;
+    const props = segment.module
+      ? segment.module.request(segment.param)
+      : segment.param;
     // console.log({ props });
 
     // creating this inside outdir
@@ -68,7 +69,6 @@ export const buildRoute = async (
   }
 
   // copy public folder
-  // TODO: find a way to copy it only once
   if (isRoot) {
     await copyAssets(outdir, cwd, config);
   }

@@ -11,3 +11,5 @@ export const request = (param: Param) => {
     name: `${param.dog} Dog`,
   };
 };
+
+export type Props = ReturnType<typeof request>;

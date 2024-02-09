@@ -10,3 +10,5 @@ export const request = (param: Param) => {
     name: `Slug ${param.slug}`,
   };
 };
+
+export type Props = ReturnType<typeof request>;

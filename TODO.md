@@ -38,7 +38,7 @@
 - [ ] Treat MDSVEX as a first-class citizen (pages + routes + templates)
 - [ ] add measure for each build step, so we can perf and optimize later
 - [ ] add binary tree for hashes to find a relevant url fast
-- [ ] implement loader from `param` into `props` from each `data` function inside `+page.ts`
+- [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 
 ## Developer Experience
 

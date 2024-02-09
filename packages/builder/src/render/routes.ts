@@ -1,10 +1,17 @@
 import { globby } from "globby";
 
+type Params = Record<string, any>;
+export interface RouteModule {
+  all: () => Params[];
+  request: (params: Params) => Record<string, any>;
+}
+
 export type RouteInfo = {
   permalink: string;
   param: Record<string, any>;
   file: string;
   route: string;
+  module?: RouteModule;
 };
 
 const PREFIX = `src/pages`;
@@ -19,7 +26,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
   );
 
   const all: RouteInfo[] = indexes
-    .map((module, index) => {
+    .map((module: RouteModule, index) => {
       return module.all().map((param: any) => {
         const file = indexFiles[index];
         const route = file.split(PREFIX)[1].replace(PAGE_FILE, "");
@@ -28,9 +35,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
           .filter((a) => !a.startsWith("("))
           .join("/"); // filter out `(group)` folders
 
-        // if it's a string literal, then we need to replace each parameter there
-        // TODO: add safety checks here, like a missing key somewhere
-        // TODO: do not allow semicolons for production
+        // TODO: add safety checks here, like a missing key somewhere or incorrect symbol
         Object.keys(param).map((key) => {
           permalink = permalink.replace(`[${key}]`, param[key]);
         });
@@ -40,6 +45,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
           param,
           route,
           file,
+          module,
         };
       });
     })

@@ -12,8 +12,8 @@
 
 ## Good to have
 
-- [ ] generate sitemap (can it be generated as a page like in SvelteKit?)
-- [ ] generate robots.txt
+- [ ] generate sitemap (this is core)
+- [ ] generate robots.txt (this is core)
 - [x] Simple file system that looks obvious (i.e. SvelteKit)
 
 ## TODO
@@ -47,3 +47,4 @@
 - [x] add `static` folder
 - [ ] add watch functionlaity and reload for `dev`
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias
+- [ ] add progress bar for `build`

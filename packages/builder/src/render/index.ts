@@ -1,3 +1,4 @@
+import fs from "fs";
 import { resolveImages } from "../plugins/resolveImages";
 import { copyAssets } from "../utils/assets";
 import { Config, getConfig } from "../utils/config";
@@ -20,6 +21,7 @@ export const buildRoute = async (
   const route = getRoute(url);
   const rand = Math.random().toString().slice(2);
   const ssrFile = `${outdir}/ssr.${rand}.js`;
+  const isRoot = route === "/";
 
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
@@ -32,9 +34,15 @@ export const buildRoute = async (
     // console.log({ props });
 
     // creating this inside outdir
-    if (route !== "/") outdir += route;
+    if (!isRoot) outdir += route;
 
-    rimraf(outdir);
+    if (!fs.existsSync(outdir)) {
+      fs.mkdirSync(outdir, { recursive: true });
+    }
+
+    if (isDev) {
+      rimraf(outdir);
+    }
 
     const common = getCommonBuildOptions();
     await generateSSR(
@@ -61,5 +69,7 @@ export const buildRoute = async (
 
   // copy public folder
   // TODO: find a way to copy it only once
-  await copyAssets(outdir, cwd, config);
+  if (isRoot) {
+    await copyAssets(outdir, cwd, config);
+  }
 };

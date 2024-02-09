@@ -9,7 +9,6 @@ const isDev = false;
 
 const routes = (await getAllRoutes(cwd)).map((s) => s.permalink);
 
-// generate robots.txt
 // generate sitemap.xml
 
 await Promise.all(

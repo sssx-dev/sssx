@@ -40,9 +40,9 @@
 - [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 - [ ] add no JS option, so pages would not be hydrated
 
+- [ ] sitemap (implement as sitemap.ts and allow to "eject" it if needed for editing)
+- [x] robots.txt
 - [ ] add tailwind support
-- [ ] sitemap
-- [ ] robots.txt
 - [ ] content URLs generated from `content`
 - [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 

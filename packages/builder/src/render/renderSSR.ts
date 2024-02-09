@@ -1,6 +1,8 @@
 import fs from "fs";
 import pretty from "pretty";
 
+const HTML_FILE = `index.html`;
+
 export const renderSSR = async (
   js: string,
   outdir: string,
@@ -50,7 +52,7 @@ export const renderSSR = async (
   fs.writeFileSync(`${outdir}/main.css`, output.css.code, "utf8");
 
   fs.writeFileSync(
-    `${outdir}/index.html`,
+    `${outdir}/${HTML_FILE}`,
     prettify ? pretty(html) : html,
     "utf8"
   );

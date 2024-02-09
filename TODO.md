@@ -40,6 +40,7 @@
 - [ ] add binary tree for hashes to find a relevant url fast
 - [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 - [ ] add no JS option, so pages would not be hydrated
+- [ ] content URLs generated from `content`
 
 ## Developer Experience
 

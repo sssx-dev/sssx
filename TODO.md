@@ -41,6 +41,7 @@
 - [x] implement loader from `param` into `props` from each `data` function inside `+page.ts`
 - [ ] add no JS option, so pages would not be hydrated
 - [ ] content URLs generated from `content`
+- [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 
 ## Developer Experience
 

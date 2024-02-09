@@ -7,7 +7,8 @@ import { generateEntryPoint } from "./generateEntryPoint";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
-  css: "injected",
+  // css: "injected",
+  css: "none",
   hydratable: true,
 };
 

@@ -1,10 +1,12 @@
 export type Config = {
   title?: string;
   assets: string;
+  outDir: string;
 };
 
 const defaultConfig: Config = {
   assets: "public",
+  outDir: ".sssx",
 };
 
 // TODO: create type for config

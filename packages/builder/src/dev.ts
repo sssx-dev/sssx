@@ -1,10 +1,12 @@
 import open from "open";
 import express from "express";
 import { buildRoute } from "./render";
+import { getConfig } from "./utils/config";
 
 const app = express();
 const cwd = process.cwd();
-const outdir = `${cwd}/dev`;
+const config = await getConfig(cwd);
+const outdir = `${cwd}/${config.outDir}`;
 const isDev = true; // TODO: get this from the environment
 
 app.get("*", async (req, res) => {
@@ -12,7 +14,7 @@ app.get("*", async (req, res) => {
 
   // generate build only on main route request
   if (url.endsWith("/")) {
-    await buildRoute(url, outdir, cwd, isDev);
+    await buildRoute(url, outdir, cwd, config, isDev);
   } else if (url.indexOf(".") === -1) {
     // redirect /about to /about/
     return res.redirect(`${url}/`);

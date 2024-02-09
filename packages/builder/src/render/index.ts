@@ -1,6 +1,6 @@
 import { resolveImages } from "../plugins/resolveImages";
 import { copyAssets } from "../utils/assets";
-import { getConfig } from "../utils/config";
+import { Config, getConfig } from "../utils/config";
 import { getRoute } from "../utils/getRoute";
 import { rimraf } from "../utils/rimraf";
 import { getCommonBuildOptions } from "../utils/settings";
@@ -13,13 +13,13 @@ export const buildRoute = async (
   url: string,
   outdir: string,
   cwd: string,
+  config: Config,
   isDev: boolean
 ) => {
   const base = `${cwd}/src/`;
   const route = getRoute(url);
   const rand = Math.random().toString().slice(2);
   const ssrFile = `${outdir}/ssr.${rand}.js`;
-  const config = await getConfig(cwd);
 
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte

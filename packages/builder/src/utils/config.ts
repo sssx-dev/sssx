@@ -1,3 +1,5 @@
+import { Postcss } from "svelte-preprocess/dist/types/options";
+
 // draw inspirations from:
 // https://nextjs.org/docs/app/api-reference/next-config-js
 // https://kit.svelte.dev/docs/configuration
@@ -9,11 +11,13 @@ export type Config = {
   outDir: string;
   site?: string;
   // baseDir?: string; // a base dir where website will be hosted
+  postcss: Postcss;
 };
 
 const defaultConfig: Config = {
   assets: "public",
   outDir: ".sssx",
+  postcss: {},
 };
 
 // TODO: create type for config

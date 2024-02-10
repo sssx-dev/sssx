@@ -9,6 +9,9 @@ import { generateClient } from "./generateClient";
 import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
 import { routeToFileSystem } from "./routes";
+//@ts-ignore
+import { default as postcssPlugin } from "esbuild-plugin-postcss2";
+import { Plugin } from "esbuild";
 
 export const buildRoute = async (
   url: string,
@@ -43,25 +46,35 @@ export const buildRoute = async (
       rimraf(outdir);
     }
 
+    // const postcss = postcssPlugin.default({
+    //   plugins: config.postcss.plugins,
+    // });
+    // const plugins: Plugin[] = [postcss]
+    const plugins: Plugin[] = [];
+
+    // console.log({ postcss });
+
     // make it silent in a production build
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
     const ssrOutput = await generateSSR(
+      config,
       base,
       segment.route,
       common,
-      [resolveImages(outdir, true)],
+      [...plugins, resolveImages(outdir, true)],
       {},
       isDev
     );
     // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
     await renderSSR(ssrOutput, outdir, props, config.title);
     await generateClient(
+      config,
       base,
       segment.route,
       outdir,
       common,
       {},
-      [resolveImages(outdir)],
+      [...plugins, resolveImages(outdir)],
       props,
       isDev
     );

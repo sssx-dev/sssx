@@ -5,13 +5,15 @@ import sveltePreprocess from "svelte-preprocess";
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import { generateEntryPoint } from "./generateEntryPoint";
 import { minify } from "../utils/settings";
+import { Config } from "../utils/config";
 
 const defaultCompilerOptions: CompileOptions = {
-  // css: 'none',
+  // css: "none",
   hydratable: true,
 };
 
 export const generateClient = async (
+  config: Config,
   basedir: string,
   route: string,
   outdir: string,
@@ -37,27 +39,29 @@ export const generateClient = async (
     sourcefile: "main.ts",
   };
 
-  await esbuild
-    .build({
-      ...buildOptions,
-      ///
-      stdin,
-      ///
-      // sourcemap,
-      outfile: `${outdir}/main.js`,
-      splitting: false,
-      // minify: true,
-      minify: false,
-      plugins: [
-        ...plugins,
-        sveltePlugin({
-          preprocess: sveltePreprocess(),
-          compilerOptions,
+  await esbuild.build({
+    ...buildOptions,
+    ///
+    stdin,
+    ///
+    // sourcemap,
+    outfile: `${outdir}/main.js`,
+    splitting: false,
+    // minify: true,
+    minify: false,
+    plugins: [
+      ...plugins,
+      sveltePlugin({
+        preprocess: sveltePreprocess({
+          postcss: config.postcss,
+          configFilePath: basedir,
         }),
-      ],
-    })
-    .catch((reason) => {
-      console.warn(`Errors: `, reason);
-      process.exit(1);
-    });
+        compilerOptions,
+      }),
+    ],
+  });
+  // .catch((reason) => {
+  //   console.warn(`Errors: `, reason);
+  //   process.exit(1);
+  // });
 };

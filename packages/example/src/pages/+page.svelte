@@ -2,6 +2,10 @@
   import svelteLogo from "../assets/svelte.svg";
   import esbuildLogo from "../assets/esbuild.svg";
   import Counter from "../lib/Counter.svelte";
+
+  // not passing data
+  export let data: any = {};
+  data = data;
 </script>
 
 <svelte:head>
@@ -17,7 +21,8 @@
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>Esbuild + Svelte</h1>
+
+  <h1 class="text-xl">Esbuild + Svelte</h1>
 
   <div class="card">
     <Counter />

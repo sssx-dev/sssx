@@ -3,6 +3,7 @@ import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint";
+import { Config } from "../utils/config";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
@@ -11,6 +12,7 @@ const defaultCompilerOptions: CompileOptions = {
 };
 
 export const generateSSR = async (
+  config: Config,
   basedir: string,
   route: string,
   buildOptions: BuildOptions = {},
@@ -50,7 +52,10 @@ export const generateSSR = async (
     plugins: [
       ...plugins,
       sveltePlugin({
-        preprocess: sveltePreprocess(),
+        preprocess: sveltePreprocess({
+          // postcss: config.postcss,
+          // configFilePath: basedir,
+        }),
         compilerOptions,
       }),
     ],
@@ -62,6 +67,9 @@ export const generateSSR = async (
 
   // TODO: check for warnings
   const output = result.outputFiles[0].text;
+
+  // const css = result.outputFiles[1].text;
+  // console.log(css);
 
   return output;
 };

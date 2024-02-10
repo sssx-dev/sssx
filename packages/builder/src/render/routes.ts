@@ -1,4 +1,11 @@
+import fs from "fs";
+import fm from "front-matter";
 import { globby } from "globby";
+import { cleanURL } from "../utils/cleanURL";
+import path from "path";
+
+// TODO: design a better architecture that would allow for streaming millions of pages
+// storing them all in memory is not a best design right now
 
 type Params = Record<string, any>;
 export interface RouteModule {
@@ -11,6 +18,7 @@ export type RouteInfo = {
   param: Record<string, any>;
   file: string;
   route: string;
+  svelte?: string;
   module?: RouteModule;
 };
 
@@ -45,6 +53,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
           param,
           route,
           file,
+          svelte: PAGE_SVELTE,
           module,
         };
       });
@@ -87,6 +96,7 @@ const getPlainRoutes = async (srcDir: string) => {
       return {
         // TODO: is there a nicer way to do this, instead re-attaching the path again
         file: `${srcDir}${file}`,
+        svelte: PAGE_SVELTE,
         route,
         permalink,
         param: {},
@@ -100,10 +110,64 @@ const getPlainRoutes = async (srcDir: string) => {
   return array;
 };
 
+const MARKDOWN = "md";
+const DEFAULT_LOCALE = `en_US`;
+const getContentRoutes = async (cwd: string) => {
+  const srcDir = `${cwd}/src/content`;
+  const list = (await globby(`${srcDir}/**/*.${MARKDOWN}`)).map((path) =>
+    path.replace(srcDir, "")
+  );
+  const full = list.map((route) => {
+    const file = cleanURL(`${srcDir}/${route}`);
+    const content = fs.readFileSync(file, "utf8");
+    //@ts-ignore
+    const frontmatter = fm(content);
+    const attributes: Record<string, any> = frontmatter.attributes as any;
+
+    let permalink = route
+      .split("/")
+      .filter((a) => !a.startsWith("("))
+      .join("/")
+      .replace(`.${MARKDOWN}`, ``);
+
+    if (permalink.endsWith(DEFAULT_LOCALE)) {
+      permalink = permalink.split(DEFAULT_LOCALE)[0];
+    }
+
+    if (!permalink.endsWith("/")) {
+      permalink += "/";
+    }
+
+    // because of how we will compile this later inside `generateEntryPoint.ts`
+    route = "/";
+    let svelte = undefined;
+
+    if (attributes.template) {
+      const array = attributes.template.split("/");
+      const prefix = array.slice(0, -1);
+      svelte = array.pop()!;
+      route = path.normalize(`${cwd}/src/${prefix.join("/")}`);
+    }
+
+    return {
+      file,
+      route,
+      svelte,
+      // route,
+      // svelte: attributes.template,
+      permalink,
+      param: attributes,
+    };
+  });
+
+  console.log(full);
+};
+
 export const getAllRoutes = async (cwd: string) => {
   const srcDir = `${cwd}/src/pages`;
   const all = await getFileSystemRoutes(srcDir);
   const plain = await getPlainRoutes(srcDir);
+  const content = await getContentRoutes(cwd);
   const array = [...all, ...plain];
 
   return array;

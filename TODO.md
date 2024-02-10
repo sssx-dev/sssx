@@ -44,6 +44,7 @@
 - [x] add tailwind support
 - [ ] content URLs generated from `content`
 - [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
+- [ ] add i18n support inside of `content`
 
 ## Developer Experience
 

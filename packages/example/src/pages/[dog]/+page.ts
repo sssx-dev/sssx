@@ -1,5 +1,10 @@
 export const all = () => {
-  return [{ dog: "dog1" }, { dog: "dog2" }, { dog: "dog3" }];
+  // return [{ dog: "dog1" }, { dog: "dog2" }, { dog: "dog3" }];
+  let array: Array<{ dog: string }> = [];
+  for (let i = 0; i < 9999; i++) {
+    array.push({ dog: `dog${i}` });
+  }
+  return array;
 };
 
 type Param = ReturnType<typeof all>[0];

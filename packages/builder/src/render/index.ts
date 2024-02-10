@@ -45,7 +45,7 @@ export const buildRoute = async (
 
     // make it silent in a production build
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
-    const output = await generateSSR(
+    const ssrOutput = await generateSSR(
       base,
       segment.route,
       common,
@@ -53,7 +53,8 @@ export const buildRoute = async (
       {},
       isDev
     );
-    await renderSSR(output, outdir, props, config.title);
+    // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
+    await renderSSR(ssrOutput, outdir, props, config.title);
     await generateClient(
       base,
       segment.route,

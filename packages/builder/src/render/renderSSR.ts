@@ -16,7 +16,7 @@ export const renderSSR = async (
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
 
   const App = (await import(dataUri)).default;
-  const output = App.render(props);
+  const output = App.render({ data: props });
 
   let head = "";
   head += output.head + `\n`;

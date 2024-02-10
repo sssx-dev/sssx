@@ -9,9 +9,8 @@ import { generateClient } from "./generateClient";
 import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
 import { routeToFileSystem } from "./routes";
-//@ts-ignore
-import { default as postcssPlugin } from "esbuild-plugin-postcss2";
-import { Plugin } from "esbuild";
+import stylePlugin from "esbuild-style-plugin";
+import { type Plugin } from "esbuild";
 
 export const buildRoute = async (
   url: string,
@@ -46,13 +45,16 @@ export const buildRoute = async (
       rimraf(outdir);
     }
 
-    // const postcss = postcssPlugin.default({
-    //   plugins: config.postcss.plugins,
-    // });
-    // const plugins: Plugin[] = [postcss]
-    const plugins: Plugin[] = [];
+    let plugins: Plugin[] = [];
 
-    // console.log({ postcss });
+    if (config.postcss.plugins) {
+      const postcss = stylePlugin({
+        postcss: {
+          plugins: config.postcss.plugins!,
+        },
+      });
+      plugins.push(postcss);
+    }
 
     // make it silent in a production build
     const common = getCommonBuildOptions(isDev ? "info" : "silent");

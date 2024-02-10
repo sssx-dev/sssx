@@ -13,7 +13,7 @@
 </svelte:head>
 
 <main>
-  <div>
+  <div class="flex flex-row justify-center">
     <a href="https://esbuild.github.io" target="_blank" rel="noreferrer">
       <img src={esbuildLogo} class="logo" alt="Esbuild Logo" />
     </a>
@@ -22,7 +22,7 @@
     </a>
   </div>
 
-  <h1 class="text-xl">Esbuild + Svelte</h1>
+  <h1 class="text-4xl">Esbuild + Svelte</h1>
 
   <div class="card">
     <Counter />

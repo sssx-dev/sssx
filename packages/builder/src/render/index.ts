@@ -43,7 +43,8 @@ export const buildRoute = async (
       rimraf(outdir);
     }
 
-    const common = getCommonBuildOptions();
+    // make it silent in a production build
+    const common = getCommonBuildOptions(isDev ? "info" : "silent");
     const output = await generateSSR(
       base,
       segment.route,

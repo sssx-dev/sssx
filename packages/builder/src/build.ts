@@ -9,9 +9,10 @@ const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
 
-if (!fs.existsSync(outdir)) {
-  fs.mkdirSync(outdir);
+if (fs.existsSync(outdir)) {
+  fs.rmSync(outdir, { recursive: true, force: true });
 }
+fs.mkdirSync(outdir);
 
 const all = await getAllRoutes(cwd);
 const routes = all.map((s) => s.permalink);
@@ -22,6 +23,8 @@ await buildSitemap(outdir, config, all);
 // TODO: add here core processing
 for (let i = 0; i < routes.length; i++) {
   const url = routes[i];
-  console.log({ i, url });
+  console.log(i, `\t`, url);
   await buildRoute(url, outdir, cwd, config, isDev);
 }
+
+console.log("DONE");

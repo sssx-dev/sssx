@@ -41,7 +41,7 @@
 - [ ] add no JS option, so pages would not be hydrated
 - [x] robots.txt
 
-- [ ] sitemap
+- [x] sitemap
 - [ ] add tailwind support
 - [ ] content URLs generated from `content`
 - [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
@@ -52,4 +52,4 @@
 - [x] add `static` folder
 - [ ] add watch functionlaity and reload for `dev`
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias
-- [ ] add progress bar for `build`
+- [x] add progress bar for `build`

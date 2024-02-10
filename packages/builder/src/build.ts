@@ -6,6 +6,7 @@ import { getConfig } from "./utils/config";
 import { getAllRoutes } from "./render/routes";
 import { buildSitemap } from "./plugins/sitemap";
 import cliProgress from "cli-progress";
+import colors from "ansi-colors";
 
 const numCPUs = os.cpus().length;
 const cwd = process.cwd();
@@ -41,11 +42,13 @@ if (cluster.isPrimary) {
   const routes = all.map((s) => s.permalink);
 
   const ROUTES_BATCH = Math.round(routes.length / numCPUs);
-  const bar1 = new cliProgress.SingleBar(
-    {},
-    cliProgress.Presets.shades_classic
-  );
-  bar1.start(routes.length, 0);
+  const bar1 = new cliProgress.SingleBar({
+    format: "SSSX |" + colors.cyan("{bar}") + "| {percentage}% || URL: {url}",
+    barCompleteChar: "\u2588",
+    barIncompleteChar: "\u2591",
+    hideCursor: true,
+  });
+  bar1.start(routes.length, 0, { url: "" });
   let jobsIndex = 0;
 
   // Fork workers.
@@ -63,7 +66,7 @@ if (cluster.isPrimary) {
 
     worker.on("message", (url) => {
       // console.log("Received message from worker", message);
-      bar1.update(jobsIndex++);
+      bar1.update(jobsIndex++, { url });
     });
   }
 

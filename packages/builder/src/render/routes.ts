@@ -153,8 +153,6 @@ const getContentRoutes = async (cwd: string) => {
       file,
       route,
       svelte,
-      // route,
-      // svelte: attributes.template,
       permalink,
       param: attributes,
     };

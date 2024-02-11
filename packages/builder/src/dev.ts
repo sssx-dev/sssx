@@ -9,12 +9,16 @@ const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = true;
 
+const sleep = (ms: number = 1000) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 app.get("*", async (req, res) => {
   const { url } = req;
 
   // generate build only on main route request
   if (url.endsWith("/")) {
     await buildRoute(url, outdir, cwd, config, isDev);
+    await sleep(); // TODO: remove this wait, because files have not been copied yet fully
   } else if (url.indexOf(".") === -1) {
     // redirect /about to /about/
     return res.redirect(`${url}/`);

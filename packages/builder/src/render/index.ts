@@ -26,7 +26,7 @@ export const buildRoute = async (
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
   const segment = await routeToFileSystem(cwd, route);
-  // console.log({ segment });
+  console.log({ segment });
 
   if (segment) {
     const props = segment.module
@@ -61,7 +61,7 @@ export const buildRoute = async (
     const ssrOutput = await generateSSR(
       config,
       base,
-      segment.route,
+      segment,
       common,
       [...plugins, resolveImages(outdir, true)],
       {},
@@ -72,7 +72,7 @@ export const buildRoute = async (
     await generateClient(
       config,
       base,
-      segment.route,
+      segment,
       outdir,
       common,
       {},

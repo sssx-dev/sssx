@@ -4,6 +4,7 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint";
 import { Config } from "../utils/config";
+import { RouteInfo } from "./routes";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
@@ -14,7 +15,7 @@ const defaultCompilerOptions: CompileOptions = {
 export const generateSSR = async (
   config: Config,
   basedir: string,
-  route: string,
+  segment: RouteInfo,
   buildOptions: BuildOptions = {},
   plugins: Plugin[] = [],
   compilerSSROptions: Partial<CompileOptions> = {},
@@ -29,7 +30,12 @@ export const generateSSR = async (
     // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
     compilerOptions.enableSourcemap = true;
   }
-  const contents = generateEntryPoint(true, compilerOptions, route);
+  const contents = generateEntryPoint(
+    true,
+    compilerOptions,
+    segment.route,
+    segment.svelte
+  );
 
   const stdin: esbuild.StdinOptions = {
     contents,
@@ -52,10 +58,7 @@ export const generateSSR = async (
     plugins: [
       ...plugins,
       sveltePlugin({
-        preprocess: sveltePreprocess({
-          // postcss: config.postcss,
-          // configFilePath: basedir,
-        }),
+        preprocess: sveltePreprocess(),
         compilerOptions,
       }),
     ],

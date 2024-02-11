@@ -51,7 +51,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
         return {
           permalink,
           param,
-          route,
+          route: `./pages${route}`,
           file,
           svelte: PAGE_SVELTE,
           module,
@@ -97,7 +97,7 @@ const getPlainRoutes = async (srcDir: string) => {
         // TODO: is there a nicer way to do this, instead re-attaching the path again
         file: `${srcDir}${file}`,
         svelte: PAGE_SVELTE,
-        route,
+        route: `./pages${route}`,
         permalink,
         param: {},
       };
@@ -149,6 +149,10 @@ const getContentRoutes = async (cwd: string) => {
       route = path.normalize(`${cwd}/src/${prefix.join("/")}`);
     }
 
+    if (!route.endsWith("/")) {
+      route += "/";
+    }
+
     return {
       file,
       route,
@@ -158,7 +162,7 @@ const getContentRoutes = async (cwd: string) => {
     };
   });
 
-  console.log(full);
+  return full;
 };
 
 export const getAllRoutes = async (cwd: string) => {
@@ -166,7 +170,7 @@ export const getAllRoutes = async (cwd: string) => {
   const all = await getFileSystemRoutes(srcDir);
   const plain = await getPlainRoutes(srcDir);
   const content = await getContentRoutes(cwd);
-  const array = [...all, ...plain];
+  const array = [...all, ...plain, ...content];
 
   return array;
 };

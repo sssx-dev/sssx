@@ -1,10 +1,14 @@
 import * as svelte from "svelte/compiler";
 
 // TODO: check if +layout exists
-const getMainSSRCode = (route = `/`, props: Record<string, any> = {}) =>
+const getMainSSRCode = (
+  route = `/`,
+  svelteFile = `+page.svelte`,
+  props: Record<string, any> = {}
+) =>
   `<script lang="ts">
   import Layout from './+layout.svelte';
-  import Page from './pages${route}+page.svelte';
+  import Page from '${route}${svelteFile}';
 
   export let data = ${JSON.stringify(props)}
 </script>
@@ -33,9 +37,10 @@ export const generateEntryPoint = (
   isSSR = true,
   compilerOptions: svelte.CompileOptions,
   route: string,
+  svelteFile: string = "+page.svelte",
   props: Record<string, any> = {}
 ) => {
-  const svelteCode = getMainSSRCode(route, props);
+  const svelteCode = getMainSSRCode(route, svelteFile, props);
   const { js } = svelte.compile(svelteCode, compilerOptions);
   let code = js.code;
 

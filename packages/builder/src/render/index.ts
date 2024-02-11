@@ -1,14 +1,13 @@
 import fs from "fs";
 import { resolveImages } from "../plugins/resolveImages";
 import { copyAssets } from "../utils/assets";
-import { Config, getConfig } from "../utils/config";
-import { getRoute } from "../utils/getRoute";
+import { Config } from "../utils/config";
 import { rimraf } from "../utils/rimraf";
 import { getCommonBuildOptions } from "../utils/settings";
 import { generateClient } from "./generateClient";
 import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
-import { RouteInfo, routeToFileSystem } from "./routes";
+import { RouteInfo } from "./routes";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown";
@@ -25,9 +24,8 @@ export const buildRoute = async (
   // const route = getRoute(url);
   const isRoot = route === "/";
 
-  // march route coming from dev server like /some/slug/ into a segment
+  // match route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
-  // const segment = await routeToFileSystem(cwd, route);
   // console.log({ segment });
 
   if (segment) {

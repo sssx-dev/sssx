@@ -179,11 +179,10 @@ export const getAllRoutes = async (cwd: string) => {
 // https://kit.svelte.dev/docs/advanced-routing
 export const routeToFileSystem = async (
   cwd: string,
-  route: string
+  route: string,
+  allRoutes: RouteInfo[]
 ): Promise<RouteInfo | undefined> => {
-  const all = await getAllRoutes(cwd);
-
-  const filtered = all.filter((segment) => segment.permalink === route);
+  const filtered = allRoutes.filter((segment) => segment.permalink === route);
 
   // return first found mathcing permalink
   if (filtered.length > 0) {

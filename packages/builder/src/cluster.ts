@@ -3,10 +3,11 @@ import os from "os";
 import cluster from "cluster";
 import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
-import { getAllRoutes } from "./render/routes";
+import { getAllRoutes, routeToFileSystem } from "./render/routes";
 import { buildSitemap } from "./plugins/sitemap";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";
+import { getRoute } from "./utils/getRoute";
 
 const numCPUs = os.cpus().length;
 const cwd = process.cwd();
@@ -38,8 +39,8 @@ if (!fs.existsSync(outdir)) {
 
 let numWorkers = 0;
 if (cluster.isPrimary) {
-  const all = await getAllRoutes(cwd);
-  const routes = all.map((s) => s.permalink);
+  const allRoutes = await getAllRoutes(cwd);
+  const routes = allRoutes.map((s) => s.permalink);
 
   const ROUTES_BATCH = Math.round(routes.length / numCPUs);
   const bar1 = new cliProgress.SingleBar({
@@ -73,7 +74,7 @@ if (cluster.isPrimary) {
     });
   }
 
-  await buildSitemap(outdir, config, all);
+  await buildSitemap(outdir, config, allRoutes);
 
   // Object.keys(cluster.workers!).forEach(function (id) {
   //   console.log("I am running with ID : " + cluster.workers![id]!.process.pid);
@@ -90,6 +91,8 @@ if (cluster.isPrimary) {
     }
   });
 } else {
+  // TODO: not the best way to parallelize, rework
+  const allRoutes = await getAllRoutes(cwd);
   process.on("message", async (routes: string[]) => {
     // console.log("Worker", process.pid, routes.length);
 
@@ -97,7 +100,9 @@ if (cluster.isPrimary) {
       const url = routes[i];
       // console.log({ i, url });
       // console.log("Worker", process.pid, i, routes.length, url);
-      await buildRoute(url, outdir, cwd, config, isDev);
+      const route = getRoute(url);
+      const segment = await routeToFileSystem(cwd, route, allRoutes);
+      await buildRoute(route, segment!, outdir, cwd, config, isDev);
       process.send!(url);
     }
 

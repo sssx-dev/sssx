@@ -8,25 +8,26 @@ import { getCommonBuildOptions } from "../utils/settings";
 import { generateClient } from "./generateClient";
 import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
-import { routeToFileSystem } from "./routes";
+import { RouteInfo, routeToFileSystem } from "./routes";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown";
 
 export const buildRoute = async (
-  url: string,
+  route: string,
+  segment: RouteInfo,
   outdir: string,
   cwd: string,
   config: Config,
   isDev: boolean
 ) => {
   const base = `${cwd}/src/`;
-  const route = getRoute(url);
+  // const route = getRoute(url);
   const isRoot = route === "/";
 
   // march route coming from dev server like /some/slug/ into a segment
   // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
-  const segment = await routeToFileSystem(cwd, route);
+  // const segment = await routeToFileSystem(cwd, route);
   // console.log({ segment });
 
   if (segment) {

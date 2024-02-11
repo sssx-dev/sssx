@@ -1,8 +1,9 @@
 import fs from "fs";
 import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
-import { getAllRoutes } from "./render/routes";
+import { getAllRoutes, routeToFileSystem } from "./render/routes";
 import { buildSitemap } from "./plugins/sitemap";
+import { getRoute } from "./utils/getRoute";
 
 const cwd = process.cwd();
 const config = await getConfig(cwd);
@@ -14,17 +15,19 @@ if (fs.existsSync(outdir)) {
 }
 fs.mkdirSync(outdir);
 
-const all = await getAllRoutes(cwd);
-const routes = all.map((s) => s.permalink);
+const allRoutes = await getAllRoutes(cwd);
+const routes = allRoutes.map((s) => s.permalink);
 
 // generate sitemap.xml
-await buildSitemap(outdir, config, all);
+await buildSitemap(outdir, config, allRoutes);
 
 // TODO: add here core processing
 for (let i = 0; i < routes.length; i++) {
   const url = routes[i];
   console.log(i, `\t`, url);
-  await buildRoute(url, outdir, cwd, config, isDev);
+  const route = getRoute(url);
+  const segment = await routeToFileSystem(cwd, route, allRoutes);
+  await buildRoute(route, segment!, outdir, cwd, config, isDev);
 }
 
 console.log("DONE");

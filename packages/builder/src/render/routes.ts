@@ -185,15 +185,6 @@ export const routeToFileSystem = async (
 
   const filtered = all.filter((segment) => segment.permalink === route);
 
-  // console.log(
-  //   "////////////////////////////////////////// routeToFileSystem start"
-  // );
-  // console.log(all);
-  // console.log(filtered);
-  // console.log(
-  //   "////////////////////////////////////////// routeToFileSystem end"
-  // );
-
   // return first found mathcing permalink
   if (filtered.length > 0) {
     return filtered[0];

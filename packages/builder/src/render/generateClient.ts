@@ -34,13 +34,7 @@ export const generateClient = async (
   }
 
   const stdin: esbuild.StdinOptions = {
-    contents: generateEntryPoint(
-      false,
-      compilerOptions,
-      segment.route,
-      segment.svelte,
-      props
-    ),
+    contents: generateEntryPoint(false, compilerOptions, segment, props),
     loader: "ts",
     resolveDir: basedir, //".",
     sourcefile: "main.ts",

@@ -30,12 +30,7 @@ export const generateSSR = async (
     // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
     compilerOptions.enableSourcemap = true;
   }
-  const contents = generateEntryPoint(
-    true,
-    compilerOptions,
-    segment.route,
-    segment.svelte
-  );
+  const contents = generateEntryPoint(true, compilerOptions, segment);
 
   const stdin: esbuild.StdinOptions = {
     contents,

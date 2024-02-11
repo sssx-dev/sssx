@@ -1,6 +1,7 @@
 import fs from "fs";
+import path from "path";
 import { resolveImages } from "../plugins/resolveImages";
-import { copyAssets } from "../utils/assets";
+import { copyAssets, copyPublicAssets } from "../utils/assets";
 import { Config } from "../utils/config";
 import { rimraf } from "../utils/rimraf";
 import { getCommonBuildOptions } from "../utils/settings";
@@ -21,7 +22,6 @@ export const buildRoute = async (
   isDev: boolean
 ) => {
   const base = `${cwd}/src/`;
-  // const route = getRoute(url);
   const isRoot = route === "/";
 
   // match route coming from dev server like /some/slug/ into a segment
@@ -32,15 +32,17 @@ export const buildRoute = async (
     let props = segment.module
       ? segment.module.request(segment.param)
       : segment.param;
-
-    if (segment.file.endsWith(".md")) {
-      const html = await markdown(segment.file);
-      props.html = html;
-    }
     // console.log({ props });
 
     // creating this inside outdir
     if (!isRoot) outdir += route;
+
+    if (segment.file.endsWith(".md")) {
+      const html = await markdown(segment.file);
+      const srcDir = path.dirname(segment.file);
+      copyAssets(srcDir, outdir);
+      props.html = html;
+    }
 
     if (!fs.existsSync(outdir)) {
       fs.mkdirSync(outdir, { recursive: true });
@@ -89,6 +91,6 @@ export const buildRoute = async (
 
   // copy public folder
   if (isRoot) {
-    await copyAssets(outdir, cwd, config);
+    await copyPublicAssets(outdir, cwd, config);
   }
 };

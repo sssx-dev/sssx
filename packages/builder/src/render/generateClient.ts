@@ -61,8 +61,4 @@ export const generateClient = async (
       }),
     ],
   });
-  // .catch((reason) => {
-  //   console.warn(`Errors: `, reason);
-  //   process.exit(1);
-  // });
 };

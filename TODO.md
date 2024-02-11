@@ -26,7 +26,7 @@
 - [x] https://kit.svelte.dev/docs/advanced-routing
 - [x] Add javascript uglifier (compress too)
 - [x] Enable assets (image)
-- [ ] Enable assets hashed assets (`image.png?hashed` that will be stored in a root)
+- [ ] Enable assets stored globally like `image.png?global` will be stored in `/global/image.hash.png`
 - [ ] optimize for lighthouse performance: First Contentful Paint (FCP)
 - [x] decide how to serve CSS (serve via files)
 - [x] get the ssr -> html rendering as a standalone function
@@ -57,4 +57,3 @@
 - [x] add progress bar for `build`
 - [ ] add type for markdown imports inside templates
 - [ ] add a way to pass `unified`, `remark`, `rehype` build options to `markdown` from config
-- [ ]

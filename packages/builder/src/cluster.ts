@@ -92,6 +92,7 @@ if (cluster.isPrimary) {
   });
 } else {
   // TODO: not the best way to parallelize, rework
+  // TODO: not working yet
   const allRoutes = await getAllRoutes(cwd);
   process.on("message", async (routes: string[]) => {
     // console.log("Worker", process.pid, routes.length);

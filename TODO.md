@@ -42,8 +42,8 @@
 - [x] robots.txt
 - [x] sitemap
 - [x] add tailwind support
-- [ ] content URLs generated from `content`
-- [ ] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
+- [x] content URLs generated from `content`
+- [x] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 - [ ] add i18n support inside of `content`
 
 ## Developer Experience
@@ -53,3 +53,5 @@
 - [ ] add watch functionlaity and reload for `dev`
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias
 - [x] add progress bar for `build`
+- [ ] add type for markdown imports inside templates
+- [ ] add a way to pass `unified`, `remark`, `rehype` build options to `markdown` from config

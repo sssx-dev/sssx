@@ -12,6 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "^0.18.0",
+    "@tailwindcss/typography": "^0.5.10",
     "@tsconfig/svelte": "^5.0.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.5",

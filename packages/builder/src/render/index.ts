@@ -11,6 +11,7 @@ import { renderSSR } from "./renderSSR";
 import { routeToFileSystem } from "./routes";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
+import { markdown } from "../utils/markdown";
 
 export const buildRoute = async (
   url: string,
@@ -29,9 +30,14 @@ export const buildRoute = async (
   console.log({ segment });
 
   if (segment) {
-    const props = segment.module
+    let props = segment.module
       ? segment.module.request(segment.param)
       : segment.param;
+
+    if (segment.file.endsWith(".md")) {
+      const html = await markdown(segment.file);
+      props.html = html;
+    }
     // console.log({ props });
 
     // creating this inside outdir

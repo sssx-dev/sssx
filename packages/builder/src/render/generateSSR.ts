@@ -1,4 +1,4 @@
-import esbuild, { Plugin, type BuildOptions } from "esbuild";
+import esbuild, { Plugin, type BuildOptions, Drop } from "esbuild";
 import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
@@ -39,6 +39,9 @@ export const generateSSR = async (
     sourcefile: "main.js",
   };
 
+  // drop console.log and debugger in production
+  const drop: Drop[] = isDev ? [] : ["console", "debugger"];
+
   // server
   const result = await esbuild.build({
     ...buildOptions,
@@ -48,6 +51,7 @@ export const generateSSR = async (
     stdin,
     //
     outfile: "./ssr.js",
+    drop,
     splitting: false,
     //
     plugins: [

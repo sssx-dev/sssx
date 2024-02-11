@@ -44,7 +44,9 @@
 - [x] add tailwind support
 - [x] content URLs generated from `content`
 - [x] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
-- [ ] add i18n support inside of `content`
+- [ ] add i18n support inside of `content` like `<link rel="alternate" hreflang="fr" href="/fr/" title="This document in French">
+`
+- [ ] remove `console.log` from the templates
 
 ## Developer Experience
 
@@ -55,3 +57,4 @@
 - [x] add progress bar for `build`
 - [ ] add type for markdown imports inside templates
 - [ ] add a way to pass `unified`, `remark`, `rehype` build options to `markdown` from config
+- [ ]

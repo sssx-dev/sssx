@@ -14,7 +14,7 @@ const cwd = process.cwd();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
-const COLD_START_DELAY = 1000;
+const COLD_START_DELAY = 2000;
 
 if (!fs.existsSync(outdir)) {
   fs.mkdirSync(outdir);
@@ -38,8 +38,9 @@ if (!fs.existsSync(outdir)) {
 // }
 
 let numWorkers = 0;
+const allRoutes = await getAllRoutes(cwd);
+
 if (cluster.isPrimary) {
-  const allRoutes = await getAllRoutes(cwd);
   const routes = allRoutes.map((s) => s.permalink);
 
   const ROUTES_BATCH = Math.round(routes.length / numCPUs);
@@ -91,10 +92,10 @@ if (cluster.isPrimary) {
     }
   });
 } else {
-  // TODO: not the best way to parallelize, rework
-  // TODO: not working yet
-  const allRoutes = await getAllRoutes(cwd);
+  // TODO: replace delay with a lazy execution
   process.on("message", async (routes: string[]) => {
+    // TODO: not the best way to parallelize, rework
+    // const allRoutes = await getAllRoutes(cwd);
     // console.log("Worker", process.pid, routes.length);
 
     for (let i = 0; i < routes.length; i++) {

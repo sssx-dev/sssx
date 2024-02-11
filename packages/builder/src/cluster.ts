@@ -20,23 +20,6 @@ if (!fs.existsSync(outdir)) {
   fs.mkdirSync(outdir);
 }
 
-// const all = await getAllRoutes(cwd);
-// const routes = all.map((s) => s.permalink);
-
-// await Promise.all(
-//   routes.map((url) => buildRoute(url, outdir, cwd, config, isDev))
-// );
-
-// generate sitemap.xml
-// await buildSitemap(outdir, config, all);
-
-// TODO: add here core processing
-// for (let i = 0; i < routes.length; i++) {
-//   const url = routes[i];
-//   console.log({ i, url });
-//   await buildRoute(url, outdir, cwd, config, isDev);
-// }
-
 let numWorkers = 0;
 const allRoutes = await getAllRoutes(cwd);
 

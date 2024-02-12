@@ -74,6 +74,9 @@ const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 const host = "127.0.0.1";
 
 app.listen(port, host, () => {
-  console.log(`Listening on port ${port}`);
-  open(`http://${host}:${port}`);
+  const url = `http://${host}:${port}`;
+  console.log(`SSSX is listening on ${url}`);
+  if (process.argv.pop() === "open") {
+    open(url);
+  }
 });

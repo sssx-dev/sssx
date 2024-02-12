@@ -1,5 +1,5 @@
 import fs from "fs";
-import { RouteInfo } from "../render/routes";
+import { RouteInfo } from "../routes";
 import { Config } from "../utils/config";
 import { cleanURL } from "../utils/cleanURL";
 import dayjs from "dayjs";

@@ -1,5 +1,5 @@
 import * as svelte from "svelte/compiler";
-import { RouteInfo } from "./routes";
+import { RouteInfo } from "../routes";
 
 // TODO: check if +layout exists
 const getMainSSRCode = (segment: RouteInfo, props: Record<string, any> = {}) =>

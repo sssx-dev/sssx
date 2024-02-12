@@ -1,7 +1,7 @@
 import fs from "fs";
 import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./render/routes";
+import { getAllRoutes, routeToFileSystem } from "./routes";
 import { buildSitemap } from "./plugins/sitemap";
 import { getRoute } from "./utils/getRoute";
 

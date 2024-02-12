@@ -8,7 +8,7 @@ import { getCommonBuildOptions } from "../utils/settings";
 import { generateClient } from "./generateClient";
 import { generateSSR } from "./generateSSR";
 import { renderSSR } from "./renderSSR";
-import { RouteInfo } from "./routes";
+import { RouteInfo } from "../routes";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown";

@@ -4,7 +4,7 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint";
 import { Config } from "../utils/config";
-import { RouteInfo } from "./routes";
+import { RouteInfo } from "../routes";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",

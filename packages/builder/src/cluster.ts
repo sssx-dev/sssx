@@ -3,7 +3,7 @@ import os from "os";
 import cluster from "cluster";
 import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./render/routes";
+import { getAllRoutes, routeToFileSystem } from "./routes";
 import { buildSitemap } from "./plugins/sitemap";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";

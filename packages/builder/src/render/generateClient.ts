@@ -6,7 +6,7 @@ import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import { generateEntryPoint } from "./generateEntryPoint";
 import { minify } from "../utils/settings";
 import { Config } from "../utils/config";
-import { RouteInfo } from "./routes";
+import { RouteInfo } from "../routes";
 
 const defaultCompilerOptions: CompileOptions = {
   // css: "none",

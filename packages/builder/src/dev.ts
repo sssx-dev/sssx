@@ -2,7 +2,7 @@ import open from "open";
 import express from "express";
 import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./render/routes";
+import { getAllRoutes, routeToFileSystem } from "./routes";
 import { getRoute } from "./utils/getRoute";
 
 const app = express();

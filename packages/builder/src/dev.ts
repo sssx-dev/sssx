@@ -56,16 +56,18 @@ app.get("*", async (req, res) => {
   const fullpath = path.normalize(`${outdir}/${filename}`);
 
   // console.log(fullpath, stats);
-  if (fs.existsSync(fullpath)) {
-    const stats = fs.statSync(fullpath);
-    if (stats.size > 100) {
-      res.sendFile(fullpath);
-    } else {
-      console.log("File is smaller than 100 bytes", fullpath);
-    }
-  } else {
-    console.log("File does not exist", fullpath);
-  }
+  // if (fs.existsSync(fullpath)) {
+  //   const stats = fs.statSync(fullpath);
+  //   if (stats.size > 100) {
+  //     res.sendFile(fullpath);
+  //   } else {
+  //     console.log("File is smaller than 100 bytes", fullpath);
+  //   }
+  // } else {
+  //   console.log("File does not exist", fullpath);
+  // }
+
+  res.sendFile(fullpath);
 });
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;

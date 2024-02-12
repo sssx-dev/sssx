@@ -26,7 +26,7 @@ export const copyAssets = async (
   outdir: string,
   excludeFilter = [/^.*\.md$/]
 ) => {
-  const list = await globby(`${srcDir}/**/*`);
+  const list = await globby(`${srcDir}/*`);
   list.map((file: string) => {
     let ignore = false;
     excludeFilter.map((filter: RegExp) => {

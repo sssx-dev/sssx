@@ -8,15 +8,19 @@ import { getLocales } from "../utils/getLocales";
 
 const MARKDOWN = "md";
 
-export const getContentRoutes = async (cwd: string, config: Config) => {
+export const getContentRoutes = async (
+  cwd: string,
+  config: Config,
+  extension = MARKDOWN
+) => {
   const srcDir = `${cwd}/src/content`;
-  const list = (await globby(`${srcDir}/**/*.${MARKDOWN}`)).map((path) =>
+  const list = (await globby(`${srcDir}/**/*.${extension}`)).map((path) =>
     path.replace(srcDir, "")
   );
   const full = list.map((route) => {
     const file = cleanURL(`${srcDir}/${route}`);
 
-    const locales = getLocales(file, config, MARKDOWN);
+    const locales = getLocales(file, config, extension);
     const content = fs.readFileSync(file, "utf8");
     //@ts-ignore
     const frontmatter = fm(content);
@@ -26,7 +30,7 @@ export const getContentRoutes = async (cwd: string, config: Config) => {
       .split("/")
       .filter((a) => !a.startsWith("("))
       .join("/")
-      .replace(`.${MARKDOWN}`, ``);
+      .replace(`.${extension}`, ``);
 
     if (permalink.endsWith(config.defaultLocale)) {
       permalink = permalink.split(config.defaultLocale)[0];

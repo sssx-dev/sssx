@@ -13,6 +13,7 @@ export type Config = {
   // baseDir?: string; // a base dir where website will be hosted
   postcss: Postcss;
   defaultLocale: string;
+  globalDir: string;
 };
 
 const defaultConfig: Config = {
@@ -21,6 +22,7 @@ const defaultConfig: Config = {
   postcss: {},
   title: "Default Title",
   defaultLocale: "en-US",
+  globalDir: "global",
 };
 
 // TODO: create type for config

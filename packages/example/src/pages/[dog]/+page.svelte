@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Props } from "./+page";
+  import corgi from "./corgi.jpg?global";
 
   export let data: Props;
 
@@ -12,3 +13,5 @@
 
 <h2>Animal: {data.animal}</h2>
 <h2>Dog: {data.dog}</h2>
+
+<img src={corgi} alt="Corgi {data.dog}" />

@@ -26,7 +26,7 @@
 - [x] https://kit.svelte.dev/docs/advanced-routing
 - [x] Add javascript uglifier (compress too)
 - [x] Enable assets (image)
-- [ ] Enable assets stored globally like `image.png?global` will be stored in `/global/image.hash.png`
+- [x] Enable assets stored globally like `image.png?global` will be stored in `/global/image.hash.png`
 - [ ] optimize for lighthouse performance: First Contentful Paint (FCP)
 - [x] decide how to serve CSS (serve via files)
 - [x] get the ssr -> html rendering as a standalone function
@@ -49,6 +49,7 @@
       `
 - [x] remove `console.log` from the templates
 - [x] fix images copied two times inside `/posts/post3/`
+- [ ] in `build` flow add output with all files written (do a glob) and then add it to the index file that keeps all the files
 
 ## Developer Experience
 

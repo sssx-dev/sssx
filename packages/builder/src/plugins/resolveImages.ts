@@ -1,25 +1,67 @@
 import fs from "fs";
 import path from "path";
-import { Plugin } from "esbuild";
+import { OnLoadArgs, OnResolveArgs, Plugin } from "esbuild";
+import { Config } from "../utils/config";
+import { hashFile } from "../utils/hashFile";
 
-const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)$/;
+// const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?$/;
+const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?(\?.*)?$/; // works for `image.jpg?global`
+
+const getPath = (args: OnResolveArgs | OnLoadArgs) => {
+  const argsPath = args.path.includes("?")
+    ? args.path.split("?")[0]
+    : args.path;
+  const isGlobal = args.path.endsWith("?global");
+
+  return { path: argsPath, isGlobal };
+};
 
 // TOOD: remember to generate ambient types for svelte here
-export const resolveImages = (outdir: string, copyAssets = false): Plugin => ({
+export const resolveImages = (
+  outdir: string,
+  config: Config,
+  copyAssets: boolean
+): Plugin => ({
   name: "resolveImages",
   setup(build) {
     const namespace = "images-namespace";
-    build.onResolve({ filter: imagesRegExp }, (args) => {
-      //   console.log(`onResolve`, args);
+    build.onResolve({ filter: imagesRegExp }, async (args) => {
+      // console.log(`onResolve`, args);
+      const { path: argsPath, isGlobal } = getPath(args);
 
-      // TODO: this would be the place to introduce hashing hash/original_name.jpeg
-      if (copyAssets) {
-        const srcDir = path.dirname(args.importer);
-        const src = path.normalize(`${srcDir}/${args.path}`);
-        const dst = path.normalize(
-          `${outdir}/${args.path.replaceAll("../", "/")}` // should always go into `outdir`
+      const srcDir = path.dirname(args.importer);
+      const src = path.normalize(`${srcDir}/${argsPath}`);
+      const dst = path.normalize(
+        `${outdir}/${argsPath.replaceAll("../", "/")}` // should always go into `outdir`
+      );
+      const dir = path.dirname(dst);
+
+      if (isGlobal) {
+        const globalDir = path.normalize(
+          `${config.outDir}/${config.globalDir}`
         );
-        const dir = path.dirname(dst);
+        if (!fs.existsSync(globalDir)) {
+          fs.mkdirSync(globalDir, { recursive: true });
+        }
+
+        const { name, ext } = path.parse(argsPath);
+        const hash = await hashFile(src);
+        const filename = `${name}.${hash}${ext}`;
+        const globalDst = path.normalize(`${globalDir}/${filename}`);
+
+        const newArgsPath = path.normalize(`/${config.globalDir}/${filename}`);
+
+        // console.log({ globalDst, argsPath, newArgsPath });
+
+        fs.copyFileSync(src, globalDst);
+
+        return {
+          path: newArgsPath,
+          namespace,
+        };
+      }
+
+      if (copyAssets) {
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir, { recursive: true });
         }
@@ -27,15 +69,16 @@ export const resolveImages = (outdir: string, copyAssets = false): Plugin => ({
       }
 
       return {
-        path: args.path,
+        path: argsPath,
         namespace,
       };
     });
 
     build.onLoad({ filter: /.*/, namespace }, (args) => {
-      //   console.log(`onLoad`, args);
+      // console.log(`onLoad`, args);
+      const { path: argsPath, isGlobal } = getPath(args);
 
-      const contents = args.path.replace("../", "./");
+      const contents = argsPath.replace("../", "./");
       return {
         contents,
         loader: "text",

@@ -70,7 +70,7 @@ export const buildRoute = async (
       base,
       segment,
       common,
-      [...plugins, resolveImages(outdir, true)],
+      [...plugins, resolveImages(outdir, config, true)],
       {},
       isDev
     );
@@ -83,7 +83,7 @@ export const buildRoute = async (
       outdir,
       common,
       {},
-      [...plugins, resolveImages(outdir)],
+      [...plugins, resolveImages(outdir, config, false)],
       props,
       isDev
     );

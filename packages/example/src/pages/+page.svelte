@@ -1,6 +1,6 @@
 <script lang="ts">
   import svelteLogo from "../assets/svelte.svg";
-  import esbuildLogo from "../assets/esbuild.svg";
+  import esbuildLogo from "../assets/esbuild.svg?global";
   import Counter from "../lib/Counter.svelte";
 
   // not passing data

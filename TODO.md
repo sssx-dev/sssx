@@ -48,6 +48,7 @@
 - [x] add i18n support inside of `content`
       `
 - [x] remove `console.log` from the templates
+- [ ] fix images copied two times inside `/posts/post3/`
 
 ## Developer Experience
 

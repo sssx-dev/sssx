@@ -42,11 +42,13 @@ export const generateSSR = async (
   // drop console.log and debugger in production
   const drop: Drop[] = isDev ? [] : ["console", "debugger"];
 
+  // output is in memory, not file system
+  const write = false;
+
   // server
   const result = await esbuild.build({
     ...buildOptions,
-    // output is in memory, not file system
-    write: false,
+    write,
     //
     stdin,
     //

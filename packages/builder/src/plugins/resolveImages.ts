@@ -76,7 +76,7 @@ export const resolveImages = (
 
     build.onLoad({ filter: /.*/, namespace }, (args) => {
       // console.log(`onLoad`, args);
-      const { path: argsPath, isGlobal } = getPath(args);
+      const { path: argsPath } = getPath(args);
 
       const contents = argsPath.replace("../", "./");
       return {

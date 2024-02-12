@@ -49,7 +49,7 @@
 - [x] remove `console.log` from the templates
 - [x] fix images copied two times inside `/posts/post3/`
 - [ ] in `build` flow add output with all files written (do a glob) and then add it to the index file that keeps all the files
-- [ ] keep index of URLs too as json list `.jsonl`
+- [x] keep index of URLs as `sssx.urls.ts`
 - [ ] add option to merge css and js into single html file
 
 ## Developer Experience

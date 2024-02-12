@@ -14,6 +14,7 @@ export type Config = {
   postcss: Postcss;
   defaultLocale: string;
   globalDir: string;
+  writeURLs: boolean;
 };
 
 const defaultConfig: Config = {
@@ -23,6 +24,7 @@ const defaultConfig: Config = {
   title: "Default Title",
   defaultLocale: "en-US",
   globalDir: "global",
+  writeURLs: false,
 };
 
 // TODO: create type for config

@@ -8,6 +8,8 @@ import { buildSitemap } from "./plugins/sitemap";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";
 import { getRoute } from "./utils/getRoute";
+import { writeURLsIndex } from "./utils/writeURLsIndex";
+import { writeFilesIndex } from "./utils/writeFilesIndex";
 
 const numCPUs = os.cpus().length;
 const cwd = process.cwd();
@@ -64,13 +66,17 @@ if (cluster.isPrimary) {
   //   console.log("I am running with ID : " + cluster.workers![id]!.process.pid);
   // });
 
-  cluster.on("exit", function (worker, code, signal) {
+  cluster.on("exit", async (worker, code, signal) => {
     numWorkers--;
     // console.log("worker " + worker.process.pid + " died");
 
     if (numWorkers === 0) {
       bar1.update(routes.length);
       bar1.stop();
+
+      if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
+      if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
+
       console.log("DONE");
     }
   });

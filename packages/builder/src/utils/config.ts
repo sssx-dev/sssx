@@ -25,8 +25,8 @@ const defaultConfig: Config = {
   title: "Default Title",
   defaultLocale: "en-US",
   globalDir: "global",
-  writeURLsIndex: false,
-  writeFilesIndex: false,
+  writeURLsIndex: true,
+  writeFilesIndex: true,
 };
 
 // TODO: create type for config

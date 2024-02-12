@@ -5,6 +5,7 @@ import { getAllRoutes, routeToFileSystem } from "./routes";
 import { buildSitemap } from "./plugins/sitemap";
 import { getRoute } from "./utils/getRoute";
 import { writeURLsIndex } from "./utils/writeURLsIndex";
+import { writeFilesIndex } from "./utils/writeFilesIndex";
 
 const cwd = process.cwd();
 const config = await getConfig(cwd);
@@ -31,6 +32,8 @@ for (let i = 0; i < routes.length; i++) {
   await buildRoute(route, segment!, outdir, cwd, config, isDev);
 }
 
+// order here is important
 if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
+if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
 console.log("DONE");

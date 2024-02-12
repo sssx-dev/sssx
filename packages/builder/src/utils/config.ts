@@ -19,7 +19,7 @@ const defaultConfig: Config = {
   assets: "public",
   outDir: ".sssx",
   postcss: {},
-  defaultLocale: "en_US",
+  defaultLocale: "en-US",
 };
 
 // TODO: create type for config

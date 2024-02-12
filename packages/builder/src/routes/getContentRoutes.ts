@@ -4,6 +4,7 @@ import { globby } from "globby";
 import { Config } from "../utils/config";
 import { cleanURL } from "../utils/cleanURL";
 import fm from "front-matter";
+import { getLocales } from "../utils/getLocales";
 
 const MARKDOWN = "md";
 
@@ -14,6 +15,8 @@ export const getContentRoutes = async (cwd: string, config: Config) => {
   );
   const full = list.map((route) => {
     const file = cleanURL(`${srcDir}/${route}`);
+
+    const locales = getLocales(file, config, MARKDOWN);
     const content = fs.readFileSync(file, "utf8");
     //@ts-ignore
     const frontmatter = fm(content);

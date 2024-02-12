@@ -55,8 +55,8 @@
 
 - [x] Add `sssx.config.ts` configuration file
 - [x] add `static` folder
-- [ ] add watch functionlaity and reload for `dev`
-- [ ] add livereload
+- [x] add watch functionlaity and reload for `dev`
+- [x] add livereload
 - [ ] Create `$lib` functionality, like in SvelteKit via tsconfig or vite alias
 - [x] add progress bar for `build`
 - [ ] add type for markdown imports inside templates

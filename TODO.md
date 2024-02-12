@@ -49,6 +49,7 @@
 - [x] remove `console.log` from the templates
 - [x] fix images copied two times inside `/posts/post3/`
 - [ ] in `build` flow add output with all files written (do a glob) and then add it to the index file that keeps all the files
+- [ ] keep index of URLs too as json list `.jsonl`
 
 ## Developer Experience
 
@@ -59,3 +60,5 @@
 - [x] add progress bar for `build`
 - [ ] add type for markdown imports inside templates
 - [ ] add a way to pass `unified`, `remark`, `rehype` build options to `markdown` from config
+- [ ] add `sssx build <url>` that builds one particular URL
+- [ ] add `sssx urls prefix/*` that returns list of URLs with established prefix

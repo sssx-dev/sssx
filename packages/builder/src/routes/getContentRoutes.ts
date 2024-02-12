@@ -57,6 +57,7 @@ export const getContentRoutes = async (cwd: string, config: Config) => {
       svelte,
       permalink,
       param: attributes,
+      locales,
     };
   });
 

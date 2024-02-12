@@ -45,9 +45,9 @@
 - [x] content URLs generated from `content`
 - [x] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 - [x] make sure content images are copied too
-- [ ] add i18n support inside of `content` like `<link rel="alternate" hreflang="fr" href="/fr/" title="This document in French">
-`
-- [ ] remove `console.log` from the templates
+- [x] add i18n support inside of `content`
+      `
+- [x] remove `console.log` from the templates
 
 ## Developer Experience
 

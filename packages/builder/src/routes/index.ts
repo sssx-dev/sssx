@@ -2,29 +2,17 @@ import { Config } from "../utils/config";
 import { getFileSystemRoutes } from "./getFileSystemRoutes";
 import { getPlainRoutes } from "./getPlainRoutes";
 import { getContentRoutes } from "./getContentRoutes";
+import { RouteInfo } from "./types";
+
+export type { RouteInfo } from "./types";
 
 // TODO: design a better architecture that would allow for streaming millions of pages
 // storing them all in memory is not a best design right now
 
-type Params = Record<string, any>;
-export interface RouteModule {
-  all: () => Params[];
-  request: (params: Params) => Record<string, any>;
-}
-
-export type RouteInfo = {
-  permalink: string;
-  param: Record<string, any>;
-  file: string;
-  route: string;
-  svelte?: string;
-  module?: RouteModule;
-};
-
 export const getAllRoutes = async (cwd: string, config: Config) => {
   const srcDir = `${cwd}/src/pages`;
-  const all = await getFileSystemRoutes(srcDir);
-  const plain = await getPlainRoutes(srcDir);
+  const all = await getFileSystemRoutes(srcDir, config);
+  const plain = await getPlainRoutes(srcDir, config);
   const content = await getContentRoutes(cwd, config);
   const array = [...all, ...plain, ...content];
 

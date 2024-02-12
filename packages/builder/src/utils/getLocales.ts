@@ -10,12 +10,12 @@ import { globEscape } from "../utils/globEscape";
 
 const ALL_CODES = ISO6391.getAllCodes();
 
-export const getLocales = async (
-  file: string,
-  config: Config,
-  extension: string
-) => {
-  let locales = [config.defaultLocale];
+export const getDefaultLocales = (config: Config) => {
+  return [config.defaultLocale];
+};
+
+export const getLocales = (file: string, config: Config, extension: string) => {
+  let locales = getDefaultLocales(config);
 
   const filename = path.parse(file).name;
 
@@ -24,14 +24,9 @@ export const getLocales = async (
   if (isLanguage) {
     let dir = globEscape(path.dirname(file));
     const pattern = `${dir}/*.${extension}`;
-    const list = globbySync(pattern);
-    // .map(
-    //   (a) => path.parse(a).name
-    // );
-    // .filter((a) => a !== filename);
+    const list = globbySync(pattern).map((a) => path.parse(a).name);
 
-    // console.log(dir, schema, list);
-    console.log(pattern, list);
+    locales = [...locales, ...list];
   }
 
   locales = locales.filter(

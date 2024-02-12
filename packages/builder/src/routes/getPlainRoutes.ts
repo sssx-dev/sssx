@@ -1,10 +1,13 @@
 import { globby } from "globby";
-import { RouteInfo } from ".";
 import { checkSlashes } from "../utils/checkSlashes";
+import { RouteInfo } from "./types";
+import { Config } from "../utils/config";
+import { getDefaultLocales } from "../utils/getLocales";
 
 const PAGE_SVELTE = `+page.svelte`;
 
-export const getPlainRoutes = async (srcDir: string) => {
+export const getPlainRoutes = async (srcDir: string, config: Config) => {
+  let locales = getDefaultLocales(config);
   const list = (await globby(`${srcDir}/**/${PAGE_SVELTE}`)).map((path) =>
     path.replace(srcDir, "")
   );
@@ -29,6 +32,7 @@ export const getPlainRoutes = async (srcDir: string) => {
         route: `./pages${route}`,
         permalink,
         param: {},
+        locales,
       };
     })
     .filter((segment) => {

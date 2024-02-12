@@ -1,5 +1,8 @@
 import fs from "fs";
 import pretty from "pretty";
+import { Config } from "../utils/config";
+import { RouteInfo } from "../routes";
+import { cleanURL } from "../utils/cleanURL";
 
 const HTML_FILE = `index.html`;
 
@@ -7,8 +10,8 @@ export const renderSSR = async (
   js: string,
   outdir: string,
   props: Record<string, any> = {},
-  title = `Custom Title Code`,
-  lang = "en",
+  segment: RouteInfo,
+  config: Config,
   prettify = true,
   includeCSS = true
 ) => {
@@ -20,16 +23,32 @@ export const renderSSR = async (
 
   let head = "";
   head += output.head + `\n`;
-  if (includeCSS) {
+  if (includeCSS && output.css.code) {
     head += `<style>${output.css.code}</style>\n`;
   }
 
   if (!head.includes("<title>")) {
-    head = `<title>${title}</title>\n${head}`;
+    head = `<title>${config.title}</title>\n${head}`;
   }
 
   // <link rel="preload" href="./main.css" as="style" />
   // <link rel="preload" href="./main.js" as="script" />
+
+  const lang = config.defaultLocale.split("-")[0];
+
+  segment.locales.map((locale: string) => {
+    const hreflang = locale.toLowerCase();
+    const href = cleanURL(
+      `${config.site}${segment.permalink}${locale}/`.replace(
+        `${config.defaultLocale}/`,
+        ""
+      )
+    );
+    head += `\n<link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
+    if (locale === config.defaultLocale) {
+      head += `\n<link rel="alternate" hreflang="x-default" href="${href}" />`;
+    }
+  });
 
   const html = `
 <!doctype html>

@@ -1,12 +1,15 @@
 import { globby } from "globby";
-import { RouteInfo, RouteModule } from ".";
+import { RouteInfo, RouteModule } from "./types";
+import { getDefaultLocales } from "../utils/getLocales";
+import { Config } from "../utils/config";
 
 const PREFIX = `src/pages`;
 const PAGE_FILE = `+page.ts`;
 const PAGE_SVELTE = `+page.svelte`;
 
 // pull +page.ts files
-export const getFileSystemRoutes = async (srcDir: string) => {
+export const getFileSystemRoutes = async (srcDir: string, config: Config) => {
+  let locales = getDefaultLocales(config);
   const indexFiles = await globby(`${srcDir}/**/${PAGE_FILE}`);
   const indexes = await Promise.all(
     indexFiles.map(async (file) => await import(file))
@@ -34,6 +37,7 @@ export const getFileSystemRoutes = async (srcDir: string) => {
           file,
           svelte: PAGE_SVELTE,
           module,
+          locales,
         };
       });
     })

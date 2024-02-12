@@ -19,6 +19,7 @@ const defaultConfig: Config = {
   assets: "public",
   outDir: ".sssx",
   postcss: {},
+  title: "Default Title",
   defaultLocale: "en-US",
 };
 

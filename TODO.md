@@ -53,6 +53,7 @@
 
 ## Developer Experience
 
+- [ ] add bin cli
 - [x] Add `sssx.config.ts` configuration file
 - [x] add `static` folder
 - [x] add watch functionlaity and reload for `dev`

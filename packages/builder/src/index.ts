@@ -1,4 +1,5 @@
-const cmd = process.argv[2];
+const [cmd, ...params] = process.argv.slice(2);
+// const cmd = process.argv[2];
 if (!["dev", "build", "cluster"].includes(cmd)) {
   console.log(`Please specify command:`);
   console.log(`\tdev – run in development mode`);

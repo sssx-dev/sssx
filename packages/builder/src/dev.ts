@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
 import open from "open";
@@ -24,7 +26,7 @@ const liveReloadServer = livereload.createServer();
 // TODO: throttle change events
 // TODO: build a more specialized updater and url
 watch(`${cwd}/src`, { recursive: true }, (event, name) => {
-  console.log({ event, name });
+  // console.log({ event, name });
   const route = "/";
   setTimeout(() => liveReloadServer.refresh(route), 1);
 });
@@ -50,8 +52,20 @@ app.get("*", async (req, res) => {
 
   // TODO: some of the files are lagging behind
   // serve the requested file from the filesystem
-  let filename = url !== "/" ? url : "index.html";
-  res.sendFile(`${outdir}/${filename}`);
+  const filename = url !== "/" ? url : "index.html";
+  const fullpath = path.normalize(`${outdir}/${filename}`);
+
+  // console.log(fullpath, stats);
+  if (fs.existsSync(fullpath)) {
+    const stats = fs.statSync(fullpath);
+    if (stats.size > 100) {
+      res.sendFile(fullpath);
+    } else {
+      console.log("File is smaller than 100 bytes", fullpath);
+    }
+  } else {
+    console.log("File does not exist", fullpath);
+  }
 });
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;

@@ -1,15 +1,15 @@
 import fs from "fs";
 import path from "path";
+import { uniqueFilter } from "./uniqueFilter";
 
-export const writeURLs = async (cwd: string, urls: string[]) => {
+const FILENAME = `sssx.urls.ts`;
+
+export const writeURLsIndex = async (cwd: string, urls: string[]) => {
   let array = urls;
-  const fullpath = path.normalize(`${cwd}/sssx.urls.ts`);
+  const fullpath = path.normalize(`${cwd}/${FILENAME}`);
   if (fs.existsSync(fullpath)) {
-    // TODO: read and modify
     const module = await import(fullpath);
-    array = [...urls, ...module.urls].filter(
-      (value, index, array) => array.indexOf(value) === index //filter unique only
-    );
+    array = [...urls, ...module.urls].filter(uniqueFilter);
   }
 
   array = array.sort();

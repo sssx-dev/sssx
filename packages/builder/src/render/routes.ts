@@ -3,6 +3,7 @@ import fm from "front-matter";
 import { globby } from "globby";
 import { cleanURL } from "../utils/cleanURL";
 import path from "path";
+import { Config } from "../utils/config";
 
 // TODO: design a better architecture that would allow for streaming millions of pages
 // storing them all in memory is not a best design right now
@@ -111,8 +112,7 @@ const getPlainRoutes = async (srcDir: string) => {
 };
 
 const MARKDOWN = "md";
-const DEFAULT_LOCALE = `en_US`;
-const getContentRoutes = async (cwd: string) => {
+const getContentRoutes = async (cwd: string, config: Config) => {
   const srcDir = `${cwd}/src/content`;
   const list = (await globby(`${srcDir}/**/*.${MARKDOWN}`)).map((path) =>
     path.replace(srcDir, "")
@@ -130,8 +130,8 @@ const getContentRoutes = async (cwd: string) => {
       .join("/")
       .replace(`.${MARKDOWN}`, ``);
 
-    if (permalink.endsWith(DEFAULT_LOCALE)) {
-      permalink = permalink.split(DEFAULT_LOCALE)[0];
+    if (permalink.endsWith(config.defaultLocale)) {
+      permalink = permalink.split(config.defaultLocale)[0];
     }
 
     if (!permalink.endsWith("/")) {
@@ -165,11 +165,11 @@ const getContentRoutes = async (cwd: string) => {
   return full;
 };
 
-export const getAllRoutes = async (cwd: string) => {
+export const getAllRoutes = async (cwd: string, config: Config) => {
   const srcDir = `${cwd}/src/pages`;
   const all = await getFileSystemRoutes(srcDir);
   const plain = await getPlainRoutes(srcDir);
-  const content = await getContentRoutes(cwd);
+  const content = await getContentRoutes(cwd, config);
   const array = [...all, ...plain, ...content];
 
   return array;

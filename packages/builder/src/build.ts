@@ -15,7 +15,7 @@ if (fs.existsSync(outdir)) {
 }
 fs.mkdirSync(outdir);
 
-const allRoutes = await getAllRoutes(cwd);
+const allRoutes = await getAllRoutes(cwd, config);
 const routes = allRoutes.map((s) => s.permalink);
 
 // generate sitemap.xml

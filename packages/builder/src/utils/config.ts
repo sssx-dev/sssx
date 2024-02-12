@@ -12,12 +12,14 @@ export type Config = {
   site?: string;
   // baseDir?: string; // a base dir where website will be hosted
   postcss: Postcss;
+  defaultLocale: string;
 };
 
 const defaultConfig: Config = {
   assets: "public",
   outDir: ".sssx",
   postcss: {},
+  defaultLocale: "en_US",
 };
 
 // TODO: create type for config

@@ -14,7 +14,7 @@ const isDev = true;
 const sleep = (ms: number = 1000) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-const allRoutes = await getAllRoutes(cwd);
+const allRoutes = await getAllRoutes(cwd, config);
 
 app.get("*", async (req, res) => {
   const { url } = req;

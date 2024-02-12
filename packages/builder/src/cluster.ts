@@ -21,7 +21,7 @@ if (!fs.existsSync(outdir)) {
 }
 
 let numWorkers = 0;
-const allRoutes = await getAllRoutes(cwd);
+const allRoutes = await getAllRoutes(cwd, config);
 
 if (cluster.isPrimary) {
   const routes = allRoutes.map((s) => s.permalink);

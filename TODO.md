@@ -46,7 +46,6 @@
 - [x] implement markdown rendering using `templates` (inspiration: https://docs.astro.build/en/basics/layouts/ )
 - [x] make sure content images are copied too
 - [x] add i18n support inside of `content`
-      `
 - [x] remove `console.log` from the templates
 - [x] fix images copied two times inside `/posts/post3/`
 - [ ] in `build` flow add output with all files written (do a glob) and then add it to the index file that keeps all the files

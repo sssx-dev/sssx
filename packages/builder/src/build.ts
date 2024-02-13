@@ -23,6 +23,8 @@ const routes = allRoutes.map((s) => s.permalink);
 // generate sitemap.xml
 await buildSitemap(outdir, config, allRoutes);
 
+console.log(process.argv);
+
 // TODO: add here core processing
 for (let i = 0; i < routes.length; i++) {
   const url = routes[i];

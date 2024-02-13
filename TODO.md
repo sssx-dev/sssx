@@ -69,3 +69,4 @@
 - [ ] add `sssx build <url>` that builds one particular URL
 - [ ] add `sssx urls prefix/*` that returns list of URLs with established prefix
 - [x] add `sssx dev open`
+- [x] add `sssx clean`

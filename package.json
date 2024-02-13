@@ -1,15 +1,15 @@
 {
-  "name": "my-app",
-  "version": "1.0.0",
+  "name": "workspace",
+  "version": "0.0.0",
   "description": "",
   "workspaces": [
     "packages/example",
-    "packages/builder"
+    "packages/sssx"
   ],
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "builder": "^1.0.0"
+    "sssx": "^0.2.0"
   }
 }

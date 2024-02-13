@@ -1,6 +1,6 @@
 # SSSX 2024
 
-SEO-first Static Site Generator
+Fast SSG framework built on top of Svelte and esbuild, optimised for SEO
 
 ## Philosophy
 

@@ -1,11 +1,11 @@
 {
-  "name": "builder",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "sssx",
+  "version": "0.2.0",
+  "description": "Fast SSG framework built on top of Svelte and esbuild, optimised for SEO",
+  "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx ./src/index.ts"
+    "dev": "npx tsx ./src/cli.ts"
   },
   "keywords": [
     "svelte",
@@ -65,9 +65,7 @@
     "typescript": "^5.3.3",
     "unified": "^11.0.4",
     "unified-stream": "^3.0.0",
-    "vfile-reporter": "^8.1.0"
-  },
-  "dependencies": {
+    "vfile-reporter": "^8.1.0",
     "svelte": "^4.2.10"
   }
 }

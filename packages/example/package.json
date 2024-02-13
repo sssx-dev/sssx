@@ -1,15 +1,21 @@
 {
-  "name": "my-app",
+  "name": "example-sssx-website",
   "version": "1.0.0",
-  "description": "",
+  "description": "Example website built with SSSX",
   "type": "module",
   "scripts": {
-    "build": "npx tsx build.ts",
-    "preview": "npx serve ./dist"
+    "dev": "npx sssx dev",
+    "build": "npx sssx build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "sssx",
+    "ssg",
+    "ssr",
+    "svelte",
+    "typescript"
+  ],
+  "author": "Eugene Hauptmann",
+  "license": "MIT",
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "^0.18.0",
     "@tailwindcss/typography": "^0.5.10",
@@ -33,6 +39,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "builder": "file:../builder"
+    "sssx": "file:../sssx"
   }
 }

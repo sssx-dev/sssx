@@ -1,12 +1,9 @@
-import fs from "fs";
 import path from "path";
 import { globbySync } from "globby";
-import { Config } from "../utils/config";
-import { cleanURL } from "../utils/cleanURL";
-import fm from "front-matter";
+import { Config } from "./config";
 import ISO6391 from "iso-639-1";
 import * as bcp from "bcp-47";
-import { globEscape } from "../utils/globEscape";
+import { globEscape } from "./globEscape";
 
 const ALL_CODES = ISO6391.getAllCodes();
 

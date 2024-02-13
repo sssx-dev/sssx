@@ -7,8 +7,17 @@
   "scripts": {
     "dev": "npx tsx ./src/index.ts"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "svelte",
+    "sssx",
+    "ssg",
+    "ssr",
+    "static site generator",
+    "server side rendering",
+    "jamstack",
+    "typescript"
+  ],
+  "author": "Eugene Hauptmann",
   "license": "MIT",
   "bin": {
     "sssx": "./src/cli.ts"

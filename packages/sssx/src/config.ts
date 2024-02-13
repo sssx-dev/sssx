@@ -1,4 +1,5 @@
 import { Postcss } from "svelte-preprocess/dist/types/options";
+import { Pluggable, Plugin, PluggableList } from "unified";
 
 // draw inspirations from:
 // https://nextjs.org/docs/app/api-reference/next-config-js
@@ -12,6 +13,7 @@ export type Config = {
   site?: string;
   // baseDir?: string; // a base dir where website will be hosted
   postcss: Postcss;
+  rehypePlugins: PluggableList | Pluggable[] | Plugin[];
   defaultLocale: string;
   globalDir: string;
   writeURLsIndex: boolean;
@@ -25,8 +27,9 @@ const defaultConfig: Config = {
   title: "Default Title",
   defaultLocale: "en-US",
   globalDir: "global",
-  writeURLsIndex: true,
-  writeFilesIndex: true,
+  rehypePlugins: [],
+  writeURLsIndex: false,
+  writeFilesIndex: false,
 };
 
 // TODO: create type for config

@@ -1,15 +1,33 @@
 {
-  "name": "workspace",
+  "name": "@sssx/monorepo",
   "version": "0.0.0",
-  "description": "",
-  "workspaces": [
-    "packages/example",
-    "packages/sssx"
+  "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
+  "engines": {
+    "node": "v21.x"
+  },
+  "keywords": [
+    "SSG",
+    "SSR",
+    "Svelte",
+    "SEO",
+    "Hydration",
+    "Performance",
+    "JAM",
+    "JAMstack"
   ],
-  "keywords": [],
-  "author": "",
+  "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
     "sssx": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sssx-dev/sssx"
+  },
+  "bugs": {
+    "url": "https://github.com/sssx-dev/sssx/issues"
   }
 }

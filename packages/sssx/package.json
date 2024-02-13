@@ -1,26 +1,38 @@
 {
   "name": "sssx",
   "version": "0.2.0",
-  "description": "Fast SSG framework built on top of Svelte and esbuild, optimised for SEO",
+  "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
+  "engines": {
+    "node": "v19.x"
+  },
+  "keywords": [
+    "SSG",
+    "SSR",
+    "Svelte",
+    "SEO",
+    "Hydration",
+    "Performance",
+    "JAM",
+    "JAMstack",
+    "static site generator",
+    "server side rendering"
+  ],
+  "author": "Eugene Hauptmann <eugene@sssx.dev>",
+  "license": "MIT",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
     "dev": "npx tsx ./src/cli.ts"
   },
-  "keywords": [
-    "svelte",
-    "sssx",
-    "ssg",
-    "ssr",
-    "static site generator",
-    "server side rendering",
-    "jamstack",
-    "typescript"
-  ],
-  "author": "Eugene Hauptmann",
-  "license": "MIT",
   "bin": {
     "sssx": "./src/cli.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sssx-dev/sssx"
+  },
+  "bugs": {
+    "url": "https://github.com/sssx-dev/sssx/issues"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.5",

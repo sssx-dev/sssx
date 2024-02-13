@@ -78,7 +78,7 @@ This repository is structured as a monorepo and uses workspaces.
 ## Packages
 
 - [x] [sssx](https://github.com/sssx-dev/sssx/tree/master/packages/sssx) main package
-- [x] [@sssx/example](https://github.com/sssx-dev/sssx/tree/master/packages/example) Example website project built with SSSX
+- [x] [example](https://github.com/sssx-dev/sssx/tree/master/packages/example) Example website project built with SSSX
 
 ## Getting started
 

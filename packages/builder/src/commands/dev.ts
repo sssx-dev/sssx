@@ -5,11 +5,11 @@ import connectLiveReload from "connect-livereload";
 import open from "open";
 import express from "express";
 import watch from "node-watch";
-import { buildRoute } from "./render";
-import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./routes";
-import { getRoute } from "./utils/getRoute";
-// import { sleep } from "./utils/sleep";
+import { buildRoute } from "../render";
+import { getConfig } from "../utils/config";
+import { getAllRoutes, routeToFileSystem } from "../routes";
+import { getRoute } from "../utils/getRoute";
+// import { sleep } from "../utils/sleep";
 
 const app = express();
 const cwd = process.cwd();

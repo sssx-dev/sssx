@@ -1,11 +1,11 @@
 import fs from "fs";
-import { buildRoute } from "./render";
-import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./routes";
-import { buildSitemap } from "./plugins/sitemap";
-import { getRoute } from "./utils/getRoute";
-import { writeURLsIndex } from "./indexes/writeURLsIndex";
-import { writeFilesIndex } from "./indexes/writeFilesIndex";
+import { buildRoute } from "../render";
+import { getConfig } from "../utils/config";
+import { getAllRoutes, routeToFileSystem } from "../routes";
+import { buildSitemap } from "../plugins/sitemap";
+import { getRoute } from "../utils/getRoute";
+import { writeURLsIndex } from "../indexes/writeURLsIndex";
+import { writeFilesIndex } from "../indexes/writeFilesIndex";
 
 const cwd = process.cwd();
 const config = await getConfig(cwd);

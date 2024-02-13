@@ -1,15 +1,15 @@
 import fs from "fs";
 import os from "os";
 import cluster from "cluster";
-import { buildRoute } from "./render";
-import { getConfig } from "./utils/config";
-import { getAllRoutes, routeToFileSystem } from "./routes";
-import { buildSitemap } from "./plugins/sitemap";
+import { buildRoute } from "../render";
+import { getConfig } from "../utils/config";
+import { getAllRoutes, routeToFileSystem } from "../routes";
+import { buildSitemap } from "../plugins/sitemap";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";
-import { getRoute } from "./utils/getRoute";
-import { writeURLsIndex } from "./indexes/writeURLsIndex";
-import { writeFilesIndex } from "./indexes/writeFilesIndex";
+import { getRoute } from "../utils/getRoute";
+import { writeURLsIndex } from "../indexes/writeURLsIndex";
+import { writeFilesIndex } from "../indexes/writeFilesIndex";
 
 const numCPUs = os.cpus().length;
 const cwd = process.cwd();

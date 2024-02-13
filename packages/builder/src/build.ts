@@ -23,10 +23,18 @@ const routes = allRoutes.map((s) => s.permalink);
 // generate sitemap.xml
 await buildSitemap(outdir, config, allRoutes);
 
-console.log(process.argv);
+let startIndex = 0;
+let length = routes.length;
+const inputRoute = process.argv[3];
+const inputRouteIndex = routes.indexOf(inputRoute);
 
-// TODO: add here core processing
-for (let i = 0; i < routes.length; i++) {
+// process only single input URL if any
+if (inputRouteIndex >= 0) {
+  startIndex = inputRouteIndex;
+  length = startIndex + 1;
+}
+
+for (let i = startIndex; i < length; i++) {
   const url = routes[i];
   console.log(i, `\t`, url);
   const route = getRoute(url);

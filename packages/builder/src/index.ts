@@ -13,7 +13,8 @@ if (!["dev", "build", "cluster", "clean", "urls"].includes(cmd)) {
   console.log(
     `\tcluster – run in cluster production mode and use all CPU cores (and build all)`
   );
-  console.log(`\clean – cleans existing files`);
+  console.log(`\turls prefix – prints urls with a given prefix`);
+  console.log(`\tclean – cleans existing files`);
 } else {
   await import(`./commands/${cmd}.ts`);
 }

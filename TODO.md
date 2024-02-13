@@ -67,6 +67,6 @@
 - [ ] add type for markdown imports inside templates
 - [ ] add a way to pass `unified`, `remark`, `rehype` build options to `markdown` from config
 - [x] add `sssx build <url>` that builds one particular URL
-- [ ] add `sssx urls prefix/*` that returns list of URLs with established prefix
+- [x] add `sssx urls prefix/` that returns list of URLs with established prefix
 - [x] add `sssx dev open`
 - [x] add `sssx clean`

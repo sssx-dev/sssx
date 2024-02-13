@@ -1,6 +1,6 @@
 import fs from "fs";
 import { RouteInfo } from "../routes";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { cleanURL } from "../utils/cleanURL";
 import dayjs from "dayjs";
 

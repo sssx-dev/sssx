@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getConfig } from "../utils/config";
+import { getConfig } from "../config";
 import { SSSX_FILES_INDEX, SSSX_URLS_INDEX } from "../utils/constants";
 
 const cwd = process.cwd();

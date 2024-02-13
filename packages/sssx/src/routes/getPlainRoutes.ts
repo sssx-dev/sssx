@@ -1,7 +1,7 @@
 import { globby } from "globby";
 import { checkSlashes } from "../utils/checkSlashes";
 import { RouteInfo } from "./types";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { getDefaultLocales } from "../utils/getLocales";
 
 const PAGE_SVELTE = `+page.svelte`;

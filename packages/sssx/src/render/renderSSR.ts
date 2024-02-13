@@ -1,6 +1,6 @@
 import fs from "fs";
 import pretty from "pretty";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { RouteInfo } from "../routes";
 import { cleanURL } from "../utils/cleanURL";
 

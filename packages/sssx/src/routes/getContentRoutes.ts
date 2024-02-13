@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { globby } from "globby";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { cleanURL } from "../utils/cleanURL";
 import fm from "front-matter";
 import { getLocales } from "../utils/getLocales";

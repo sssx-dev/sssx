@@ -1,5 +1,5 @@
 import { getAllRoutes } from "../routes";
-import { getConfig } from "../utils/config";
+import { getConfig } from "../config";
 
 const cwd = process.cwd();
 const config = await getConfig(cwd);

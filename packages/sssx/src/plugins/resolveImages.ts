@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { OnLoadArgs, OnResolveArgs, Plugin } from "esbuild";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { hashFile } from "../utils/hashFile";
 
 // const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?$/;

@@ -5,7 +5,7 @@ import sveltePreprocess from "svelte-preprocess";
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import { generateEntryPoint } from "./generateEntryPoint";
 import { minify } from "../utils/settings";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { RouteInfo } from "../routes";
 
 const defaultCompilerOptions: CompileOptions = {

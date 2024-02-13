@@ -1,6 +1,6 @@
 import fs from "fs";
 import { uniqueFilter } from "../utils/uniqueFilter";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { globby } from "globby";
 import { SSSX_BANNER, SSSX_FILES_INDEX } from "../utils/constants";
 import { arrayToFile } from "../utils/arrayToFile";

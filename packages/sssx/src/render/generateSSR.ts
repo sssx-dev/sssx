@@ -3,7 +3,7 @@ import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { RouteInfo } from "../routes";
 
 const defaultCompilerOptions: CompileOptions = {

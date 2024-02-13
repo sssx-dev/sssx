@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import cluster from "cluster";
 import { buildRoute } from "../render";
-import { getConfig } from "../utils/config";
+import { getConfig } from "../config";
 import { getAllRoutes, routeToFileSystem } from "../routes";
 import { buildSitemap } from "../plugins/sitemap";
 import cliProgress from "cli-progress";

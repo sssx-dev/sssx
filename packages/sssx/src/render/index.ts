@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { resolveImages } from "../plugins/resolveImages";
 import { copyAssets, copyPublicAssets } from "../utils/assets";
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { rimraf } from "../utils/rimraf";
 import { getCommonBuildOptions } from "../utils/settings";
 import { generateClient } from "./generateClient";

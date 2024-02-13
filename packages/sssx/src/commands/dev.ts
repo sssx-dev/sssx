@@ -6,7 +6,7 @@ import open from "open";
 import express from "express";
 import watch from "node-watch";
 import { buildRoute } from "../render";
-import { getConfig } from "../utils/config";
+import { getConfig } from "../config";
 import { getAllRoutes, routeToFileSystem } from "../routes";
 import { getRoute } from "../utils/getRoute";
 // import { sleep } from "../utils/sleep";

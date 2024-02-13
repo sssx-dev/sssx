@@ -1,4 +1,4 @@
-import { Config } from "../utils/config";
+import { Config } from "../config";
 import { getFileSystemRoutes } from "./getFileSystemRoutes";
 import { getPlainRoutes } from "./getPlainRoutes";
 import { getContentRoutes } from "./getContentRoutes";

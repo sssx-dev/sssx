@@ -1,6 +1,6 @@
 import path from "path";
 import { globbySync } from "globby";
-import { Config } from "./config";
+import { Config } from "../config";
 import ISO6391 from "iso-639-1";
 import * as bcp from "bcp-47";
 import { globEscape } from "./globEscape";

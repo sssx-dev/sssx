@@ -8,7 +8,6 @@ import { getFullPath } from "./getFullPath";
 import { loadExistingModule } from "./loadExistingModule";
 import { loadExistingUrlsModule } from "./writeURLsIndex";
 
-// TODO: figure out removal of the files here
 export const writeFilesIndex = async (cwd: string, config: Config) => {
   const dir = `${cwd}/${config.outDir}`;
   const files = (await globby(`${dir}/**/*`)).map((a) => a.replace(dir, ""));
@@ -20,9 +19,6 @@ export const writeFilesIndex = async (cwd: string, config: Config) => {
 
   // because we might be generating route by route, lets defer to removed urls here
   // const removed = oldFiles.filter((file) => !files.includes(file));
-
-  // console.log({ oldFiles });
-  // console.log({ removedURLs });
 
   const removed = oldFiles.filter((file) => {
     let isRemoved = false;

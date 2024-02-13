@@ -4,8 +4,8 @@ import { getConfig } from "./utils/config";
 import { getAllRoutes, routeToFileSystem } from "./routes";
 import { buildSitemap } from "./plugins/sitemap";
 import { getRoute } from "./utils/getRoute";
-import { writeURLsIndex } from "./utils/writeURLsIndex";
-import { writeFilesIndex } from "./utils/writeFilesIndex";
+import { writeURLsIndex } from "./indexes/writeURLsIndex";
+import { writeFilesIndex } from "./indexes/writeFilesIndex";
 
 const cwd = process.cwd();
 const config = await getConfig(cwd);

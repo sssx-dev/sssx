@@ -8,8 +8,8 @@ import { buildSitemap } from "./plugins/sitemap";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";
 import { getRoute } from "./utils/getRoute";
-import { writeURLsIndex } from "./utils/writeURLsIndex";
-import { writeFilesIndex } from "./utils/writeFilesIndex";
+import { writeURLsIndex } from "./indexes/writeURLsIndex";
+import { writeFilesIndex } from "./indexes/writeFilesIndex";
 
 const numCPUs = os.cpus().length;
 const cwd = process.cwd();

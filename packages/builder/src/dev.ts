@@ -9,7 +9,7 @@ import { buildRoute } from "./render";
 import { getConfig } from "./utils/config";
 import { getAllRoutes, routeToFileSystem } from "./routes";
 import { getRoute } from "./utils/getRoute";
-import { sleep } from "./utils/sleep";
+// import { sleep } from "./utils/sleep";
 
 const app = express();
 const cwd = process.cwd();

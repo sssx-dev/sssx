@@ -25,6 +25,7 @@ export const all = [
 ];
 
 export const added = [
+"/dog0/",
 ];
 
 export const removed = [

@@ -54,6 +54,8 @@
 - [x] figure out what to do when you remove routes or files `sssx.files.ts` (get from URLs and edit files?)
 - [x] generate list of removed URLs and then go over it to remove the URLs from the files
 - [ ] add a check that there no similar routes in file system, plain, content, if there are, then alert the user
+- [ ] run `a11y` checks
+- [ ] run SEO checks (metatags, description, title, language, etc.)
 
 ## Developer Experience
 

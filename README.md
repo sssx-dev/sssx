@@ -59,6 +59,7 @@ This framework was created to address several things that are lacking in current
 - 💦 Hydration using Svelte components
 - 📦 Small size of JavaScript overhead (thanks to Svelte)
 - 💪 ESM first, no more enormous CommonJS bundles (thanks to Esbuild)
+- 🕸️ Out of box SEO features: metatags, i18n, web vitals, robots, sitemap, etc.
 
 ## Documentation
 

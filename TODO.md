@@ -56,6 +56,7 @@
 - [ ] add a check that there no similar routes in file system, plain, content, if there are, then alert the user
 - [ ] run `a11y` checks
 - [ ] run SEO checks (metatags, description, title, language, etc.)
+- [ ] updated changelog inside `sssx`
 
 ## Developer Experience
 

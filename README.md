@@ -53,13 +53,16 @@ This framework was created to address several things that are lacking in current
 
 ### Features
 
-- 📈 Incremental updates `sssx build <url>`
-- 🚀 1000ms or less spent on building each page
-- 👍 Static pages don't need JavaScript whatsoever
-- 💦 Hydration using Svelte components
-- 📦 Small size of JavaScript overhead (thanks to Svelte)
-- 💪 ESM first, no more enormous CommonJS bundles (thanks to Esbuild)
+- 📈 Incremental updates `sssx build <url>`.
+- 🚀 It's fast! 1000ms or less spent on building each page.
+- 👍 Each page is it's own SPA. Fully autonomous.
+- 💦 Hydration using Svelte components.
+- 📦 Small size of JavaScript overhead, thanks to Svelte.
+- 💪 ESM first, no more enormous CommonJS bundles, thanks to Esbuild.
 - 🕸️ Out of box SEO features: metatags, i18n, web vitals, robots, sitemap, etc.
+- 🏠 Host anywhere. It's just HTML files with bunch of CSS and JS files.
+- ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
+- 😎 Development Experience is our priority!
 
 ## Documentation
 
@@ -75,7 +78,7 @@ This repository is structured as a monorepo and uses workspaces.
 ## Packages
 
 - [x] [sssx](https://github.com/sssx-dev/sssx/tree/master/packages/sssx) main package
-- [x] [@sssx/aws-adapter](https://github.com/sssx-dev/sssx/tree/master/packages/example) Example website project built with SSSX
+- [x] [@sssx/example](https://github.com/sssx-dev/sssx/tree/master/packages/example) Example website project built with SSSX
 
 ## Getting started
 

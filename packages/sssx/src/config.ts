@@ -6,17 +6,30 @@ import { Pluggable, Plugin, PluggableList } from "unified";
 // https://kit.svelte.dev/docs/configuration
 // https://elderguide.com/tech/elderjs/#config-elderconfigjs
 // https://docs.astro.build/en/reference/configuration-reference/
+
+/** SSSX configuration, stored in `sssx.config.ts` */
 export type Config = {
+  /** default title to use if it's not provided by the template or content */
   title?: string;
+  /** folder with the public assets to be copied, @default public */
   assets: string;
+  /** Output dir with all files @default .sssx  */
   outDir: string;
+  /** a website name like https://example.com */
   site?: string;
-  // baseDir?: string; // a base dir where website will be hosted
+  /** a base dir where website will be hosted */
+  baseDir?: string;
+  /** postcss plugins */
   postcss: Postcss;
+  /** rehype markdown plugins */
   rehypePlugins: PluggableList | Pluggable[] | Plugin[];
+  /** default locale, @default en-US */
   defaultLocale: string;
+  /** global dir to store assets via `image.jpg?global` @default global */
   globalDir: string;
+  /** dump all urls into `sssx.urls.ts` */
   writeURLsIndex: boolean;
+  /** dump all files into `sssx.files.ts` */
   writeFilesIndex: boolean;
 };
 

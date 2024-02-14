@@ -51,7 +51,7 @@ This framework was created to address several things that are lacking in current
 2. Links and URLs first
 3. Designed for websites with millions of pages
 
-### Features
+## Features
 
 - 📈 Incremental updates `sssx build <url>`.
 - 🚀 It's fast! 1000ms or less spent on building each page.
@@ -64,12 +64,20 @@ This framework was created to address several things that are lacking in current
 - ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
 - 😎 Development Experience is our priority!
 
+## Cluster mode
+
+To run SSSX in cluster mode to use all available CPU cores use the following command:
+
+```shell
+sssx cluster
+```
+
+![1000 urls in cluster mode in real time](./docs/cluster-1000-urls.gif)
+
 ## Documentation
 
 When you render millions of static pages, you don't want to rerender all of them each time.
 SSSX enables you to finetune which pages has to be updated and when.
-
-[Read more](https://github.com/sssx-dev/sssx/blob/master/DOCUMENTATION.md)
 
 ## Structure
 

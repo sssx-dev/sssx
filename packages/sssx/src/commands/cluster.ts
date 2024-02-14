@@ -33,12 +33,12 @@ if (cluster.isPrimary) {
     format:
       "SSSX |" +
       colors.cyan("{bar}") +
-      "| {percentage}% | {duration_formatted} | {eta_formatted} left | URL: {url}",
+      "| {percentage}% | {duration_formatted} | {eta_formatted} left | URL: {url} | Total: {total}",
     barCompleteChar: "\u2588",
     barIncompleteChar: "\u2591",
     hideCursor: true,
   });
-  bar1.start(routes.length, 0, { url: "" });
+  bar1.start(routes.length, 0, { url: "", total: 0 });
   let jobsIndex = 0;
 
   // Fork workers.
@@ -56,7 +56,8 @@ if (cluster.isPrimary) {
 
     worker.on("message", (url) => {
       // console.log("Received message from worker", message);
-      bar1.update(jobsIndex++, { url });
+      jobsIndex++;
+      bar1.update(jobsIndex, { url, total: jobsIndex });
     });
   }
 

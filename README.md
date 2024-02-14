@@ -72,6 +72,8 @@ To run SSSX in cluster mode to use all available CPU cores use the following com
 sssx cluster
 ```
 
+Here's a demonstration of generating 1000+ URLs under 30 seconds:
+
 ![1000 urls in cluster mode in real time](https://github.com/sssx-dev/sssx/raw/master/docs/cluster-1000-urls.gif)
 
 ## Documentation

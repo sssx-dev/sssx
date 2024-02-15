@@ -1,12 +1,6 @@
 import { Postcss } from "svelte-preprocess/dist/types/options";
 import { Pluggable, Plugin, PluggableList } from "unified";
 
-// draw inspirations from:
-// https://nextjs.org/docs/app/api-reference/next-config-js
-// https://kit.svelte.dev/docs/configuration
-// https://elderguide.com/tech/elderjs/#config-elderconfigjs
-// https://docs.astro.build/en/reference/configuration-reference/
-
 /** SSSX configuration, stored in `sssx.config.ts` */
 export type Config = {
   /** default title to use if it's not provided by the template or content */
@@ -45,7 +39,6 @@ const defaultConfig: Config = {
   writeFilesIndex: false,
 };
 
-// TODO: create type for config
 export const getConfig = async (cwd: string): Promise<Config> => {
   const projectConfig = (await import(`${cwd}/sssx.config.ts`)).default;
   const config = { ...defaultConfig, ...projectConfig };

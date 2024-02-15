@@ -1,5 +1,5 @@
-import tailwindcss from "tailwindcss";
-import autoprefixer from "autoprefixer";
+import tailwindcss from "npm:tailwindcss";
+import autoprefixer from "npm:autoprefixer";
 
 const sssxConfig: any = {
   title: "Sssx Example Title",

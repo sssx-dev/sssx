@@ -1,12 +1,12 @@
 import path from "node:path";
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
-import open from "open";
+// import open from "open";
 import express from "express";
 import watch from "node-watch";
 import { buildRoute } from "../render/index.ts";
 import { getConfig } from "../config.ts";
-import { getAllRoutes, routeToFileSystem } from "../routes";
+import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
@@ -51,13 +51,16 @@ app.get("*", async (req, res) => {
   res.sendFile(fullpath);
 });
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;
+let port = 8080;
+if (process) {
+  if (process.env.PORT) port = parseInt(process.env.PORT);
+}
 const host = "127.0.0.1";
 
 app.listen(port, host, () => {
   const url = `http://${host}:${port}`;
   console.log(`SSSX is listening on ${url}`);
-  if (args.pop() === "open") {
-    open(url);
-  }
+  // if (args.pop() === "open") {
+  //   open(url);
+  // }
 });

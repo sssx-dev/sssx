@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { unified, type Plugin } from "unified";
-import remarkParse from "remark-parse";
+import remarkParse from "npm:remark-parse";
 import remarkToc from "remark-toc";
 import remarkRehype from "remark-rehype";
 import rehypeFormat from "rehype-format";

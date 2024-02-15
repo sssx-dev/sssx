@@ -1,17 +1,17 @@
-import fs from "fs";
-import path from "path";
-import { resolveImages } from "../plugins/resolveImages";
-import { copyAssets, copyPublicAssets } from "../utils/assets";
-import { Config } from "../config";
-import { rimraf } from "../utils/rimraf";
-import { getCommonBuildOptions } from "../utils/settings";
-import { generateClient } from "./generateClient";
-import { generateSSR } from "./generateSSR";
-import { renderSSR } from "./renderSSR";
-import { RouteInfo } from "../routes";
+import fs from "node:fs";
+import path from "node:path";
+import { resolveImages } from "../plugins/resolveImages.ts";
+import { copyAssets, copyPublicAssets } from "../utils/assets.ts";
+import { Config } from "../config.ts";
+import { rimraf } from "../utils/rimraf.ts";
+import { getCommonBuildOptions } from "../utils/settings.ts";
+import { generateClient } from "./generateClient.ts";
+import { generateSSR } from "./generateSSR.ts";
+import { renderSSR } from "./renderSSR.ts";
+import { RouteInfo } from "../routes/index.ts";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
-import { markdown } from "../utils/markdown";
+import { markdown } from "../utils/markdown.ts";
 
 export const buildRoute = async (
   route: string,

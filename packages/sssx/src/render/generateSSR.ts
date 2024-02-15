@@ -2,8 +2,8 @@ import esbuild, { Plugin, type BuildOptions, Drop } from "esbuild";
 import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
-import { generateEntryPoint } from "./generateEntryPoint";
-import { Config } from "../config";
+import { generateEntryPoint } from "./generateEntryPoint.ts";
+import { Config } from "../config.ts";
 import { RouteInfo } from "../routes";
 
 const defaultCompilerOptions: CompileOptions = {

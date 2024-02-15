@@ -1,10 +1,10 @@
-import { Config } from "../config";
-import { getFileSystemRoutes } from "./getFileSystemRoutes";
-import { getPlainRoutes } from "./getPlainRoutes";
-import { getContentRoutes } from "./getContentRoutes";
-import { RouteInfo } from "./types";
+import { Config } from "../config.ts";
+import { getFileSystemRoutes } from "./getFileSystemRoutes.ts";
+import { getPlainRoutes } from "./getPlainRoutes.ts";
+import { getContentRoutes } from "./getContentRoutes.ts";
+import { RouteInfo } from "./types.ts";
 
-export type { RouteInfo } from "./types";
+export type { RouteInfo } from "./types.ts";
 
 // TODO: design a better architecture that would allow for streaming millions of pages
 // storing them all in memory is not a best design right now

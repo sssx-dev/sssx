@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { Module } from "./types";
 
 export const loadExistingModule = async (fullpath: string) => {

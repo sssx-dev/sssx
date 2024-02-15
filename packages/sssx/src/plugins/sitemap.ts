@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { RouteInfo } from "../routes";
 import { Config } from "../config";
 import { cleanURL } from "../utils/cleanURL";

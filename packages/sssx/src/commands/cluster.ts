@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import os from "os";
 import cluster from "cluster";
 import { buildRoute } from "../render";

@@ -1,8 +1,8 @@
-import fs from "fs";
+import fs from "node:fs";
 import pretty from "pretty";
-import { Config } from "../config";
+import { Config } from "../config.ts";
 import { RouteInfo } from "../routes";
-import { cleanURL } from "../utils/cleanURL";
+import { cleanURL } from "../utils/cleanURL.ts";
 
 const HTML_FILE = `index.html`;
 

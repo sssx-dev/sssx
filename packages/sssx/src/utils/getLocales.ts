@@ -1,9 +1,9 @@
-import path from "path";
+import path from "node:path";
 import { globbySync } from "globby";
-import { Config } from "../config";
+import { Config } from "../config.ts";
 import ISO6391 from "iso-639-1";
 import * as bcp from "bcp-47";
-import { globEscape } from "./globEscape";
+import { globEscape } from "./globEscape.ts";
 
 const ALL_CODES = ISO6391.getAllCodes();
 

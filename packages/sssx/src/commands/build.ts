@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { buildRoute } from "../render";
 import { getConfig } from "../config";
 import { getAllRoutes, routeToFileSystem } from "../routes";

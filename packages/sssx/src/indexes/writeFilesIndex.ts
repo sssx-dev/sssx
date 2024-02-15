@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { uniqueFilter } from "../utils/uniqueFilter";
 import { Config } from "../config";
 import { globby } from "globby";

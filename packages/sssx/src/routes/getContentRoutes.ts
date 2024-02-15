@@ -1,10 +1,10 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { globby } from "globby";
-import { Config } from "../config";
-import { cleanURL } from "../utils/cleanURL";
+import { Config } from "../config.ts";
+import { cleanURL } from "../utils/cleanURL.ts";
 import fm from "front-matter";
-import { getLocales } from "../utils/getLocales";
+import { getLocales } from "../utils/getLocales.ts";
 
 const MARKDOWN = "md";
 

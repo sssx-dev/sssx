@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { uniqueFilter } from "../utils/uniqueFilter";
 import { SSSX_BANNER, SSSX_URLS_INDEX } from "../utils/constants";
 import { arrayToFile } from "../utils/arrayToFile";

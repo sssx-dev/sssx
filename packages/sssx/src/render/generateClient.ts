@@ -3,10 +3,10 @@ import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 //@ts-ignore
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
-import { generateEntryPoint } from "./generateEntryPoint";
-import { minify } from "../utils/settings";
-import { Config } from "../config";
-import { RouteInfo } from "../routes";
+import { generateEntryPoint } from "./generateEntryPoint.ts";
+import { minify } from "../utils/settings.ts";
+import { Config } from "../config.ts";
+import { RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
   // css: "none",

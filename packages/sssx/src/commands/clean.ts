@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { getConfig } from "../config";
 import { SSSX_FILES_INDEX, SSSX_URLS_INDEX } from "../utils/constants";
 

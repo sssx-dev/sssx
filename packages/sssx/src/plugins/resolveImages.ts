@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { OnLoadArgs, OnResolveArgs, Plugin } from "esbuild";
-import { Config } from "../config";
-import { hashFile } from "../utils/hashFile";
+import { Config } from "../config.ts";
+import { hashFile } from "../utils/hashFile.ts";
 
 // const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?$/;
 const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?(\?.*)?$/; // works for `image.jpg?global`

@@ -1,13 +1,14 @@
 import fs from "node:fs";
-import { buildRoute } from "../render";
-import { getConfig } from "../config";
-import { getAllRoutes, routeToFileSystem } from "../routes";
-import { buildSitemap } from "../plugins/sitemap";
-import { getRoute } from "../utils/getRoute";
-import { writeURLsIndex } from "../indexes/writeURLsIndex";
-import { writeFilesIndex } from "../indexes/writeFilesIndex";
+import { buildRoute } from "../render/index.ts";
+import { getConfig } from "../config.ts";
+import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
+import { buildSitemap } from "../plugins/sitemap.ts";
+import { getRoute } from "../utils/getRoute.ts";
+import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
+import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
+import { cwd } from "../utils/cwd.ts";
+import { args } from "../utils/args.ts";
 
-const cwd = process.cwd();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
@@ -25,7 +26,7 @@ await buildSitemap(outdir, config, allRoutes);
 
 let startIndex = 0;
 let length = routes.length;
-const inputRoute = process.argv[3];
+const inputRoute = args[0];
 const inputRouteIndex = routes.indexOf(inputRoute);
 
 // process only single input URL if any

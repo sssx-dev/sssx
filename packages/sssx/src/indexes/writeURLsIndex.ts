@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import { uniqueFilter } from "../utils/uniqueFilter";
-import { SSSX_BANNER, SSSX_URLS_INDEX } from "../utils/constants";
-import { arrayToFile } from "../utils/arrayToFile";
-import { loadExistingModule } from "./loadExistingModule";
-import { getFullPath } from "./getFullPath";
+import { uniqueFilter } from "../utils/uniqueFilter.ts";
+import { SSSX_BANNER, SSSX_URLS_INDEX } from "../utils/constants.ts";
+import { arrayToFile } from "../utils/arrayToFile.ts";
+import { loadExistingModule } from "./loadExistingModule.ts";
+import { getFullPath } from "./getFullPath.ts";
 
 export const loadExistingUrlsModule = async (cwd: string) => {
   const fullpath = getFullPath(cwd, SSSX_URLS_INDEX);

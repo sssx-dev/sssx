@@ -1,12 +1,12 @@
 import fs from "node:fs";
-import { uniqueFilter } from "../utils/uniqueFilter";
-import { Config } from "../config";
+import { uniqueFilter } from "../utils/uniqueFilter.ts";
+import { Config } from "../config.ts";
 import { globby } from "globby";
-import { SSSX_BANNER, SSSX_FILES_INDEX } from "../utils/constants";
-import { arrayToFile } from "../utils/arrayToFile";
-import { getFullPath } from "./getFullPath";
-import { loadExistingModule } from "./loadExistingModule";
-import { loadExistingUrlsModule } from "./writeURLsIndex";
+import { SSSX_BANNER, SSSX_FILES_INDEX } from "../utils/constants.ts";
+import { arrayToFile } from "../utils/arrayToFile.ts";
+import { getFullPath } from "./getFullPath.ts";
+import { loadExistingModule } from "./loadExistingModule.ts";
+import { loadExistingUrlsModule } from "./writeURLsIndex.ts";
 
 export const writeFilesIndex = async (cwd: string, config: Config) => {
   const dir = `${cwd}/${config.outDir}`;

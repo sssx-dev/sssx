@@ -1,6 +1,8 @@
 import { Postcss } from "svelte-preprocess/dist/types/options";
 import { Pluggable, Plugin, PluggableList } from "unified";
 
+const SSSX_CONFIG_FILE = `sssx.config.ts`;
+
 /** SSSX configuration, stored in `sssx.config.ts` */
 export type Config = {
   /** default title to use if it's not provided by the template or content */
@@ -40,7 +42,7 @@ const defaultConfig: Config = {
 };
 
 export const getConfig = async (cwd: string): Promise<Config> => {
-  const projectConfig = (await import(`${cwd}/sssx.config.ts`)).default;
+  const projectConfig = (await import(`${cwd}/${SSSX_CONFIG_FILE}`)).default;
   const config = { ...defaultConfig, ...projectConfig };
 
   return config;

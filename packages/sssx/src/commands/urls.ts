@@ -1,12 +1,12 @@
 import { getAllRoutes } from "../routes";
 import { getConfig } from "../config";
+import { cwd } from "../utils/cwd";
+import { args } from "../utils/args";
 
-const cwd = process.cwd();
 const config = await getConfig(cwd);
 const allRoutes = await getAllRoutes(cwd, config);
 const routes = allRoutes.map((s) => s.permalink).sort();
-
-const prefix = process.argv[3];
+const prefix = args[0];
 
 routes.map((route) => {
   if (route.startsWith(prefix)) {

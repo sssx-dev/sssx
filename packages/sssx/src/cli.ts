@@ -1,8 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import chalk from "chalk";
-
-const [cmd, ...params] = process.argv.slice(2);
+import { cmd } from "./utils/args.ts";
 
 if (!["dev", "build", "cluster", "clean", "urls"].includes(cmd)) {
   console.log(`Usage:`);

@@ -1,18 +1,19 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
 import open from "open";
 import express from "express";
 import watch from "node-watch";
-import { buildRoute } from "../render";
-import { getConfig } from "../config";
+import { buildRoute } from "../render/index.ts";
+import { getConfig } from "../config.ts";
 import { getAllRoutes, routeToFileSystem } from "../routes";
-import { getRoute } from "../utils/getRoute";
-// import { sleep } from "../utils/sleep";
+import { getRoute } from "../utils/getRoute.ts";
+import { cwd } from "../utils/cwd.ts";
+import { args } from "../utils/args.ts";
+// import { sleep } from "../utils/sleep.ts";
 
 const app = express();
-const cwd = process.cwd();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = true;
@@ -76,7 +77,7 @@ const host = "127.0.0.1";
 app.listen(port, host, () => {
   const url = `http://${host}:${port}`;
   console.log(`SSSX is listening on ${url}`);
-  if (process.argv.pop() === "open") {
+  if (args.pop() === "open") {
     open(url);
   }
 });

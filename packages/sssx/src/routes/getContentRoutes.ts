@@ -34,10 +34,10 @@ export const getContentRoutes = async (
       .join("/")
       .replace(`.${extension}`, ``);
 
-    if (config.defaultLocale)
-      if (permalink.endsWith(config.defaultLocale)) {
-        permalink = permalink.split(config.defaultLocale)[0];
-      }
+    // replace dynamic slugs inside permalink
+    Object.keys(attributes).map((key: string) => {
+      permalink = permalink.replace(`[${key}]`, attributes[key]);
+    });
 
     // shuffle locale to the front
     if (locales.length > 1) {
@@ -53,6 +53,11 @@ export const getContentRoutes = async (
     if (!permalink.startsWith("/")) {
       permalink = "/" + permalink;
     }
+
+    if (config.defaultLocale)
+      if (permalink.startsWith(`/${config.defaultLocale}`)) {
+        permalink = permalink.split(config.defaultLocale)[1];
+      }
 
     // console.log({ permalink, locales });
 

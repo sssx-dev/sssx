@@ -19,7 +19,8 @@ export const buildRoute = async (
   outdir: string,
   cwd: string,
   config: Config,
-  isDev: boolean
+  isDev: boolean,
+  devSite?: string
 ) => {
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
@@ -75,7 +76,7 @@ export const buildRoute = async (
       isDev
     );
     // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
-    await renderSSR(ssrOutput, outdir, props, segment, config);
+    await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
     await generateClient(
       config,
       base,

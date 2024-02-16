@@ -12,6 +12,7 @@ export const renderSSR = async (
   props: Record<string, any> = {},
   segment: RouteInfo,
   config: Config,
+  devSite?: string,
   noJS = false,
   prettify = true,
   includeCSS = true
@@ -39,10 +40,12 @@ export const renderSSR = async (
 
   // console.log(segment)
 
+  const site = devSite ? devSite : config.site;
+
   segment.locales.map((locale: string) => {
     const hreflang = locale.toLowerCase();
     const href = cleanURL(
-      `${config.site}${segment.permalink}`.replace(segment.locale, locale).replace(
+      `${site}${segment.permalink}`.replace(segment.locale, locale).replace(
         `${config.defaultLocale!}/`,
         ""
       )
@@ -67,7 +70,7 @@ export const renderSSR = async (
   </head>
   <body>
     <div id="app">${output.html}</div>
-    ${noJS && '<script type="module" src="./main.js"></script>'}
+    ${noJS ? '' : '<script type="module" src="./main.js"></script>'}
   </body>
 </html>
 `;

@@ -11,6 +11,13 @@ import { getRoute } from "../utils/getRoute.ts";
 import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
 
+let port = 8080;
+if (process) {
+  if (process.env.PORT) port = parseInt(process.env.PORT);
+}
+const host = "127.0.0.1";
+const devSite = `http://${host}:${port}`;
+
 const app = express();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
@@ -37,7 +44,7 @@ app.get("*", async (req, res) => {
   if (url.endsWith("/")) {
     const segment = await routeToFileSystem(cwd, route, allRoutes);
     if (segment) {
-      await buildRoute(route, segment, outdir, cwd, config, isDev);
+      await buildRoute(route, segment, outdir, cwd, config, isDev, devSite);
     }
   } else if (url.indexOf(".") === -1) {
     // redirect /about to /about/
@@ -51,16 +58,9 @@ app.get("*", async (req, res) => {
   res.sendFile(fullpath);
 });
 
-let port = 8080;
-if (process) {
-  if (process.env.PORT) port = parseInt(process.env.PORT);
-}
-const host = "127.0.0.1";
-
 app.listen(port, host, () => {
-  const url = `http://${host}:${port}`;
-  console.log(`SSSX is listening on ${url}`);
+  console.log(`SSSX is listening on ${devSite}`);
   if (args.pop() === "open") {
-    open(url);
+    open(devSite);
   }
 });

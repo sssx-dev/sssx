@@ -1,7 +1,4 @@
-import { register } from "ts-node";
 import { parentPort, threadId } from "node:worker_threads";
-register();
-
 import { cwd } from "../utils/cwd.ts";
 import { getConfig } from "../config.ts";
 import { isDeno } from "../utils/isDeno.ts";

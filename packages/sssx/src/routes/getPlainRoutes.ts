@@ -12,7 +12,7 @@ export const getPlainRoutes = async (srcDir: string, config: Config) => {
     path.replace(srcDir, "")
   );
 
-  const array: RouteInfo[] = list
+  const array = list
     .map((file) => {
       let route = file.split("/").slice(0, -1).join("/");
       const permalink = checkSlashes(
@@ -33,7 +33,7 @@ export const getPlainRoutes = async (srcDir: string, config: Config) => {
         permalink,
         param: {},
         locales,
-      };
+      } as RouteInfo;
     })
     .filter((segment) => {
       // filtering out /some/[slug]/route

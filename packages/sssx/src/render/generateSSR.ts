@@ -64,10 +64,6 @@ export const generateSSR = async (
       }),
     ],
   });
-  // .catch((reason: any) => {
-  //   console.warn(`Errors: `, reason);
-  //   process.exit(1);
-  // });
 
   // TODO: check for warnings
   const output = result.outputFiles[0].text;

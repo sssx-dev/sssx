@@ -34,13 +34,13 @@ export const renderSSR = async (
   // <link rel="preload" href="./main.css" as="style" />
   // <link rel="preload" href="./main.js" as="script" />
 
-  const lang = config.defaultLocale.split("-")[0];
+  const lang = config.defaultLocale!.split("-")[0];
 
   segment.locales.map((locale: string) => {
     const hreflang = locale.toLowerCase();
     const href = cleanURL(
       `${config.site}${segment.permalink}${locale}/`.replace(
-        `${config.defaultLocale}/`,
+        `${config.defaultLocale!}/`,
         ""
       )
     );

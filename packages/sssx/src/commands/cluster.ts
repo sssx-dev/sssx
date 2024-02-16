@@ -22,7 +22,6 @@ if (!fs.existsSync(outdir)) {
 let numWorkers = 0;
 // TODO: not the best way to parallelize, rework
 const allRoutes = await getAllRoutes(cwd, config);
-const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
 
 const createBar = () =>
   new cliProgress.SingleBar({
@@ -66,9 +65,12 @@ type Message = {
   [key: string]: any;
 };
 
+const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
+
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
-  const worker = new Worker(workerPath, {
+  const worker = new Worker(workerPath,
+  {
     //@ts-ignore
     type: "module",
     deno: {

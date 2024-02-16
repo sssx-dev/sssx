@@ -39,5 +39,3 @@ if (!ALLOWED_COMMANDS.includes(cmd)) {
 } else {
   await import(`./commands/${cmd}.ts`);
 }
-
-export {};

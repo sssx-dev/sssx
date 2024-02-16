@@ -15,7 +15,7 @@ export const getFileSystemRoutes = async (srcDir: string, config: Config) => {
     indexFiles.map(async (file) => await import(file))
   );
 
-  const all: RouteInfo[] = indexes
+  const all = indexes
     .map((module: RouteModule, index) => {
       return module.all().map((param: any) => {
         const file = indexFiles[index];
@@ -38,7 +38,7 @@ export const getFileSystemRoutes = async (srcDir: string, config: Config) => {
           svelte: PAGE_SVELTE,
           module,
           locales,
-        };
+        } as RouteInfo;
       });
     })
     .flat();

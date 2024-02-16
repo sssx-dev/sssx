@@ -1,3 +1,4 @@
+import path from "node:path";
 import { Postcss } from "svelte-preprocess/dist/types/options";
 import { Pluggable, Plugin, PluggableList } from "unified";
 

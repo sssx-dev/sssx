@@ -54,7 +54,7 @@ export const buildRoute = async (
 
     let plugins: Plugin[] = [];
 
-    if (config.postcss.plugins) {
+    if (config.postcss?.plugins) {
       const postcss = stylePlugin({
         postcss: {
           plugins: config.postcss.plugins!,

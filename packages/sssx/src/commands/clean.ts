@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import { getConfig } from "../config";
-import { SSSX_FILES_INDEX, SSSX_URLS_INDEX } from "../utils/constants";
+import { getConfig } from "../config.ts";
+import { SSSX_FILES_INDEX, SSSX_URLS_INDEX } from "../utils/constants.ts";
+import { cwd } from "../utils/cwd.ts";
 
-const cwd = process.cwd();
 const config = await getConfig(cwd);
 
 const outdir = `${cwd}/${config.outDir}`;

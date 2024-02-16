@@ -1,6 +1,7 @@
 {
   "imports": {
     "tailwindcss": "npm:tailwindcss@^3.4.1",
-    "autoprefixer": "npm:autoprefixer@^10.4.17"
+    "autoprefixer": "npm:autoprefixer@^10.4.17",
+    "remark-parse": "npm:remark-parse@^11.0.0"
   }
 }

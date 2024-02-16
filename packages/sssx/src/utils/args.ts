@@ -7,5 +7,3 @@ let all: string[] = process
 all = all.filter((a) => !a.startsWith("--"));
 
 export const [cmd, ...args] = all;
-
-console.log({ cmd, args });

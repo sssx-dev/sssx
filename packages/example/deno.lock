@@ -36,6 +36,7 @@
       "npm:rehype-stringify@^10.0.0": "npm:rehype-stringify@10.0.0",
       "npm:remark-frontmatter@^5.0.0": "npm:remark-frontmatter@5.0.0",
       "npm:remark-html@^16.0.1": "npm:remark-html@16.0.1",
+      "npm:remark-parse@^11.0.0": "npm:remark-parse@11.0.0",
       "npm:remark-preset-lint-markdown-style-guide@^5.1.3": "npm:remark-preset-lint-markdown-style-guide@5.1.3",
       "npm:remark-rehype@^11.1.0": "npm:remark-rehype@11.1.0",
       "npm:remark-toc@^9.0.0": "npm:remark-toc@9.0.0",
@@ -3858,6 +3859,7 @@
   "workspace": {
     "dependencies": [
       "npm:autoprefixer@^10.4.17",
+      "npm:remark-parse@^11.0.0",
       "npm:tailwindcss@^3.4.1"
     ]
   }

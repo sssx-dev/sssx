@@ -1,7 +1,7 @@
 export const all = () => {
   // return [{ dog: "dog1" }, { dog: "dog2" }, { dog: "dog3" }];
   let array: Array<{ dog: string }> = [];
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 10; i++) {
     array.push({ dog: `dog${i}` });
   }
   return array;

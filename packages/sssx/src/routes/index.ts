@@ -1,8 +1,8 @@
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 import { getFileSystemRoutes } from "./getFileSystemRoutes.ts";
 import { getPlainRoutes } from "./getPlainRoutes.ts";
 import { getContentRoutes } from "./getContentRoutes.ts";
-import { RouteInfo } from "./types.ts";
+import { type RouteInfo } from "./types.ts";
 
 export type { RouteInfo } from "./types.ts";
 

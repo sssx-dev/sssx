@@ -1,7 +1,7 @@
 import { globby } from "globby";
-import { RouteInfo, RouteModule } from "./types.ts";
+import type { RouteInfo, RouteModule } from "./types.ts";
 import { getDefaultLocales } from "../utils/getLocales.ts";
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 
 const PREFIX = `src/pages`;
 const PAGE_FILE = `+page.ts`;

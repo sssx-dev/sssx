@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { globby } from "globby";
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 import { cleanURL } from "../utils/cleanURL.ts";
 import fm from "front-matter";
 import { getLocales } from "../utils/getLocales.ts";
-import { RouteInfo } from "./types.ts";
+import { type RouteInfo } from "./types.ts";
 
 const MARKDOWN = "md";
 

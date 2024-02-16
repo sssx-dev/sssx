@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { uniqueFilter } from "../utils/uniqueFilter.ts";
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 import { globby } from "globby";
 import { SSSX_BANNER, SSSX_FILES_INDEX } from "../utils/constants.ts";
 import { arrayToFile } from "../utils/arrayToFile.ts";

@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { Module } from "./types.ts";
+import { type Module } from "./types.ts";
 
 export const loadExistingModule = async (fullpath: string) => {
   if (fs.existsSync(fullpath)) {

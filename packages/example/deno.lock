@@ -3854,5 +3854,11 @@
       }
     }
   },
-  "remote": {}
+  "remote": {},
+  "workspace": {
+    "dependencies": [
+      "npm:autoprefixer@^10.4.17",
+      "npm:tailwindcss@^3.4.1"
+    ]
+  }
 }

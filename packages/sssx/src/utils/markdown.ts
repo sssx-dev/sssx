@@ -17,7 +17,7 @@ export const markdown = async (path: string, config: Config) => {
     .use(remarkFrontmatter, ["yaml", "toml"])
     .use(rehypeFormat)
     .use(rehypeStringify)
-    .use(config.rehypePlugins)
+    .use(config.rehypePlugins ? config.rehypePlugins : [])
     .process(input);
 
   return file.value;

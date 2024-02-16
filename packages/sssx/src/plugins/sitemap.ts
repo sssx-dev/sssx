@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import { RouteInfo } from "../routes/index.ts";
-import { Config } from "../config.ts";
-import { cleanURL } from "../utils/cleanURL.ts";
 import dayjs from "dayjs";
+import { Config } from "../config.ts";
+import { RouteInfo } from "../routes/index.ts";
+import { cleanURL } from "../utils/cleanURL.ts";
 
 const MAX_URLS_PER_SITEMAP = 5000;
 

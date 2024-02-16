@@ -1,2 +1,3 @@
-export { type Config } from "./config.ts";
+import { type Config as InnerConfig } from "./config.ts";
+export type Config = Partial<InnerConfig>;
 console.log(`Hello SSSX`);

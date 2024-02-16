@@ -5,6 +5,7 @@ import { Config } from "../config.ts";
 import { cleanURL } from "../utils/cleanURL.ts";
 import fm from "front-matter";
 import { getLocales } from "../utils/getLocales.ts";
+import { RouteInfo } from "./types.ts";
 
 const MARKDOWN = "md";
 
@@ -32,9 +33,10 @@ export const getContentRoutes = async (
       .join("/")
       .replace(`.${extension}`, ``);
 
-    if (permalink.endsWith(config.defaultLocale)) {
-      permalink = permalink.split(config.defaultLocale)[0];
-    }
+    if (config.defaultLocale)
+      if (permalink.endsWith(config.defaultLocale)) {
+        permalink = permalink.split(config.defaultLocale)[0];
+      }
 
     if (!permalink.endsWith("/")) {
       permalink += "/";
@@ -62,7 +64,7 @@ export const getContentRoutes = async (
       permalink,
       param: attributes,
       locales,
-    };
+    } as RouteInfo;
   });
 
   return full;

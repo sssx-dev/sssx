@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { unified, type Plugin } from "unified";
-import remarkParse from "npm:remark-parse";
+// import remarkParse from "npm:remark-parse";
 import remarkToc from "remark-toc";
 import remarkRehype from "remark-rehype";
 import rehypeFormat from "rehype-format";
@@ -11,7 +11,7 @@ import { Config } from "../config.ts";
 export const markdown = async (path: string, config: Config) => {
   const input = fs.readFileSync(path, "utf8");
   const file = await unified()
-    .use(remarkParse)
+    .use(require("remarkParse"))
     .use(remarkToc)
     .use(remarkRehype)
     .use(remarkFrontmatter, ["yaml", "toml"])

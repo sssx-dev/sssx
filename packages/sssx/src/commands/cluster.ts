@@ -1,18 +1,19 @@
 import fs from "node:fs";
-import os from "os";
-import cluster from "cluster";
-import { buildRoute } from "../render";
-import { getConfig } from "../config";
-import { getAllRoutes, routeToFileSystem } from "../routes";
-import { buildSitemap } from "../plugins/sitemap";
+import os from "node:os";
+import cluster from "node:cluster";
+import { buildRoute } from "../render/index.ts";
+import { getConfig } from "../config.ts";
+import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
+import { buildSitemap } from "../plugins/sitemap.ts";
 import cliProgress from "cli-progress";
 import colors from "ansi-colors";
-import { getRoute } from "../utils/getRoute";
-import { writeURLsIndex } from "../indexes/writeURLsIndex";
-import { writeFilesIndex } from "../indexes/writeFilesIndex";
+import { getRoute } from "../utils/getRoute.ts";
+import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
+import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
+import { cwd } from "../utils/cwd.ts";
+import { isDeno } from "../utils/isDeno.ts";
 
 const numCPUs = os.cpus().length;
-const cwd = process.cwd();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
@@ -24,6 +25,8 @@ if (!fs.existsSync(outdir)) {
 
 let numWorkers = 0;
 const allRoutes = await getAllRoutes(cwd, config);
+
+// console.log({ cluster });
 
 if (cluster.isPrimary) {
   const routes = allRoutes.map((s) => s.permalink);
@@ -43,19 +46,25 @@ if (cluster.isPrimary) {
 
   // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
-    const worker = cluster.fork();
+    const worker = isDeno
+      ? //@ts-ignore
+        new Worker("./cluster.ts", { type: "module", deno: true })
+      : cluster.fork();
     const routesBatch = routes.slice(
       i * ROUTES_BATCH,
       Math.min(routes.length, (i + 1) * ROUTES_BATCH)
     );
     numWorkers++;
     // console.log(i, routes.length, routesBatch.length);
-    setTimeout(() => {
-      worker.send(routesBatch);
-    }, COLD_START_DELAY);
+    setTimeout(
+      () =>
+        //@ts-ignore
+        isDeno ? worker.postMessage(routesBatch) : worker.send(routesBatch),
+      COLD_START_DELAY
+    );
 
-    worker.on("message", (url) => {
-      // console.log("Received message from worker", message);
+    worker.on("message", (url: string) => {
+      // console.log("Received message from worker", url);
       jobsIndex++;
       bar1.update(jobsIndex, { url, total: jobsIndex });
     });
@@ -83,7 +92,7 @@ if (cluster.isPrimary) {
   });
 } else {
   // TODO: replace delay with a lazy execution
-  process.on("message", async (routes: string[]) => {
+  const handler = async (routes: string[]) => {
     // TODO: not the best way to parallelize, rework
     // const allRoutes = await getAllRoutes(cwd);
     // console.log("Worker", process.pid, routes.length);
@@ -99,5 +108,7 @@ if (cluster.isPrimary) {
     }
 
     process.exit(1);
-  });
+  };
+
+  process ? process.on("message", handler) : (self.onMessage = handler);
 }

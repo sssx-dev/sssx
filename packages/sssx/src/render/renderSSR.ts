@@ -12,6 +12,7 @@ export const renderSSR = async (
   props: Record<string, any> = {},
   segment: RouteInfo,
   config: Config,
+  noJS = false,
   prettify = true,
   includeCSS = true
 ) => {
@@ -66,7 +67,7 @@ export const renderSSR = async (
   </head>
   <body>
     <div id="app">${output.html}</div>
-    <script type="module" src="./main.js"></script>
+    ${noJS && '<script type="module" src="./main.js"></script>'}
   </body>
 </html>
 `;

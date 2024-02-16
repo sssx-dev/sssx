@@ -4,7 +4,7 @@ import { Pluggable, Plugin, PluggableList } from "unified";
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
 
 /** SSSX configuration, stored in `sssx.config.ts` */
-export type Config = {
+export type Config = Partial<{
   /** default title to use if it's not provided by the template or content */
   title?: string;
   /** folder with the public assets to be copied, @default public */
@@ -27,7 +27,7 @@ export type Config = {
   writeURLsIndex: boolean;
   /** dump all files into `sssx.files.ts` */
   writeFilesIndex: boolean;
-};
+}>;
 
 const defaultConfig: Config = {
   assets: "public",

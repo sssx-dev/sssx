@@ -66,12 +66,12 @@ type Message = {
 };
 
 const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
-
+const execArgv = ["--require", "ts-node/register", "--import", 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));', "--trace-warnings"]
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
   const worker = new Worker(workerPath,
   {
-    execArgv: ["--require", "ts-node/register"],
+    execArgv, 
     //@ts-ignore
     type: "module",
     deno: {

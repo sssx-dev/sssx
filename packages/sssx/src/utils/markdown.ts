@@ -6,7 +6,7 @@ import remarkRehype from "remark-rehype";
 import rehypeFormat from "rehype-format";
 import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 
 export const markdown = async (path: string, config: Config) => {
   const input = fs.readFileSync(path, "utf8");

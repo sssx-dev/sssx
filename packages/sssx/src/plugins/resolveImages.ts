@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { OnLoadArgs, OnResolveArgs, type Plugin } from "esbuild";
-import { Config } from "../config.ts";
+import type { OnLoadArgs, OnResolveArgs, Plugin } from "esbuild";
+import { type Config } from "../config.ts";
 import { hashFile } from "../utils/hashFile.ts";
 
 // const imagesRegExp = /^.*\.(svg|png|jpeg|jpg|webp)?$/;

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { Config } from "../config.ts";
+import { type Config } from "../config.ts";
 import { globby } from "globby";
 
 const copyFiles = async (src: string, dst: string) => {

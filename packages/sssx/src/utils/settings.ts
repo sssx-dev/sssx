@@ -1,4 +1,4 @@
-import { BuildOptions, LogLevel } from "esbuild";
+import type { BuildOptions, LogLevel } from "esbuild";
 
 export const enableSourcemap = false;
 export const logLevel = `info`; // TODO: get this from env variable

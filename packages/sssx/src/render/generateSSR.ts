@@ -1,10 +1,10 @@
-import esbuild, { Plugin, type BuildOptions, Drop } from "esbuild";
+import esbuild, { type Plugin, type BuildOptions, type Drop } from "esbuild";
 import type { CompileOptions } from "svelte/types/compiler/interfaces";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
-import { Config } from "../config.ts";
-import { RouteInfo } from "../routes/index.ts";
+import { type Config } from "../config.ts";
+import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",

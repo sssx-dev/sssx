@@ -1,12 +1,12 @@
-import esbuild, { BuildOptions, Plugin } from "esbuild";
+import esbuild, { type BuildOptions, type Plugin } from "esbuild";
 import sveltePlugin from "esbuild-svelte";
 import sveltePreprocess from "svelte-preprocess";
 //@ts-ignore
 import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { minify } from "../utils/settings.ts";
-import { Config } from "../config.ts";
-import { RouteInfo } from "../routes/index.ts";
+import { type Config } from "../config.ts";
+import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
   // css: "none",

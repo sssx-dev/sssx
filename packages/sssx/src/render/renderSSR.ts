@@ -42,10 +42,14 @@ export const renderSSR = async (
 
   const site = devSite ? devSite : config.site;
 
-  segment.locales.map((locale: string) => {
+  // so far only works for the content routes
+  // TODO: add this for other types too
+  if(segment.permalinks)
+  Object.keys(segment.permalinks).map((locale: string) => {
+    const permalink = segment.permalinks![locale];
     const hreflang = locale.toLowerCase();
     const href = cleanURL(
-      `${site}${segment.permalink}`.replace(segment.locale, locale).replace(
+      `${site}${permalink}`.replace(
         `${config.defaultLocale!}/`,
         ""
       )

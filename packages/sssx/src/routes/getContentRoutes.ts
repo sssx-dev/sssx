@@ -84,6 +84,46 @@ const loadRoute = async (
   } as RouteInfo;
 };
 
+const getPrefix = (segment: RouteInfo, extension: string) => {
+  const ending = `${segment.locale}.${extension}`;
+  if (segment.file.endsWith(ending)) {
+    // example/src/content/foo/[bar]/'
+    return segment.file.replace(ending, "");
+  }
+};
+
+const getLocalePermalinks = (array: RouteInfo[], extension: string) => {
+  let cache: {
+    [key: string]: {
+      [locale: string]: string;
+    };
+  } = {};
+
+  // first run
+  array.map((segment: RouteInfo) => {
+    const prefix = getPrefix(segment, extension);
+    if (prefix) {
+      if (!cache[prefix]) cache[prefix] = {};
+
+      segment.locales.map((l) => {
+        if (!cache[prefix][l]) {
+          // 'en-US': '/cats/oscar/',
+          cache[prefix][l] = segment.locale === l ? segment.permalink : "";
+        }
+      });
+    }
+  });
+
+  //second run
+  return array.map((segment: RouteInfo) => {
+    const prefix = getPrefix(segment, extension);
+    if (prefix && cache[prefix]) {
+      segment = { ...segment, permalinks: cache[prefix] };
+    }
+    return segment;
+  });
+};
+
 export const getContentRoutes = async (
   cwd: string,
   config: Config,
@@ -97,5 +137,7 @@ export const getContentRoutes = async (
     list.map((route) => loadRoute(cwd, config, srcDir, route, extension))
   );
 
-  return full;
+  const result = getLocalePermalinks(full, extension);
+
+  return result;
 };

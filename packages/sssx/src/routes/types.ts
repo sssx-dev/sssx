@@ -4,6 +4,10 @@ export interface RouteModule {
   request: (params: Params) => Record<string, any>;
 }
 
+type LocalePermalink = {
+  [locale: string]: string;
+};
+
 export type RouteInfo = {
   permalink: string;
   param: Record<string, any>;
@@ -13,4 +17,5 @@ export type RouteInfo = {
   module?: RouteModule;
   locales: string[];
   locale: string;
+  permalinks?: LocalePermalink;
 };

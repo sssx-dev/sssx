@@ -39,7 +39,5 @@ if (!ALLOWED_COMMANDS.includes(cmd)) {
   console.log(`\t${bgWhite("clean")} – cleans existing files`);
 } else {
   const path = import.meta.resolve(`./commands/${cmd}.ts`)
-  // await import(`./commands/${cmd}.ts`);
-  // await import(path);
   import(path).catch(err => console.error(err));
 }

@@ -36,14 +36,17 @@ export const renderSSR = async (
 
   const lang = config.defaultLocale!.split("-")[0];
 
+  // console.log(segment)
+
   segment.locales.map((locale: string) => {
     const hreflang = locale.toLowerCase();
     const href = cleanURL(
-      `${config.site}${segment.permalink}${locale}/`.replace(
+      `${config.site}${segment.permalink}`.replace(segment.locale, locale).replace(
         `${config.defaultLocale!}/`,
         ""
       )
     );
+    // console.log({locale, href, hreflang})
     head += `\n<link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
     if (locale === config.defaultLocale) {
       head += `\n<link rel="alternate" hreflang="x-default" href="${href}" />`;

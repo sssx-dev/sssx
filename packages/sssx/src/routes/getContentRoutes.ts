@@ -21,6 +21,7 @@ export const getContentRoutes = async (
   const full = list.map((route) => {
     const file = cleanURL(`${srcDir}/${route}`);
 
+    let locale = config.defaultLocale;
     const locales = getLocales(file, config, extension);
     const content = fs.readFileSync(file, "utf8");
     //@ts-ignore
@@ -38,9 +39,22 @@ export const getContentRoutes = async (
         permalink = permalink.split(config.defaultLocale)[0];
       }
 
+    // shuffle locale to the front
+    if (locales.length > 1) {
+      let array = permalink.split("/").filter((a) => a.length > 0);
+      locale = array.pop();
+      permalink = [locale, ...array].join("/");
+    }
+
     if (!permalink.endsWith("/")) {
       permalink += "/";
     }
+
+    if (!permalink.startsWith("/")) {
+      permalink = "/" + permalink;
+    }
+
+    // console.log({ permalink, locales });
 
     // because of how we will compile this later inside `generateEntryPoint.ts`
     route = "/";
@@ -64,6 +78,7 @@ export const getContentRoutes = async (
       permalink,
       param: attributes,
       locales,
+      locale,
     } as RouteInfo;
   });
 

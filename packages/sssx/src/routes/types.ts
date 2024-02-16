@@ -12,4 +12,5 @@ export type RouteInfo = {
   svelte?: string;
   module?: RouteModule;
   locales: string[];
+  locale: string;
 };

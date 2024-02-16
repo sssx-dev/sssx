@@ -1,20 +1,19 @@
 import { register } from "ts-node";
-import { parentPort, workerData, threadId } from "node:worker_threads";
-import { buildRoute } from "../render/index.ts";
-import { isDeno } from "../utils/isDeno.ts";
-import { getRoute } from "../utils/getRoute.ts";
-import { getAllRoutes } from "../routes/index.ts";
-import { routeToFileSystem } from "../routes/index.ts";
+import { parentPort, threadId } from "node:worker_threads";
+register();
+
 import { cwd } from "../utils/cwd.ts";
 import { getConfig } from "../config.ts";
-
-register();
+import { isDeno } from "../utils/isDeno.ts";
+import { buildRoute } from "../render/index.ts";
+import { getRoute } from "../utils/getRoute.ts";
+import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = false;
 
-const processData = async (routes) => {
+const processData = async (routes: string[]) => {
   // TODO: not the best way to parallelize, rework
   const allRoutes = await getAllRoutes(cwd, config);
 
@@ -22,7 +21,7 @@ const processData = async (routes) => {
     const url = routes[i];
     const route = getRoute(url);
     const segment = await routeToFileSystem(cwd, route, allRoutes);
-    await buildRoute(route, segment, outdir, cwd, config, isDev);
+    await buildRoute(route, segment!, outdir, cwd, config, isDev);
     parentPort?.postMessage({ url, threadId });
   }
 
@@ -32,7 +31,7 @@ const processData = async (routes) => {
   isDeno ? self.close() : process.exit(1);
 };
 
-parentPort?.on("message", async (data) => {
+parentPort?.on("message", async (data: any) => {
   //   console.log("onMessage", data);
   if (data.routes) await processData(data.routes);
 });

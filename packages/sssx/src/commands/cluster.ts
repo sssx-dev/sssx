@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import colors from "ansi-colors";
 import cliProgress from "cli-progress";
-import { Worker, threadId } from "node:worker_threads";
+import { Worker } from "node:worker_threads";
 import { getConfig } from "../config.ts";
 import { getAllRoutes } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
@@ -14,7 +14,6 @@ import { cwd } from "../utils/cwd.ts";
 const numCPUs = os.cpus().length;
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
-const isDev = false;
 
 if (!fs.existsSync(outdir)) {
   fs.mkdirSync(outdir);
@@ -23,6 +22,7 @@ if (!fs.existsSync(outdir)) {
 let numWorkers = 0;
 // TODO: not the best way to parallelize, rework
 const allRoutes = await getAllRoutes(cwd, config);
+const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
 
 const createBar = () =>
   new cliProgress.SingleBar({
@@ -68,10 +68,6 @@ type Message = {
 
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
-  // const routesBatch = getRoutesBatch(i);
-  // console.log({ i, routesBatch });
-  const workerPath = import.meta.resolve("./worker.js").replace("file://", "");
-
   const worker = new Worker(workerPath, {
     //@ts-ignore
     type: "module",
@@ -98,8 +94,6 @@ for (var i = 0; i < numCPUs; i++) {
     }
   });
 }
-
-// console.log("============");
 
 // runs in parallel to the workers
 await buildSitemap(outdir, config, allRoutes);

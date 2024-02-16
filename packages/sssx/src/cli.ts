@@ -3,7 +3,9 @@
 import chalk from "chalk";
 import { cmd } from "./utils/args.ts";
 
-if (!["dev", "build", "cluster", "clean", "urls"].includes(cmd)) {
+const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls"];
+
+if (!ALLOWED_COMMANDS.includes(cmd)) {
   console.log(`Usage:`);
   console.log(`\t$ sssx <input>`);
   console.log("");

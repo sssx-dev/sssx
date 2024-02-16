@@ -1,7 +1,7 @@
 import path from "node:path";
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
-// import open from "open";
+import open from "open";
 import express from "express";
 import watch from "node-watch";
 import { buildRoute } from "../render/index.ts";
@@ -60,7 +60,7 @@ const host = "127.0.0.1";
 app.listen(port, host, () => {
   const url = `http://${host}:${port}`;
   console.log(`SSSX is listening on ${url}`);
-  // if (args.pop() === "open") {
-  //   open(url);
-  // }
+  if (args.pop() === "open") {
+    open(url);
+  }
 });

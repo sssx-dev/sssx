@@ -53,6 +53,7 @@ This framework was created to address several things that are lacking in current
 
 ## Features
 
+- 🦕 First-class Deno support
 - 📈 Incremental updates `sssx build <url>`.
 - 🚀 It's fast! 1000ms or less spent on building each page.
 - 👍 Each page is it's own SPA. Fully autonomous.

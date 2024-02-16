@@ -1,7 +1,7 @@
-import { getAllRoutes } from "../routes";
-import { getConfig } from "../config";
-import { cwd } from "../utils/cwd";
-import { args } from "../utils/args";
+import { getAllRoutes } from "../routes/index.ts";
+import { getConfig } from "../config.ts";
+import { cwd } from "../utils/cwd.ts";
+import { args } from "../utils/args.ts";
 
 const config = await getConfig(cwd);
 const allRoutes = await getAllRoutes(cwd, config);

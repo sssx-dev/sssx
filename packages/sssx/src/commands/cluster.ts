@@ -71,6 +71,7 @@ const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
 for (var i = 0; i < numCPUs; i++) {
   const worker = new Worker(workerPath,
   {
+    execArgv: ["--require", "ts-node/register"],
     //@ts-ignore
     type: "module",
     deno: {

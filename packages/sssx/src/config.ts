@@ -1,6 +1,6 @@
 import path from "node:path";
-import { Postcss } from "svelte-preprocess/dist/types/options";
-import { Pluggable, Plugin, PluggableList } from "unified";
+import type { Postcss } from "svelte-preprocess/dist/types/options";
+import type { Pluggable, Plugin, PluggableList } from "unified";
 
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
 

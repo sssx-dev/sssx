@@ -23,7 +23,8 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx ./src/cli.ts",
-    "dev2": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/cli.ts"
+    "dev2": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/cli.ts",
+    "dev3": "node -r ts-node/register --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' --trace-warnings ../sssx/src/cli.ts"
   },
   "bin": {
     "sssx": "./src/cli.ts"

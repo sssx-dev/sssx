@@ -6,7 +6,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "NodeNext",
+    "module": "ES2022",
     "resolveJsonModule": true,
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.
@@ -18,7 +18,11 @@
     "checkJs": true,
     "isolatedModules": true,
     // for build.ts
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    //
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "Node",
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "sssx.config.ts"]
 }

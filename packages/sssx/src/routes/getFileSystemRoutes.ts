@@ -2,6 +2,7 @@ import { globby } from "globby";
 import type { RouteInfo, RouteModule } from "./types.ts";
 import { getDefaultLocales } from "../utils/getLocales.ts";
 import { type Config } from "../config.ts";
+import { replacePermalinkSlugsWithValues } from "../utils/replacePermalinkSlugsWithValues.ts";
 
 const PREFIX = `src/pages`;
 const PAGE_FILE = `+page.ts`;
@@ -25,10 +26,7 @@ export const getFileSystemRoutes = async (srcDir: string, config: Config) => {
           .filter((a) => !a.startsWith("("))
           .join("/"); // filter out `(group)` folders
 
-        // TODO: add safety checks here, like a missing key somewhere or incorrect symbol
-        Object.keys(param).map((key) => {
-          permalink = permalink.replace(`[${key}]`, param[key]);
-        });
+        permalink = replacePermalinkSlugsWithValues(permalink, param);
 
         return {
           permalink,

@@ -6,6 +6,7 @@ import { cleanURL } from "../utils/cleanURL.ts";
 import fm from "front-matter";
 import { getLocales } from "../utils/getLocales.ts";
 import { type RouteInfo } from "./types.ts";
+import { replacePermalinkSlugsWithValues } from "../utils/replacePermalinkSlugsWithValues.ts";
 
 const MARKDOWN = "md";
 
@@ -32,9 +33,7 @@ const loadRoute = async (
     .replace(`.${extension}`, ``);
 
   // replace dynamic slugs inside permalink
-  Object.keys(attributes).map((key: string) => {
-    permalink = permalink.replace(`[${key}]`, attributes[key]);
-  });
+  permalink = replacePermalinkSlugsWithValues(permalink, attributes);
 
   // shuffle locale to the front
   if (locales.length > 1) {

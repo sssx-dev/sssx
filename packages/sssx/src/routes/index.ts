@@ -7,13 +7,14 @@ import { type RouteInfo } from "./types.ts";
 export type { RouteInfo } from "./types.ts";
 
 // TODO: design a better architecture that would allow for streaming millions of pages
-// storing them all in memory is not a best design right now
 
 export const getAllRoutes = async (cwd: string, config: Config) => {
   const srcDir = `${cwd}/src/pages`;
-  const all = await getFileSystemRoutes(srcDir, config);
-  const plain = await getPlainRoutes(srcDir, config);
-  const content = await getContentRoutes(cwd, config);
+  const [all, plain, content] = await Promise.all([
+    getFileSystemRoutes(srcDir, config),
+    getPlainRoutes(srcDir, config),
+    getContentRoutes(cwd, config),
+  ]);
   const array = [...all, ...plain, ...content];
 
   return array;

@@ -36,6 +36,7 @@ export const getFileSystemRoutes = async (srcDir: string, config: Config) => {
           svelte: PAGE_SVELTE,
           module,
           locales,
+          type: "filesystem",
         } as RouteInfo;
       });
     })

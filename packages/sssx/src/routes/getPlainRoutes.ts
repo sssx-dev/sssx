@@ -33,6 +33,7 @@ export const getPlainRoutes = async (srcDir: string, config: Config) => {
         permalink,
         param: {},
         locales,
+        type: "plain",
       } as RouteInfo;
     })
     .filter((segment) => {

@@ -20,7 +20,6 @@ if (!fs.existsSync(outdir)) {
 }
 
 let numWorkers = 0;
-// TODO: not the best way to parallelize, rework
 const allRoutes = await getAllRoutes(cwd, config);
 
 const createBar = () =>
@@ -34,18 +33,20 @@ const createBar = () =>
     hideCursor: true,
   });
 
-const routes = allRoutes.map((s) => s.permalink);
-
-const ROUTES_BATCH = Math.round(routes.length / numCPUs);
+const ROUTES_BATCH = Math.round(allRoutes.length / numCPUs);
 const bar1 = createBar();
-bar1.start(routes.length, 0, { url: "", total: 0 });
+bar1.start(allRoutes.length, 0, { url: "", total: 0 });
 let jobsIndex = 0;
 
 const onDone = async () => {
-  bar1.update(routes.length);
+  bar1.update(allRoutes.length);
   bar1.stop();
 
-  if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
+  if (config.writeURLsIndex)
+    await writeURLsIndex(
+      cwd,
+      allRoutes.map((r) => r.permalink)
+    );
   if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
   console.log("DONE");
@@ -54,10 +55,13 @@ const onDone = async () => {
 // console.log("============");
 
 const getRoutesBatch = (i: number) => {
-  return routes.slice(
-    i * ROUTES_BATCH,
-    Math.min(routes.length, (i + 1) * ROUTES_BATCH)
-  );
+  return allRoutes
+    .slice(i * ROUTES_BATCH, Math.min(allRoutes.length, (i + 1) * ROUTES_BATCH))
+    .map((segment) => ({
+      ...segment,
+      // removing the module, because it can not be passed to the worker via shared memory
+      module: undefined,
+    }));
 };
 
 type Message = {
@@ -67,12 +71,17 @@ type Message = {
 
 const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
 // this was crucial to have to be able to run ts-node, because in tsx this would not run without it at all!
-const execArgv = ["--require", "ts-node/register", "--import", 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));', "--trace-warnings"]
+const execArgv = [
+  "--require",
+  "ts-node/register",
+  "--import",
+  'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));',
+  "--trace-warnings",
+];
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
-  const worker = new Worker(workerPath,
-  {
-    execArgv, 
+  const worker = new Worker(workerPath, {
+    execArgv,
     //@ts-ignore
     type: "module",
     deno: {

@@ -25,9 +25,9 @@ export const getAllRoutes = async (cwd: string, config: Config) => {
 export const routeToFileSystem = async (
   cwd: string,
   route: string,
-  allRoutes: RouteInfo[]
+  routes: RouteInfo[]
 ): Promise<RouteInfo | undefined> => {
-  const filtered = allRoutes.filter((segment) => segment.permalink === route);
+  const filtered = routes.filter((segment) => segment.permalink === route);
 
   // return first found mathcing permalink
   if (filtered.length > 0) {

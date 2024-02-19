@@ -18,4 +18,5 @@ export type RouteInfo = {
   locales: string[];
   locale: string;
   permalinks?: LocalePermalink;
+  type: "plain" | "content" | "filesystem";
 };

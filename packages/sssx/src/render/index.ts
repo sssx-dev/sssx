@@ -12,6 +12,7 @@ import { type RouteInfo } from "../routes/index.ts";
 import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
+import type { RouteModule } from "../routes/types.ts";
 
 export const buildRoute = async (
   route: string,
@@ -30,9 +31,15 @@ export const buildRoute = async (
   // console.log({ segment });
 
   if (segment) {
-    let props = segment.module
-      ? segment.module.request(segment.param)
-      : segment.param;
+    let props = segment.param;
+
+    if (segment.type === "filesystem" && !segment.module) {
+      // load modules again, if not loaded from before
+      // like when this is executed in the worker
+      const module: RouteModule = await import(segment.file);
+      props = module.request(segment.param);
+    }
+
     // console.log({ props });
 
     // creating this inside outdir

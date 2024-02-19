@@ -80,6 +80,7 @@ const loadRoute = async (
     param: attributes,
     locales,
     locale,
+    type: "content",
   } as RouteInfo;
 };
 

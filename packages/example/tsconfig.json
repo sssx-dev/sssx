@@ -21,6 +21,7 @@
     "esModuleInterop": true,
     //
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "moduleResolution": "Node",
     "verbatimModuleSyntax": true
   },

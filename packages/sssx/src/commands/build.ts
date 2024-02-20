@@ -21,7 +21,7 @@ fs.mkdirSync(outdir);
 const allRoutes = await getAllRoutes(cwd, config);
 const routes = allRoutes.map((s) => s.permalink);
 
-// generate sitemap.xml
+// generate sitemap.xml for all routes without the filter
 await buildSitemap(outdir, config, allRoutes);
 
 let startIndex = 0;

@@ -1,40 +1,31 @@
 import fs from "node:fs";
 import os from "node:os";
-import colors from "ansi-colors";
-import cliProgress from "cli-progress";
 import { Worker } from "node:worker_threads";
+
+import { cwd } from "../utils/cwd.ts";
 import { getConfig } from "../config.ts";
+import { execArgv } from "../utils/tsNode.ts";
 import { getAllRoutes } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
-
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
-import { cwd } from "../utils/cwd.ts";
+import { createProgressBar } from "../utils/createProgressBar.ts";
 
 const numCPUs = os.cpus().length;
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
+const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
 
 if (!fs.existsSync(outdir)) {
   fs.mkdirSync(outdir);
 }
 
+// tracking number of workers
 let numWorkers = 0;
 const allRoutes = await getAllRoutes(cwd, config);
 
-const createBar = () =>
-  new cliProgress.SingleBar({
-    format:
-      "SSSX |" +
-      colors.cyan("{bar}") +
-      "| {percentage}% | {duration_formatted} | {eta_formatted} left | URL: {url} | Total: {total}",
-    barCompleteChar: "\u2588",
-    barIncompleteChar: "\u2591",
-    hideCursor: true,
-  });
-
 const ROUTES_BATCH = Math.round(allRoutes.length / numCPUs);
-const bar1 = createBar();
+const bar1 = createProgressBar();
 bar1.start(allRoutes.length, 0, { url: "", total: 0 });
 let jobsIndex = 0;
 
@@ -69,15 +60,6 @@ type Message = {
   [key: string]: any;
 };
 
-const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
-// this was crucial to have to be able to run ts-node, because in tsx this would not run without it at all!
-const execArgv = [
-  "--require",
-  "ts-node/register",
-  "--import",
-  'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));',
-  "--trace-warnings",
-];
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
   const worker = new Worker(workerPath, {

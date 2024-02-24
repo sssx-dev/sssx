@@ -10,6 +10,7 @@ import { buildSitemap } from "../plugins/sitemap.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
+import { done } from "../utils/done.ts";
 
 const numCPUs = os.cpus().length;
 const config = await getConfig(cwd);
@@ -40,7 +41,7 @@ const onDone = async () => {
     );
   if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
-  console.log("DONE");
+  await done();
 };
 
 // console.log("============");

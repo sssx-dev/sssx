@@ -8,6 +8,7 @@ import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
+import { done } from "../utils/done.ts";
 
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
@@ -47,4 +48,4 @@ for (let i = startIndex; i < length; i++) {
 if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
 if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
-console.log("DONE");
+await done();

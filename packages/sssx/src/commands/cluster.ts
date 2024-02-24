@@ -63,7 +63,7 @@ type Message = {
 // Create workers
 for (var i = 0; i < numCPUs; i++) {
   const worker = new Worker(workerPath, {
-    execArgv,
+    execArgv: execArgv(),
     //@ts-ignore
     type: "module",
     deno: {

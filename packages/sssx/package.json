@@ -1,6 +1,6 @@
 {
   "name": "sssx",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
   "engines": {
     "node": "^21.x"
@@ -23,8 +23,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx ./src/cli.ts",
-    "dev2": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/cli.ts",
-    "dev3": "node -r ts-node/register --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' --trace-warnings ../sssx/src/cli.ts"
+    "prepublishOnly": "cp ../../README.md README.md"
   },
   "bin": {
     "sssx": "./src/cli.ts"

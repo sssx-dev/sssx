@@ -68,7 +68,7 @@ export const buildRoute = async (
           plugins: config.postcss.plugins!,
         },
       });
-      plugins.push(postcss);
+      plugins.push(postcss as any);
     }
 
     // make it silent in a production build

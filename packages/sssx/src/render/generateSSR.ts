@@ -8,7 +8,8 @@ import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
-  css: "none",
+  // options_invalid_value: Invalid compiler option: The boolean options have been removed from the css option. Use "external" instead of false and "injected" instead of true
+  css: "external", //"none",
   hydratable: true,
 };
 
@@ -17,7 +18,7 @@ export const generateSSR = async (
   basedir: string,
   segment: RouteInfo,
   buildOptions: BuildOptions = {},
-  plugins: Plugin[] = [],
+  inputPlugins: Plugin[] = [],
   compilerSSROptions: Partial<CompileOptions> = {},
   isDev: boolean
 ) => {
@@ -45,6 +46,14 @@ export const generateSSR = async (
   // output is in memory, not file system
   const write = false;
 
+  const plugins: Plugin[] = [
+    ...inputPlugins,
+    sveltePlugin({
+      preprocess: sveltePreprocess(),
+      compilerOptions,
+    }),
+  ] as any[];
+
   // server
   const result = await esbuild.build({
     ...buildOptions,
@@ -56,13 +65,7 @@ export const generateSSR = async (
     drop,
     splitting: false,
     //
-    plugins: [
-      ...plugins,
-      sveltePlugin({
-        preprocess: sveltePreprocess(),
-        compilerOptions,
-      }),
-    ],
+    plugins,
   });
 
   // TODO: check for warnings

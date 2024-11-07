@@ -44,22 +44,19 @@ export const renderSSR = async (
 
   // so far only works for the content routes
   // TODO: add this for other types too
-  if(segment.permalinks)
-  Object.keys(segment.permalinks).map((locale: string) => {
-    const permalink = segment.permalinks![locale];
-    const hreflang = locale.toLowerCase();
-    const href = cleanURL(
-      `${site}${permalink}`.replace(
-        `${config.defaultLocale!}/`,
-        ""
-      )
-    );
-    // console.log({locale, href, hreflang})
-    head += `\n<link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
-    if (locale === config.defaultLocale) {
-      head += `\n<link rel="alternate" hreflang="x-default" href="${href}" />`;
-    }
-  });
+  if (segment.permalinks)
+    Object.keys(segment.permalinks).map((locale: string) => {
+      const permalink = segment.permalinks![locale];
+      const hreflang = locale.toLowerCase();
+      const href = cleanURL(
+        `${site}${permalink}`.replace(`${config.defaultLocale!}/`, "")
+      );
+      // console.log({locale, href, hreflang})
+      head += `\n<link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
+      if (locale === config.defaultLocale) {
+        head += `\n<link rel="alternate" hreflang="x-default" href="${href}" />`;
+      }
+    });
 
   const html = `
 <!doctype html>
@@ -74,7 +71,7 @@ export const renderSSR = async (
   </head>
   <body>
     <div id="app">${output.html}</div>
-    ${noJS ? '' : '<script type="module" src="./main.js"></script>'}
+    ${noJS ? "" : '<script type="module" src="./main.js"></script>'}
   </body>
 </html>
 `;

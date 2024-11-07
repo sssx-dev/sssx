@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
   "engines": {
-    "node": "^21.x"
+    "node": "^23.x"
   },
   "keywords": [
     "SSG",

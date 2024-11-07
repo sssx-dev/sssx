@@ -36,7 +36,7 @@ watch(`${cwd}/src`, { recursive: true }, (event, name) => {
 
 app.use(connectLiveReload());
 
-app.get("*", async (req, res) => {
+app.get("*splat", async (req, res) => {
   const { url } = req;
   const route = getRoute(url);
 

@@ -20,8 +20,11 @@ export const renderSSR = async (
   const dataUri =
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
 
+  console.log("======================");
   const App = (await import(dataUri)).default;
-  const output = App.render({ data: props });
+  // const output = App.render({ data: props });
+  const output = { head: "", css: { code: "" }, html: "" };
+  console.log("======================");
 
   let head = "";
   head += output.head + `\n`;

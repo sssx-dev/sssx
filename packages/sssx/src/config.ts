@@ -1,5 +1,3 @@
-import path from "node:path";
-import type { Postcss } from "svelte-preprocess/dist/types/options";
 import type { Pluggable, Plugin, PluggableList } from "unified";
 
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
@@ -16,8 +14,6 @@ export type Config = Partial<{
   site?: string;
   /** a base dir where website will be hosted */
   baseDir?: string;
-  /** postcss plugins */
-  postcss: Postcss;
   /** rehype markdown plugins */
   rehypePlugins: PluggableList | Pluggable[] | Plugin[];
   /** default locale, @default en-US */
@@ -33,7 +29,6 @@ export type Config = Partial<{
 const defaultConfig: Config = {
   assets: "public",
   outDir: ".sssx",
-  postcss: {},
   title: "Default Title",
   defaultLocale: "en-US",
   globalDir: "global",

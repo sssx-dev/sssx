@@ -1,6 +1,6 @@
 import esbuild, { type Plugin, type BuildOptions, type Drop } from "esbuild";
-import type { CompileOptions } from "svelte/types/compiler/interfaces";
-import sveltePlugin from "esbuild-svelte";
+import type { CompileOptions, Warning } from "svelte/compiler";
+import sveltePlugin from "esbuild-svelte5";
 import sveltePreprocess from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { type Config } from "../config.ts";

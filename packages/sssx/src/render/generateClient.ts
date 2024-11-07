@@ -1,8 +1,11 @@
 import esbuild, { type BuildOptions, type Plugin } from "esbuild";
-import sveltePlugin from "esbuild-svelte";
+import sveltePlugin from "esbuild-svelte5";
 import sveltePreprocess from "svelte-preprocess";
-//@ts-ignore
-import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
+
+// @ts-ignore
+// import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
+
+import type { CompileOptions } from "svelte/compiler";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { minify } from "../utils/settings.ts";
 import { type Config } from "../config.ts";
@@ -20,7 +23,7 @@ export const generateClient = async (
   outdir: string,
   buildOptions: BuildOptions = {},
   compilerClientOptions: Partial<CompileOptions> = {},
-  plugins: Plugin[] = [],
+  newPlugins: Plugin[] = [],
   props: Record<string, any> = {},
   isDev: boolean
 ) => {
@@ -40,6 +43,13 @@ export const generateClient = async (
     sourcefile: "main.ts",
   };
 
+  const plugins: Plugin[] = [
+    ...newPlugins,
+    sveltePlugin({
+      compilerOptions,
+    }),
+  ] as any[];
+
   await esbuild.build({
     ...buildOptions,
     ///
@@ -50,15 +60,6 @@ export const generateClient = async (
     splitting: false,
     // minify: true,
     minify: false,
-    plugins: [
-      ...plugins,
-      sveltePlugin({
-        preprocess: sveltePreprocess({
-          // postcss: config.postcss,
-          // configFilePath: basedir,
-        }),
-        compilerOptions,
-      }),
-    ],
+    plugins,
   });
 };

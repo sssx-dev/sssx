@@ -62,15 +62,6 @@ export const buildRoute = async (
 
     let plugins: Plugin[] = [];
 
-    if (config.postcss?.plugins) {
-      const postcss = stylePlugin({
-        postcss: {
-          plugins: config.postcss.plugins!,
-        },
-      });
-      plugins.push(postcss as any);
-    }
-
     // make it silent in a production build
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
     const ssrOutput = await generateSSR(
@@ -82,7 +73,7 @@ export const buildRoute = async (
       {},
       isDev
     );
-    // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
+    fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
     await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
     await generateClient(
       config,

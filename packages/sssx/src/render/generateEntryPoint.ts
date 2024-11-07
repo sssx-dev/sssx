@@ -1,4 +1,4 @@
-import * as svelte from "svelte/compiler";
+import { compile, type CompileOptions } from "svelte/compiler";
 import { type RouteInfo } from "../routes/index.ts";
 
 // TODO: check if +layout exists
@@ -18,30 +18,43 @@ const getMainSSRCode = (segment: RouteInfo, props: Record<string, any> = {}) =>
 // we merge above into the code below
 // https://svelte.dev/docs/client-side-component-api
 // props are nested because we pass them via a wrapper
-const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
-  `const app = new Component({
-  target: document.getElementById("app")!,
-  hydrate: ${hydrate},
-  props: {
-    data: ${JSON.stringify(props, null, 2)}
-  }
-});
+// const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
+//   `
+// const app = new Component({
+//   target: document.getElementById("app")!,
+//   hydrate: ${hydrate},
+//   props: {
+//     data: ${JSON.stringify(props, null, 2)}
+//   }
+// });
+// export default app;
+// `;
 
+const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
+  `
+const props = {
+    data: ${JSON.stringify(props, null, 2)}
+};
+const app = makeComponent(document.getElementById("app")!, props);
 export default app;
 `;
 
 export const generateEntryPoint = (
   isSSR = true,
-  compilerOptions: svelte.CompileOptions,
+  compilerOptions: CompileOptions,
   segment: RouteInfo,
   props: Record<string, any> = {}
 ) => {
   const svelteCode = getMainSSRCode(segment, props);
-  const { js } = svelte.compile(svelteCode, compilerOptions);
+  const { js } = compile(svelteCode, compilerOptions);
   let code = js.code;
 
   if (!isSSR) {
-    code = code.replace(`export default Component`, ``);
+    // code = code.replace(`export default Component`, ``);
+    code = code.replace(
+      `export default function _unknown_`,
+      `function makeComponent`
+    );
     code += `\n`;
     code += getMainClientCode(props);
     code += `\n`;

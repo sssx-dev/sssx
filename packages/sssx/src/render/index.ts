@@ -73,7 +73,7 @@ export const buildRoute = async (
       {},
       isDev
     );
-    fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
+    // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
     await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
     await generateClient(
       config,

@@ -54,7 +54,7 @@
     "dayjs": "^1.11.10",
     "esbuild": "^0.24.0",
     "esbuild-style-plugin": "^1.6.3",
-    "esbuild-svelte5": "0.8.4",
+    "esbuild-svelte5": "0.8.5",
     "express": "^5.0.1",
     "front-matter": "^4.0.2",
     "fs-extra": "^11.2.0",

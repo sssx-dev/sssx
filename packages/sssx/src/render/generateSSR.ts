@@ -1,15 +1,14 @@
 import esbuild, { type Plugin, type BuildOptions, type Drop } from "esbuild";
 import type { CompileOptions, Warning } from "svelte/compiler";
 import sveltePlugin from "esbuild-svelte5";
-import sveltePreprocess from "svelte-preprocess";
+import { sveltePreprocess } from "svelte-preprocess";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
   generate: "ssr",
-  // options_invalid_value: Invalid compiler option: The boolean options have been removed from the css option. Use "external" instead of false and "injected" instead of true
-  css: "external", //"none",
+  css: "external",
   hydratable: true,
 };
 

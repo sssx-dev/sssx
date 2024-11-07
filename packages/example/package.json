@@ -27,7 +27,6 @@
     "esbuild": "0.24.0",
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-inline-image": "^0.0.9",
-    "esbuild-svelte": "^0.8.0",
     "fs-extra": "^11.2.0",
     "postcss": "^8.4.35",
     "pretty": "^2.0.0",

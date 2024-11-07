@@ -1,18 +1,13 @@
 import esbuild, { type BuildOptions, type Plugin } from "esbuild";
 import sveltePlugin from "esbuild-svelte5";
 import sveltePreprocess from "svelte-preprocess";
-
-// @ts-ignore
-// import type { CompileOptions, Warning } from "svelte/types/compiler/interfaces";
-
-import type { CompileOptions } from "svelte/compiler";
+import type { CompileOptions, Warning } from "svelte/compiler";
 import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { minify } from "../utils/settings.ts";
 import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
-  // css: "none",
   hydratable: true,
 };
 
@@ -45,9 +40,7 @@ export const generateClient = async (
 
   const plugins: Plugin[] = [
     ...newPlugins,
-    sveltePlugin({
-      compilerOptions,
-    }),
+    sveltePlugin({ compilerOptions }),
   ] as any[];
 
   await esbuild.build({

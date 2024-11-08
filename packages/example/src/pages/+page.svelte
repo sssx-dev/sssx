@@ -14,6 +14,9 @@
 
 <main>
   <div class="flex flex-row justify-center">
+    <a href="https://www.sssx.dev" target="_blank" rel="noreferrer">
+      <img src="/logo/sssx.png" class="logo sssx" alt="SSSX Logo" />
+    </a>
     <a href="https://esbuild.github.io" target="_blank" rel="noreferrer">
       <img src={esbuildLogo} class="logo" alt="Esbuild Logo" />
     </a>
@@ -35,9 +38,7 @@
     Svelte.
   </p>
 
-  <p class="read-the-docs">
-    Click on the Esbuild and Svelte logos to learn more
-  </p>
+  <p class="read-the-docs">Click on the logos to learn more</p>
 </main>
 
 <style>
@@ -52,6 +53,9 @@
   }
   .logo.svelte:hover {
     filter: drop-shadow(0 0 2em #ff3e00aa);
+  }
+  .logo.sssx:hover {
+    filter: drop-shadow(0 0 2em #ffffffaa);
   }
   .read-the-docs {
     color: #888;

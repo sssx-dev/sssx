@@ -74,8 +74,6 @@ export const generateSSR = async (
     `current_component = { p: current_component, c: null, d: null };`,
     `current_component = { p: current_component, c: null, d: null, function: {} };`
   );
-  // reexport hydrate function from svelte
-  // .replace(`main_default as default`, `main_default as default,\n\thydrate`);
 
   // const css = result.outputFiles[1].text;
   // console.log(css);

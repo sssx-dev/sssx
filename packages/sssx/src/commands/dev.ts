@@ -67,15 +67,13 @@ const handler: RequestHandler = async (req, res) => {
 
 const DEBUG_PAGE = `__debug`;
 app.get(`/${DEBUG_PAGE}`, async (req, res) => {
-  console.log("Hello");
   const allRoutes = await getAllRoutes(cwd, config);
   res.type("json");
   res.end(JSON.stringify(allRoutes, null, 2));
 });
-// app.get("*splat", handler);
+
 app.use(async (req, res, next) => {
   const { url } = req;
-  console.log({ url });
   if (url != DEBUG_PAGE && url !== `/${DEBUG_PAGE}/`) handler(req, res, next);
   else next();
 });

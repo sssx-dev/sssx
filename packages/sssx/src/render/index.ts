@@ -14,7 +14,7 @@ import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 
 // TODO: change back to true before publish
-const CLEAR_OUT_FOLDER = false;
+const CLEAR_OUT_FOLDER = true;
 
 export const buildRoute = async (
   route: string,

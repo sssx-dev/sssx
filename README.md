@@ -101,6 +101,18 @@ npm install
 npx sssx dev open
 ```
 
+Run build cluster using deno:
+
+```shell
+deno \
+    --allow-read \
+    --allow-env \
+    --allow-sys \
+    --allow-write \
+    --allow-run \
+    ../../node_modules/.bin/sssx cluster
+```
+
 ## Development
 
 ```shell

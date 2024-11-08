@@ -32,8 +32,10 @@
   </div>
 
   <p>
-    Check out <a href="https://www.sssx.dev" target="_blank" rel="noreferrer"
-      >SSSX</a
+    Thank you for using <a
+      href="https://www.sssx.dev"
+      target="_blank"
+      rel="noreferrer">SSSX</a
     >, the static site generator for multimillion pages websites written in
     Svelte.
   </p>

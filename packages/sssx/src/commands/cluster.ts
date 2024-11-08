@@ -75,6 +75,8 @@ for (var i = 0; i < numCPUs; i++) {
     // console.log(data);
     if (data.ready) {
       worker.postMessage({ routes: getRoutesBatch(data.threadId) });
+    } else if (data.err) {
+      console.log("There was an error", data.err);
     } else if (data.url) {
       const url = data.url;
       jobsIndex++;

@@ -9,7 +9,6 @@ import { generateClient } from "./generateClient.ts";
 import { generateSSR } from "./generateSSR.ts";
 import { renderSSR } from "./renderSSR.ts";
 import { type RouteInfo } from "../routes/index.ts";
-import stylePlugin from "esbuild-style-plugin";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";

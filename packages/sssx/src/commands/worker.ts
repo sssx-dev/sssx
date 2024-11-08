@@ -4,11 +4,7 @@ import { getConfig } from "../config.ts";
 import { isDeno } from "../utils/isDeno.ts";
 import { buildRoute } from "../render/index.ts";
 import { getRoute } from "../utils/getRoute.ts";
-import {
-  getAllRoutes,
-  routeToFileSystem,
-  type RouteInfo,
-} from "../routes/index.ts";
+import { type RouteInfo } from "../routes/index.ts";
 
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
@@ -19,8 +15,13 @@ const processData = async (routes: RouteInfo[]) => {
     const segment = routes[i];
     const url = segment.permalink;
     const route = getRoute(url);
-    await buildRoute(route, segment!, outdir, cwd, config, isDev);
-    parentPort?.postMessage({ url, threadId });
+    try {
+      await buildRoute(route, segment!, outdir, cwd, config, isDev);
+      parentPort?.postMessage({ url, threadId });
+    } catch (err) {
+      console.log("build error route issue", { segment, routes });
+      parentPort?.postMessage({ err });
+    }
   }
 
   parentPort?.postMessage({ terminate: true, threadId });

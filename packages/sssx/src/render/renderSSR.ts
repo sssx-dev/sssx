@@ -3,6 +3,7 @@ import pretty from "pretty";
 import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 import { cleanURL } from "../utils/cleanURL.ts";
+import { render } from "svelte/server";
 
 const HTML_FILE = `index.html`;
 
@@ -20,16 +21,19 @@ export const renderSSR = async (
   const dataUri =
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
 
+  const filename = "main_ssr_file_set_in_renderSSR";
   const App = (await import(dataUri)).default;
   // TODO: uncomment before publishing
-  // const output = App.render({ data: props });
+  // const output = render(App, { props });
   const output = { head: "", css: { code: "" }, html: "" };
 
   let head = "";
   head += output.head + `\n`;
-  if (includeCSS && output.css.code) {
-    head += `<style>${output.css.code}</style>\n`;
-  }
+
+  // TODO: find a way to uncomment CSS
+  // if (includeCSS && output.css.code) {
+  //   head += `<style>${output.css.code}</style>\n`;
+  // }
 
   if (!head.includes("<title>")) {
     head = `<title>${config.title}</title>\n${head}`;
@@ -78,7 +82,8 @@ export const renderSSR = async (
 </html>
 `;
 
-  fs.writeFileSync(`${outdir}/main.css`, output.css.code, "utf8");
+  // TODO: find a way to uncomment CSS
+  // fs.writeFileSync(`${outdir}/main.css`, output.css.code, "utf8");
 
   fs.writeFileSync(
     `${outdir}/${HTML_FILE}`,

@@ -7,7 +7,8 @@ import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
-  generate: "ssr",
+  // @ts-ignore
+  generate: "server",
   css: "external",
   hydratable: true,
 };

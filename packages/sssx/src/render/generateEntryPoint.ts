@@ -32,12 +32,15 @@ const getMainSSRCode = (segment: RouteInfo, props: Record<string, any> = {}) =>
 
 const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
   `
+import { mount, unmount } from 'svelte';
+
 const props = {
     data: ${JSON.stringify(props, null, 2)}
 };
-const app = makeComponent(document.getElementById("app")!, props);
+const app = mount(_unknown_, { target: document.getElementById("app"), props });
 export default app;
 `;
+// const app = mount(App, { target: document.getElementById("app"), props });
 
 export const generateEntryPoint = (
   isSSR = true,
@@ -49,12 +52,19 @@ export const generateEntryPoint = (
   const { js } = compile(svelteCode, compilerOptions);
   let code = js.code;
 
+  code = code.replace(`_unknown_[$.FILENAME] = "(unknown)";\n`, ``);
+
+  // console.log("====================");
+  // console.log(code);
+  // console.log("====================");
+
   if (!isSSR) {
     // code = code.replace(`export default Component`, ``);
     code = code.replace(
       `export default function _unknown_`,
-      `function makeComponent`
+      `export function _unknown_`
     );
+    // `export function App`
     code += `\n`;
     code += getMainClientCode(props);
     code += `\n`;

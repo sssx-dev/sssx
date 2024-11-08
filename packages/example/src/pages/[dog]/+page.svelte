@@ -15,3 +15,9 @@
 <h2>Dog: {data.dog}</h2>
 
 <img src={corgi} alt="Corgi {data.dog}" />
+
+<style>
+  img {
+    width: 100%;
+  }
+</style>

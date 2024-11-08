@@ -33,9 +33,9 @@ export const generateClient = async (
 
   const contents = generateEntryPoint(false, compilerOptions, segment, props);
 
-  console.log("==================");
-  console.log(contents);
-  console.log("==================");
+  // console.log("==================");
+  // console.log(contents);
+  // console.log("==================");
 
   const stdin: esbuild.StdinOptions = {
     contents,

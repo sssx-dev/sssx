@@ -1,9 +1,12 @@
 import path from "node:path";
+import fs from "node:fs";
 import livereload from "livereload";
 import connectLiveReload from "connect-livereload";
 import open from "open";
 import express from "express";
+import { type RequestHandler } from "express";
 import watch from "node-watch";
+import mime from "mime-types";
 import { buildRoute } from "../render/index.ts";
 import { getConfig } from "../config.ts";
 import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
@@ -36,7 +39,7 @@ watch(`${cwd}/src`, { recursive: true }, (event, name) => {
 
 app.use(connectLiveReload());
 
-app.get("*splat", async (req, res) => {
+const handler: RequestHandler = async (req, res) => {
   const { url } = req;
   const route = getRoute(url);
 
@@ -53,10 +56,24 @@ app.get("*splat", async (req, res) => {
 
   // serve the requested file from the filesystem
   const filename = url !== "/" ? url : "index.html";
+  const ext = filename.split(".").pop()!;
   const fullpath = path.normalize(`${outdir}/${filename}`);
 
-  res.sendFile(fullpath);
-});
+  // res.sendFile(fullpath);
+  const content = fs.readFileSync(fullpath);
+  const contentType = mime.lookup(ext) as string;
+  // Content-Type: text/html; charset=utf-8
+  res.setHeader("Content-Type", contentType);
+  res.end(content);
+};
+
+// app.use((req, res, next) => {
+//   const { url } = req;
+//   console.log({ url });
+//   next();
+// });
+
+app.get("*splat", handler);
 
 app.listen(port, host, () => {
   console.log(`SSSX is listening on ${devSite}`);

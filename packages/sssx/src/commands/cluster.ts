@@ -44,8 +44,6 @@ const onDone = async () => {
   await done();
 };
 
-// console.log("============");
-
 const getRoutesBatch = (i: number) => {
   return allRoutes
     .slice(i * ROUTES_BATCH, Math.min(allRoutes.length, (i + 1) * ROUTES_BATCH))

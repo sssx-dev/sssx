@@ -16,16 +16,19 @@ export const renderSSR = async (
   devSite?: string,
   noJS = false,
   prettify = true,
-  includeCSS = true
+  includeCSS = true,
+  inputPath?: string
 ) => {
   const dataUri =
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
 
-  const filename = "main_ssr_file_set_in_renderSSR";
-  const App = (await import(dataUri)).default;
+  // const filename = "main_ssr_file_set_in_renderSSR";
+  // const App = (await import(dataUri)).default;
+  const App = (await import(inputPath ? inputPath : dataUri)).default;
   // TODO: uncomment before publishing
-  // const output = render(App, { props });
-  const output = { head: "", css: { code: "" }, html: "" };
+  // App({ head: { out: "" } }, { data: [], out: {} });
+  const output = render(App, { props });
+  // const output = { head: "", css: { code: "" }, html: "" };
 
   let head = "";
   head += output.head + `\n`;
@@ -64,6 +67,7 @@ export const renderSSR = async (
       }
     });
 
+  // ${noJS ? "" : '<script type="module" src="./main.js"></script>'}
   const html = `
 <!doctype html>
 <html lang="${lang}">
@@ -74,10 +78,11 @@ export const renderSSR = async (
     <link rel="stylesheet" href="./main.css">
 
     ${head}
-  </head>
-  <body>
-    <div id="app">${output.html}</div>
+    </head>
+    <body>
+    <div id="app">${output.body}</div>
     ${noJS ? "" : '<script type="module" src="./main.js"></script>'}
+    ${noJS ? "" : "<script>onload = (event) => import('./main.js');</script>"}
   </body>
 </html>
 `;

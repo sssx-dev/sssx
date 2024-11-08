@@ -6,6 +6,8 @@ import { generateEntryPoint } from "./generateEntryPoint.ts";
 import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
+const DEFAULT_OUTPUT_FILENAME = "./ssr.js";
+
 const defaultCompilerOptions: CompileOptions = {
   // @ts-ignore
   generate: "server",
@@ -19,7 +21,8 @@ export const generateSSR = async (
   buildOptions: BuildOptions = {},
   inputPlugins: Plugin[] = [],
   compilerSSROptions: Partial<CompileOptions> = {},
-  isDev: boolean
+  isDev: boolean,
+  outfile = DEFAULT_OUTPUT_FILENAME
 ) => {
   const compilerOptions: CompileOptions = {
     ...defaultCompilerOptions,
@@ -27,8 +30,6 @@ export const generateSSR = async (
   };
   if (isDev) {
     compilerOptions.dev = isDev;
-    // https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes
-    // compilerOptions.enableSourcemap = true;
   }
   const contents = generateEntryPoint(true, compilerOptions, segment);
 
@@ -44,6 +45,7 @@ export const generateSSR = async (
 
   // output is in memory, not file system
   const write = false;
+  const splitting = false;
 
   const plugins: Plugin[] = [
     ...inputPlugins,
@@ -57,18 +59,24 @@ export const generateSSR = async (
   const result = await esbuild.build({
     ...buildOptions,
     write,
-    //
     stdin,
-    //
-    outfile: "./ssr.js",
+    outfile,
     drop,
-    splitting: false,
-    //
+    splitting,
     plugins,
   });
 
   // TODO: check for warnings
-  const output = result.outputFiles[0].text;
+  let output = result.outputFiles[0].text;
+
+  // a fix for undefined in push_element function
+  output = output
+    .replace(
+      `current_component = { p: current_component, c: null, d: null };`,
+      `current_component = { p: current_component, c: null, d: null, function: {} };`
+    )
+    // reexport hydrate function from svelte
+    .replace(`main_default as default`, `main_default as default,\n\thydrate`);
 
   // const css = result.outputFiles[1].text;
   // console.log(css);

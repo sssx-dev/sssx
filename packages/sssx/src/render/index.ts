@@ -13,6 +13,9 @@ import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 
+// TODO: change back to true before publish
+const CLEAR_OUT_FOLDER = false;
+
 export const buildRoute = async (
   route: string,
   segment: RouteInfo,
@@ -55,7 +58,7 @@ export const buildRoute = async (
       fs.mkdirSync(outdir, { recursive: true });
     }
 
-    if (isDev) {
+    if (isDev && CLEAR_OUT_FOLDER) {
       rimraf(outdir);
     }
 
@@ -72,8 +75,21 @@ export const buildRoute = async (
       {},
       isDev
     );
-    // fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
-    await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
+    const tmpPath = `${outdir}/ssr.js`;
+    fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
+    // await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
+    await renderSSR(
+      ssrOutput,
+      outdir,
+      props,
+      segment,
+      config,
+      devSite,
+      false,
+      true,
+      true,
+      tmpPath
+    );
     await generateClient(
       config,
       base,

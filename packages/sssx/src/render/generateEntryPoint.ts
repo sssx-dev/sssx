@@ -30,16 +30,19 @@ const getMainSSRCode = (segment: RouteInfo, props: Record<string, any> = {}) =>
 // export default app;
 // `;
 
-const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) =>
-  `
-import { mount, unmount } from 'svelte';
+const getMainClientCode = (props: Record<string, any> = {}, hydrate = true) => {
+  const mountOrHydrate = hydrate ? "hydrate" : "mount";
+  return `
+import { mount, unmount, hydrate } from 'svelte';
 
 const props = {
     data: ${JSON.stringify(props, null, 2)}
 };
-const app = mount(_unknown_, { target: document.getElementById("app"), props });
+const app = ${mountOrHydrate}(_unknown_, { target: document.getElementById("app"), props });
 export default app;
 `;
+};
+
 // const app = mount(App, { target: document.getElementById("app"), props });
 
 export const generateEntryPoint = (
@@ -66,7 +69,7 @@ export const generateEntryPoint = (
     );
     // `export function App`
     code += `\n`;
-    code += getMainClientCode(props);
+    code += getMainClientCode(props, true);
     code += `\n`;
   }
 

@@ -8,7 +8,7 @@ import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
 const defaultCompilerOptions: CompileOptions = {
-  hydratable: true,
+  accessors: true,
 };
 
 export const generateClient = async (

@@ -10,7 +10,6 @@ const defaultCompilerOptions: CompileOptions = {
   // @ts-ignore
   generate: "server",
   css: "external",
-  hydratable: true,
 };
 
 export const generateSSR = async (
@@ -28,8 +27,8 @@ export const generateSSR = async (
   };
   if (isDev) {
     compilerOptions.dev = isDev;
-    // gives Cannot read properties of null (reading 'sourcesContent') [plugin esbuild-svelte]
-    compilerOptions.enableSourcemap = true;
+    // https://svelte.dev/docs/svelte/v5-migration-guide#Components-are-no-longer-classes
+    // compilerOptions.enableSourcemap = true;
   }
   const contents = generateEntryPoint(true, compilerOptions, segment);
 

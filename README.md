@@ -120,6 +120,10 @@ cd packages/example
 ../sssx/src/cli.ts dev open
 ```
 
+### Helper URL
+
+[/\_\_debug](http://127.0.0.1:8080/__debug/) you can access `__debug` page to see all existing routes
+
 ## Thank you
 
 Inspirations are drawn from:

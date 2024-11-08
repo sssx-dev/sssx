@@ -1,5 +1,10 @@
 # sssx
 
+## 0.2.3
+
+- [x] Added Svelte 5 support
+- [x] Added `__debug` helper URL
+
 ## 0.2.0
 
 ### Minor Changes

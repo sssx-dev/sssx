@@ -122,7 +122,7 @@ cd packages/example
 
 ### Helper URL
 
-[/\_\_debug](http://127.0.0.1:8080/__debug/) you can access `__debug` page to see all existing routes
+[/\_\_debug](http://127.0.0.1:8080/__debug/) you can access `__debug` page to see all existing routes. It only works in `dev` mode.
 
 ## Thank you
 

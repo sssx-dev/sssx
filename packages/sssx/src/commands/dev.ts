@@ -30,7 +30,6 @@ const allRoutes = await getAllRoutes(cwd, config);
 const liveReloadServer = livereload.createServer();
 
 // TODO: throttle change events
-// TODO: build a more specialized updater and url
 watch(`${cwd}/src`, { recursive: true }, (event, name) => {
   // console.log({ event, name });
   const route = "/";
@@ -55,23 +54,16 @@ const handler: RequestHandler = async (req, res) => {
   }
 
   // serve the requested file from the filesystem
-  const filename = url !== "/" ? url : "index.html";
+  const filename = url.endsWith("/") ? `${url}/index.html` : url;
   const ext = filename.split(".").pop()!;
   const fullpath = path.normalize(`${outdir}/${filename}`);
 
-  // res.sendFile(fullpath);
   const content = fs.readFileSync(fullpath);
   const contentType = mime.lookup(ext) as string;
-  // Content-Type: text/html; charset=utf-8
+
   res.setHeader("Content-Type", contentType);
   res.end(content);
 };
-
-// app.use((req, res, next) => {
-//   const { url } = req;
-//   console.log({ url });
-//   next();
-// });
 
 app.get("*splat", handler);
 

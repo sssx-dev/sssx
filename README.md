@@ -64,6 +64,7 @@ This framework was created to address several things that are lacking in current
 - 🏠 Host anywhere. It's just HTML files with bunch of CSS and JS files.
 - ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
 - 😎 Development Experience is our priority!
+- 5️⃣ Supports Svelte 5.
 
 ## Cluster mode
 
@@ -124,16 +125,9 @@ cd packages/example
 
 [/\_\_debug](http://127.0.0.1:8080/__debug/) you can access `__debug` page to see all existing routes. It only works in `dev` mode.
 
-## Thank you
+## Contributing
 
-Inspirations are drawn from:
-
-- [Next.js](https://github.com/vercel/next.js/)
-- [Elder.js](https://github.com/Elderjs/elderjs)
-- [SvelteKit](https://github.com/sveltejs/kit)
-- [Astro](https://github.com/withastro/astro)
-- [Esbuild](https://github.com/evanw/esbuild)
-- [Rust](https://github.com/rust-lang/rust)
+PRs are welcome!
 
 ## License
 

@@ -131,6 +131,6 @@ PRs are welcome!
 
 ## License
 
-Copyright © 2022-2025 [Eugene Hauptmann](https://twitter.com/sssx-dev)
+Copyright © 2022-2026 [Eugene Hauptmann](https://twitter.com/sssx-dev)
 
 [MIT](https://github.com/sssx-dev/sssx/blob/master/LICENSE)

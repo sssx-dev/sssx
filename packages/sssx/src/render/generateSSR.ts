@@ -66,17 +66,12 @@ export const generateSSR = async (
     plugins,
   });
 
-  // TODO: check for warnings
-  let output = result.outputFiles[0].text;
+  if (result.warnings.length > 0) {
+    for (const warning of result.warnings) {
+      console.warn(`[esbuild warning] ${warning.text}`);
+    }
+  }
 
-  // a fix for undefined in push_element function
-  output = output.replace(
-    `current_component = { p: current_component, c: null, d: null };`,
-    `current_component = { p: current_component, c: null, d: null, function: {} };`
-  );
-
-  // const css = result.outputFiles[1].text;
-  // console.log(css);
-
+  const output = result.outputFiles[0].text;
   return output;
 };

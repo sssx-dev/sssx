@@ -306,9 +306,68 @@ describe("E2E: full build of example project", () => {
       expect(entries.length).toBeGreaterThan(0);
       for (const entry of entries) {
         expect(entry.publicPath).toMatch(/\/global\/images\/\w+\.\w+\.\w+/);
-        // Verify file exists
         const filePath = path.join(OUT_DIR, entry.publicPath);
         expect(fs.existsSync(filePath)).toBe(true);
+      }
+    });
+  });
+
+  // ────────── JSON data files ──────────
+
+  describe("JSON data files", () => {
+    it("merges shared data.json into post props", () => {
+      const html = fs.readFileSync(`${OUT_DIR}/posts/post2/index.html`, "utf8");
+      const match = html.match(/<script id="__sssx_data" type="application\/json">([\s\S]*?)<\/script>/);
+      expect(match).not.toBeNull();
+      const props = JSON.parse(match![1]);
+      // author comes from data.json, not frontmatter
+      expect(props.author).toBe("SSSX Team");
+    });
+
+    it("merges locale-specific JSON into post props", () => {
+      const html = fs.readFileSync(`${OUT_DIR}/posts/post3/en-US/index.html`, "utf8");
+      const match = html.match(/<script id="__sssx_data" type="application\/json">([\s\S]*?)<\/script>/);
+      expect(match).not.toBeNull();
+      const props = JSON.parse(match![1]);
+      expect(props.sidebar).toEqual(["Related Post 1", "Related Post 2"]);
+      expect(props.featured).toBe(true);
+    });
+  });
+
+  // ────────── RSS feed content ──────────
+
+  describe("RSS feed", () => {
+    it("includes posts with dates sorted newest first", () => {
+      const rss = fs.readFileSync(`${OUT_DIR}/rss.xml`, "utf8");
+      expect(rss).toContain("<item>");
+      expect(rss).toContain("Simple post");
+      expect(rss).toContain("post 2");
+    });
+
+    it("includes description in RSS items", () => {
+      const rss = fs.readFileSync(`${OUT_DIR}/rss.xml`, "utf8");
+      expect(rss).toContain("Some simple description here");
+    });
+
+    it("includes full URLs in RSS items", () => {
+      const rss = fs.readFileSync(`${OUT_DIR}/rss.xml`, "utf8");
+      expect(rss).toContain("https://example.com/posts/");
+    });
+  });
+
+  // ────────── Route count ──────────
+
+  describe("route completeness", () => {
+    it("builds exactly 27 routes", () => {
+      const manifest = JSON.parse(fs.readFileSync(`${OUT_DIR}/build-manifest.json`, "utf8"));
+      expect(manifest.routes).toBe(27);
+    });
+
+    it("all routes have HTML files", () => {
+      const manifest = JSON.parse(fs.readFileSync(`${OUT_DIR}/build-manifest.json`, "utf8"));
+      for (const page of manifest.pages) {
+        const htmlPath = path.join(OUT_DIR, page.permalink, "index.html");
+        expect(fs.existsSync(htmlPath)).toBe(true);
       }
     });
   });

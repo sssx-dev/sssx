@@ -5,6 +5,8 @@ description: Some description of third post
 template: ./templates/post.template.svelte
 date: 2024-02-06
 updated: 2024-02-06
+tags: tutorial, images
+categories: blog
 ---
 
 Third post at /posts/post3/

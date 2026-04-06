@@ -7,6 +7,7 @@ import { buildSitemap } from "../plugins/sitemap.ts";
 import { buildRobots } from "../plugins/robots.ts";
 import { buildRSS } from "../plugins/rss.ts";
 import { build404 } from "../plugins/notFound.ts";
+import { buildHeaders } from "../plugins/hosting.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
@@ -45,6 +46,7 @@ await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
 if (config.rss !== false) buildRSS(outdir, config, allRoutes);
 if (config.generate404 !== false) build404(outdir, config);
+buildHeaders(outdir, config);
 
 // Plugin: onBuildStart
 const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };

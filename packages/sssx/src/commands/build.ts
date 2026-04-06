@@ -15,6 +15,7 @@ import { args } from "../utils/args.ts";
 import { done } from "../utils/done.ts";
 import { Timer } from "../utils/timer.ts";
 import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
+import { reportBuildSize } from "../utils/fileSize.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
 
 const { dim, green, red, bold } = colors;
@@ -100,6 +101,8 @@ if (failedRoutes.length > 0) {
     console.error(red(`    - ${url}: ${error instanceof Error ? error.message : String(error)}`));
   }
 }
+
+await reportBuildSize(outdir);
 
 // Plugin: onBuildEnd
 await runHook(plugins, "onBuildEnd", buildCtx);

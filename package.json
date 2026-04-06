@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
   "engines": {
-    "node": "^23.x"
+    "node": ">=22.x"
   },
   "keywords": [
     "SSG",
@@ -20,9 +20,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "sssx": "^0.2.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/sssx-dev/sssx"

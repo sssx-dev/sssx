@@ -29,18 +29,27 @@ const app = express();
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const isDev = true;
-const allRoutes = await getAllRoutes(cwd, config);
+let allRoutes = await getAllRoutes(cwd, config);
 
 const liveReloadServer = livereload.createServer();
 
 let reloadTimeout: ReturnType<typeof setTimeout> | null = null;
-watch(`${cwd}/src`, { recursive: true }, (_event, _name) => {
+watch(`${cwd}/src`, { recursive: true }, async (_event, name) => {
   // Throttle reload events
   if (reloadTimeout) clearTimeout(reloadTimeout);
-  reloadTimeout = setTimeout(() => {
+  reloadTimeout = setTimeout(async () => {
+    // Re-scan routes when files are added/removed
+    try {
+      allRoutes = await getAllRoutes(cwd, config);
+    } catch (e) {
+      // ignore — route scan may fail mid-save
+    }
     liveReloadServer.refresh("/");
+    if (name) {
+      console.log(colors.dim(`  ↻ ${path.relative(cwd, name as string) || "file changed"}`));
+    }
     reloadTimeout = null;
-  }, 100);
+  }, 150);
 });
 
 app.use(connectLiveReload());
@@ -95,6 +104,14 @@ const handler: RequestHandler = async (req, res) => {
     const contentType = mime.lookup(ext) || "application/octet-stream";
 
     res.setHeader("Content-Type", contentType);
+
+    // Cache static assets in dev (images, fonts, etc.) but not HTML/JS
+    if (ext && !["html", "js", "mjs"].includes(ext)) {
+      res.setHeader("Cache-Control", "public, max-age=3600");
+    } else {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+
     res.end(content);
   } catch (err) {
     console.error(`Error handling request for ${url}:`, err);

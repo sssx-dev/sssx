@@ -4,6 +4,27 @@ let all: string[] = process
   : // @ts-ignore
     Deno.args;
 
-all = all.filter((a) => !a.startsWith("--"));
+/** Parse --flag and --key=value / --key value pairs */
+export const flags = new Map<string, string | true>();
 
-export const [cmd, ...args] = all;
+const positional: string[] = [];
+for (let i = 0; i < all.length; i++) {
+  const arg = all[i];
+  if (arg.startsWith("--")) {
+    const key = arg.slice(2);
+    if (key.includes("=")) {
+      const [k, v] = key.split("=", 2);
+      flags.set(k, v);
+    } else if (i + 1 < all.length && !all[i + 1].startsWith("-")) {
+      flags.set(key, all[++i]);
+    } else {
+      flags.set(key, true);
+    }
+  } else if (arg.startsWith("-") && arg.length === 2) {
+    flags.set(arg.slice(1), true);
+  } else {
+    positional.push(arg);
+  }
+}
+
+export const [cmd, ...args] = positional;

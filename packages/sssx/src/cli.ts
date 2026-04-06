@@ -1,50 +1,70 @@
 #!/usr/bin/env npx tsx
 
 import colors from "ansi-colors";
-import { cmd } from "./utils/args.ts";
+import { cmd, flags } from "./utils/args.ts";
+import { getVersion } from "./utils/version.ts";
+import { Timer } from "./utils/timer.ts";
 
-const {bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite} = colors;
-const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls"];
+const { bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite, green, dim, bold } =
+  colors;
+const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls", "info"];
 
 const showHelp = () => {
-  console.log(`Usage:`);
-  console.log(`\t$ sssx <command>`);
+  console.log(bold(`\n  SSSX v${getVersion()}`) + dim(" — Fast Svelte Static Site Generator\n"));
+  console.log(`  Usage: ${green("sssx")} <command> [options]\n`);
+  console.log(`  Commands:\n`);
+  console.log(`    ${bgGreen(" dev ")}      Run in development mode`);
+  console.log(`                ${dim("sssx dev open")} — open browser automatically`);
+  console.log(`                ${dim("sssx dev --port 3000")} — custom port`);
   console.log("");
-  console.log(`\t${bgGreen("dev")} – run in development mode`);
-  console.log(
-    `\t\t${bgGreen(
-      "dev open"
-    )} – if you want to open url in browser automatically`
-  );
+  console.log(`    ${bgBlue(" build ")}    Build for production (all routes)`);
+  console.log(`                ${dim("sssx build <url>")} — build a single URL`);
   console.log("");
-  console.log(
-    `\t${bgBlue("build")} – run in production mode (and build all)`
-  );
-  console.log(
-    `\t\t${bgBlue(
-      "build <url>"
-    )} – run in production mode and build only single <url>`
-  );
+  console.log(`    ${bgMagenta(" cluster ")}  Build using all CPU cores`);
   console.log("");
-  console.log(
-    `\t${bgMagenta(
-      "cluster"
-    )} – run in cluster production mode and use all CPU cores (and build all)`
-  );
+  console.log(`    ${bgCyan(" urls ")}     Print URLs matching a prefix`);
+  console.log(`                ${dim("sssx urls /blog/")}`);
   console.log("");
-  console.log(
-    `\t${bgCyan("urls prefix")} – prints urls with a given prefix`
-  );
+  console.log(`    ${bgWhite(" clean ")}    Remove generated output files`);
   console.log("");
-  console.log(`\t${bgWhite("clean")} – cleans existing files`);
+  console.log(`    ${green("info")}       Show project info and version`);
+  console.log("");
+  console.log(`  Flags:\n`);
+  console.log(`    ${dim("--help, -h")}     Show this help`);
+  console.log(`    ${dim("--version, -v")}  Show version`);
+  console.log(`    ${dim("--port <n>")}     Dev server port (default: 8080)`);
+  console.log(`    ${dim("--verbose")}      Verbose output`);
+  console.log("");
 };
 
-if (!ALLOWED_COMMANDS.includes(cmd) || cmd === "--help" || cmd === "-h") {
+const showVersion = () => {
+  console.log(`sssx v${getVersion()}`);
+};
+
+if (flags.has("version") || flags.has("v")) {
+  showVersion();
+} else if (
+  flags.has("help") ||
+  flags.has("h") ||
+  !cmd ||
+  !ALLOWED_COMMANDS.includes(cmd)
+) {
   showHelp();
-} else {
-  const path = import.meta.resolve(`./commands/${cmd}.ts`)
-  import(path).catch(err => {
-    console.error(`Error running command "${cmd}":`, err);
+  if (cmd && !ALLOWED_COMMANDS.includes(cmd)) {
+    console.error(colors.red(`  Unknown command: "${cmd}"\n`));
     process.exitCode = 1;
-  });
+  }
+} else {
+  const timer = new Timer();
+  const path = import.meta.resolve(`./commands/${cmd}.ts`);
+  import(path)
+    .then(() => {
+      if (cmd !== "dev") {
+        console.log(dim(`\n  Completed in ${timer.format()}`));
+      }
+    })
+    .catch((err) => {
+      console.error(colors.red(`Error running command "${cmd}":`), err);
+      process.exitCode = 1;
+    });
 }

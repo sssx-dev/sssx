@@ -12,10 +12,14 @@ import { getConfig } from "../config.ts";
 import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { cwd } from "../utils/cwd.ts";
-import { args } from "../utils/args.ts";
+import { args, flags } from "../utils/args.ts";
+import { getVersion } from "../utils/version.ts";
+import colors from "ansi-colors";
 
 let port = 8080;
-if (typeof process !== "undefined" && process.env.PORT) {
+if (flags.has("port")) {
+  port = parseInt(flags.get("port") as string);
+} else if (typeof process !== "undefined" && process.env.PORT) {
   port = parseInt(process.env.PORT);
 }
 const host = "127.0.0.1";
@@ -120,7 +124,9 @@ app.use(async (req, res, next) => {
 });
 
 const server = app.listen(port, host, () => {
-  console.log(`SSSX is listening on ${devSite}`);
+  console.log(colors.bold(`\n  SSSX v${getVersion()}`) + colors.dim(" dev server"));
+  console.log(colors.dim(`  Listening on ${devSite}\n`));
+  console.log(colors.dim(`  Routes: ${allRoutes.length} | Debug: ${devSite}/__debug\n`));
   if (args.pop() === "open") {
     open(devSite);
   }

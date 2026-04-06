@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import type { Pluggable, Plugin, PluggableList } from "unified";
 import type { SSSXPlugin } from "./plugins/types.ts";
+import type { SSSXTheme } from "./themes/types.ts";
 
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
 
@@ -28,6 +29,8 @@ export type Config = Partial<{
   writeFilesIndex: boolean;
   /** SSSX plugins for build lifecycle hooks */
   plugins: SSSXPlugin[];
+  /** Theme configuration — path or theme object */
+  theme: string | SSSXTheme;
 }>;
 
 const defaultConfig: Config = {

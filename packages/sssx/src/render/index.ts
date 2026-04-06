@@ -13,6 +13,7 @@ import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 import { AssetManifest } from "./assetManifest.ts";
+import { type SSSXPlugin, runHook, runTransform, type RouteContext, type BuildContext } from "../plugins/types.ts";
 
 const CLEAR_OUT_FOLDER = true;
 
@@ -37,7 +38,8 @@ export const buildRoute = async (
   cwd: string,
   config: Config,
   isDev: boolean,
-  devSite?: string
+  devSite?: string,
+  plugins: SSSXPlugin[] = []
 ) => {
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
@@ -112,6 +114,10 @@ export const buildRoute = async (
       }
     }
 
+    // Run plugin before-route hook
+    const routeCtx: RouteContext = { config, cwd, outdir: rootOutdir, routes: [], route, segment, props };
+    await runHook(plugins, "onBeforeRoute", routeCtx);
+
     await renderSSR({
       js: ssrOutput,
       outdir,
@@ -125,7 +131,11 @@ export const buildRoute = async (
       inputPath: tmpPath,
       jsPath,
       cssPath,
+      plugins,
     });
+
+    // Run plugin after-route hook
+    await runHook(plugins, "onAfterRoute", routeCtx);
 
     // In dev mode, still generate client per-route
     if (isDev) {

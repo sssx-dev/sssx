@@ -12,6 +12,7 @@ import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
 import { done } from "../utils/done.ts";
 import { Timer } from "../utils/timer.ts";
+import { runHook, type BuildContext } from "../plugins/types.ts";
 
 const { dim, green, red, bold } = colors;
 
@@ -26,12 +27,17 @@ fs.mkdirSync(outdir);
 
 resetManifest();
 
+const plugins = config.plugins || [];
 const allRoutes = await getAllRoutes(cwd, config);
 const routes = allRoutes.map((s) => s.permalink);
 
 // generate sitemap.xml and robots.txt
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
+
+// Plugin: onBuildStart
+const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };
+await runHook(plugins, "onBuildStart", buildCtx);
 
 let startIndex = 0;
 let length = routes.length;
@@ -57,7 +63,7 @@ for (let i = startIndex; i < length; i++) {
       console.warn(dim(`  ⚠ No segment for "${url}", skipping.`));
       continue;
     }
-    await buildRoute(route, segment, outdir, cwd, config, isDev);
+    await buildRoute(route, segment, outdir, cwd, config, isDev, undefined, plugins);
     builtCount++;
     console.log(dim(`  ${green("✓")} ${url}`) + dim(` (${routeTimer.format()})`));
   } catch (err) {
@@ -84,6 +90,9 @@ if (failedRoutes.length > 0) {
     console.error(red(`    - ${url}: ${error instanceof Error ? error.message : String(error)}`));
   }
 }
+
+// Plugin: onBuildEnd
+await runHook(plugins, "onBuildEnd", buildCtx);
 
 // order here is important
 if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);

@@ -6,6 +6,7 @@ import { cleanURL } from "../utils/cleanURL.ts";
 import { render } from "svelte/server";
 import { getVersion } from "../utils/version.ts";
 import { generateSEOHead } from "../plugins/seo.ts";
+import { type SSSXPlugin, runTransform, type RouteContext } from "../plugins/types.ts";
 
 const HTML_FILE = `index.html`;
 
@@ -24,6 +25,8 @@ export interface RenderOptions {
   jsPath?: string;
   /** Override path to the CSS bundle */
   cssPath?: string;
+  /** SSSX plugins for transform hooks */
+  plugins?: SSSXPlugin[];
 }
 
 export const renderSSR = async (opts: RenderOptions) => {
@@ -40,6 +43,7 @@ export const renderSSR = async (opts: RenderOptions) => {
     jsPath = "./main.js",
     cssPath = "./main.css",
   } = opts;
+  const plugins = opts.plugins || [];
 
   const dataUri =
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
@@ -75,6 +79,12 @@ export const renderSSR = async (opts: RenderOptions) => {
   // Comprehensive SEO meta tags (canonical, OG, Twitter, etc.)
   head += `\n` + generateSEOHead(segment, config, site);
 
+  // Run transformHead plugin hooks
+  if (plugins.length > 0) {
+    const ctx: RouteContext = { config, cwd: "", outdir, routes: [], route: segment.permalink, segment, props };
+    head = await runTransform(plugins, "transformHead", head, ctx);
+  }
+
   const version = getVersion();
 
   const html = `
@@ -96,9 +106,13 @@ export const renderSSR = async (opts: RenderOptions) => {
 </html>
 `;
 
-  fs.writeFileSync(
-    `${outdir}/${HTML_FILE}`,
-    shouldPrettify ? pretty(html) : html,
-    "utf8"
-  );
+  let finalHTML = shouldPrettify ? pretty(html) : html;
+
+  // Run transformHTML plugin hooks
+  if (plugins.length > 0) {
+    const ctx: RouteContext = { config, cwd: "", outdir, routes: [], route: segment.permalink, segment, props };
+    finalHTML = await runTransform(plugins, "transformHTML", finalHTML, ctx);
+  }
+
+  fs.writeFileSync(`${outdir}/${HTML_FILE}`, finalHTML, "utf8");
 };

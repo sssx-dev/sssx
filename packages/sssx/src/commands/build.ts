@@ -20,6 +20,7 @@ import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
 import { reportBuildSize } from "../utils/fileSize.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
 import { initEsbuild, disposeEsbuild } from "../render/esbuildContext.ts";
+import { formatBuildError } from "../utils/errors.ts";
 import { writeBuildManifest } from "../plugins/buildManifest.ts";
 
 const { dim, green, red, bold } = colors;
@@ -96,7 +97,7 @@ for (let i = startIndex; i < length; i++) {
     builtCount++;
     console.log(dim(`  ${green("✓")} ${url}`) + dim(` (${routeTimer.format()})`));
   } catch (err) {
-    console.error(red(`  ✗ ${url}: ${err instanceof Error ? err.message : String(err)}`));
+    console.error(formatBuildError(err, url));
     failedRoutes.push({ url, error: err });
   }
 }

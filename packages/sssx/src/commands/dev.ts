@@ -15,6 +15,7 @@ import { cwd } from "../utils/cwd.ts";
 import { args, flags } from "../utils/args.ts";
 import { getVersion } from "../utils/version.ts";
 import colors from "ansi-colors";
+import { formatBuildError } from "../utils/errors.ts";
 
 // Dev build cache: route → last build timestamp
 const buildCache = new Map<string, number>();
@@ -126,8 +127,9 @@ const handler: RequestHandler = async (req, res) => {
 
     res.end(content);
   } catch (err) {
-    console.error(`Error handling request for ${url}:`, err);
-    res.status(500).send(`<h1>500 — Internal Server Error</h1><pre>${err instanceof Error ? err.message : String(err)}</pre>`);
+    console.error(formatBuildError(err, url));
+    const errMsg = err instanceof Error ? err.message : String(err);
+    res.status(500).send(`<h1>500 — Internal Server Error</h1><pre>${errMsg}</pre>`);
   }
 };
 

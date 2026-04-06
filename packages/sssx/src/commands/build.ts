@@ -5,6 +5,7 @@ import { getConfig } from "../config.ts";
 import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
 import { buildRobots } from "../plugins/robots.ts";
+import { buildRSS } from "../plugins/rss.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
@@ -34,6 +35,7 @@ const routes = allRoutes.map((s) => s.permalink);
 // generate sitemap.xml and robots.txt
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
+buildRSS(outdir, config, allRoutes);
 
 // Plugin: onBuildStart
 const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };

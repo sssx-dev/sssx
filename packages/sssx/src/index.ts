@@ -7,6 +7,8 @@ export type { SEOMeta } from "./plugins/seo.ts";
 export type { ImageConfig } from "./plugins/imageOptimizer.ts";
 export { responsiveImage, pictureElement, copyImageHashed } from "./plugins/imageOptimizer.ts";
 export { generateSEOHead } from "./plugins/seo.ts";
+export { generateJsonLD } from "./plugins/jsonld.ts";
+export { buildRSS } from "./plugins/rss.ts";
 export type { SSSXTheme } from "./themes/types.ts";
 export { loadTheme } from "./themes/types.ts";
 export { getVersion } from "./utils/version.ts";

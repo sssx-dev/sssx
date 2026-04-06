@@ -6,6 +6,7 @@ import { cleanURL } from "../utils/cleanURL.ts";
 import { render } from "svelte/server";
 import { getVersion } from "../utils/version.ts";
 import { generateSEOHead } from "../plugins/seo.ts";
+import { generateJsonLD } from "../plugins/jsonld.ts";
 import { type SSSXPlugin, runTransform, type RouteContext } from "../plugins/types.ts";
 
 const HTML_FILE = `index.html`;
@@ -78,6 +79,9 @@ export const renderSSR = async (opts: RenderOptions) => {
 
   // Comprehensive SEO meta tags (canonical, OG, Twitter, etc.)
   head += `\n` + generateSEOHead(segment, config, site);
+
+  // JSON-LD structured data
+  head += `\n` + generateJsonLD(segment, config, site);
 
   // Run transformHead plugin hooks
   if (plugins.length > 0) {

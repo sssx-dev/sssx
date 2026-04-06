@@ -40,7 +40,7 @@ type ChangeFreq =
 
 const singleSitemap = (
   config: Config,
-  urls: string[],
+  routes: RouteInfo[],
   changefreq: ChangeFreq = "daily",
   priority = 0.8
 ) => {
@@ -48,15 +48,26 @@ const singleSitemap = (
 ${BANNER}
     <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
-        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        ${urls
-          .map((url) => {
-            return `<url>
-            <loc>${cleanURL(config.site + url)}</loc>
+        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        ${routes
+          .map((route) => {
+            let entry = `<url>
+            <loc>${cleanURL(config.site + route.permalink)}</loc>
             <lastmod>${date}</lastmod>
             <changefreq>${changefreq}</changefreq>
-            <priority>${priority}</priority>
-        </url>`;
+            <priority>${priority}</priority>`;
+            // i18n alternate links
+            if (route.permalinks) {
+              Object.entries(route.permalinks).forEach(([locale, permalink]) => {
+                if (permalink) {
+                  const href = cleanURL(`${config.site}${permalink}`);
+                  entry += `\n            <xhtml:link rel="alternate" hreflang="${locale.toLowerCase()}" href="${href}" />`;
+                }
+              });
+            }
+            entry += `\n        </url>`;
+            return entry;
           })
           .join("\n\t\t")}
     </urlset>`;
@@ -78,11 +89,9 @@ export const buildSitemap = async (
 
   let index = 0;
   for (let i = 0; i < routes.length; i += MAX_URLS_PER_SITEMAP) {
-    const urls = routes
-      .slice(i, i + MAX_URLS_PER_SITEMAP)
-      .map((r) => r.permalink);
+    const batch = routes.slice(i, i + MAX_URLS_PER_SITEMAP);
 
-    const sitemap = singleSitemap(config, urls);
+    const sitemap = singleSitemap(config, batch);
     const filename = `sitemap.${index++}.xml`;
     const sitemapFile = `${sitemapsDir}/${filename}`;
     fs.writeFileSync(sitemapFile, sitemap, "utf-8");

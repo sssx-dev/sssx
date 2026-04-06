@@ -14,6 +14,7 @@ import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 import { AssetManifest } from "./assetManifest.ts";
 import { type SSSXPlugin, runHook, type RouteContext } from "../plugins/types.ts";
+import { type ImageMap, getImagesForRoute } from "../plugins/imagePipeline.ts";
 
 const CLEAR_OUT_FOLDER = true;
 
@@ -39,7 +40,8 @@ export const buildRoute = async (
   config: Config,
   isDev: boolean,
   devSite?: string,
-  sssxPlugins: SSSXPlugin[] = []
+  sssxPlugins: SSSXPlugin[] = [],
+  imageMap?: ImageMap
 ) => {
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
@@ -61,6 +63,14 @@ export const buildRoute = async (
       const srcDir = path.dirname(segment.file);
       copyAssets(srcDir, outdir);
       props.html = html;
+    }
+
+    // Attach route-specific images from image map
+    if (imageMap) {
+      const routeImages = getImagesForRoute(segment.file, imageMap);
+      if (routeImages.length > 0) {
+        props._images = routeImages;
+      }
     }
 
     if (!fs.existsSync(outdir)) {

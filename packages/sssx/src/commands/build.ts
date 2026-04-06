@@ -8,6 +8,7 @@ import { buildRobots } from "../plugins/robots.ts";
 import { buildRSS } from "../plugins/rss.ts";
 import { build404 } from "../plugins/notFound.ts";
 import { buildHeaders } from "../plugins/hosting.ts";
+import { processContentImages, writeImageMap } from "../plugins/imagePipeline.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
@@ -47,6 +48,18 @@ buildRobots(outdir, config);
 if (config.rss !== false) buildRSS(outdir, config, allRoutes);
 if (config.generate404 !== false) build404(outdir, config);
 buildHeaders(outdir, config);
+
+// Process content images
+const contentDir = `${cwd}/src/content`;
+let imageMap = { images: {} as Record<string, any> };
+if (fs.existsSync(contentDir)) {
+  imageMap = await processContentImages(contentDir, outdir, config);
+  writeImageMap(outdir, imageMap);
+  const imgCount = Object.keys(imageMap.images).length;
+  if (imgCount > 0) {
+    console.log(dim(`  Processed ${imgCount} content images`));
+  }
+}
 
 // Plugin: onBuildStart
 const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };

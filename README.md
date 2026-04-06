@@ -150,6 +150,7 @@ sssx urls --json      # List routes as JSON
 sssx info             # Show project info
 sssx clean            # Remove generated files
 sssx init <name>      # Scaffold new project
+sssx serve            # Serve production build locally
 sssx --version        # Show version
 ```
 

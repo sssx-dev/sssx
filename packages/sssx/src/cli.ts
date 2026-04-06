@@ -7,7 +7,7 @@ import { Timer } from "./utils/timer.ts";
 
 const { bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite, green, dim, bold } =
   colors;
-const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls", "info", "init", "serve"];
+const ALLOWED_COMMANDS = ["dev", "build", "diff", "cluster", "clean", "urls", "info", "init", "serve"];
 
 const showHelp = () => {
   console.log(bold(`\n  SSSX v${getVersion()}`) + dim(" — Fast Svelte Static Site Generator\n"));
@@ -19,6 +19,8 @@ const showHelp = () => {
   console.log("");
   console.log(`    ${bgBlue(" build ")}    Build for production (all routes)`);
   console.log(`                ${dim("sssx build <url>")} — build a single URL`);
+  console.log("");
+  console.log(`    ${green("diff")}       Differential build — only changed pages + affected pages`);
   console.log("");
   console.log(`    ${bgMagenta(" cluster ")}  Build using all CPU cores`);
   console.log("");

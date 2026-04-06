@@ -7,6 +7,7 @@ import fm from "front-matter";
 import { getLocales } from "../utils/getLocales.ts";
 import { type RouteInfo } from "./types.ts";
 import { replacePermalinkSlugsWithValues } from "../utils/replacePermalinkSlugsWithValues.ts";
+import { loadJsonData, mergeJsonData } from "./loadJsonData.ts";
 
 const MARKDOWN = "md";
 
@@ -24,7 +25,11 @@ const loadRoute = async (
   const content = fs.readFileSync(file, "utf8");
   //@ts-ignore
   const frontmatter = fm(content);
-  const attributes: Record<string, any> = frontmatter.attributes as any;
+  const rawAttributes: Record<string, any> = frontmatter.attributes as any;
+
+  // Load JSON data files alongside this content file
+  const jsonData = loadJsonData(file, locale || config.defaultLocale || "en-US", config);
+  const attributes = mergeJsonData(rawAttributes, jsonData);
 
   let permalink = route
     .split("/")

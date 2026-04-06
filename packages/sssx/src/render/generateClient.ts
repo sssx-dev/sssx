@@ -55,7 +55,7 @@ export const generateClient = async (
       stdin,
       outfile,
       splitting: false,
-      minify: !isDev,
+      minify: !isDev && config.minify !== false,
       plugins,
       write: false,
     });

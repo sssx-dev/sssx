@@ -98,5 +98,5 @@ for (let i = 0; i < numCPUs; i++) {
 // runs in parallel to the workers
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
-buildRSS(outdir, config, allRoutes);
-build404(outdir, config);
+if (config.rss !== false) buildRSS(outdir, config, allRoutes);
+if (config.generate404 !== false) build404(outdir, config);

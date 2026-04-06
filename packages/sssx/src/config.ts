@@ -31,6 +31,12 @@ export type Config = Partial<{
   plugins: SSSXPlugin[];
   /** Theme configuration — path or theme object */
   theme: string | SSSXTheme;
+  /** Minify output in production @default true */
+  minify: boolean;
+  /** Generate RSS feed @default true */
+  rss: boolean;
+  /** Generate 404 page @default true */
+  generate404: boolean;
 }>;
 
 const defaultConfig: Config = {
@@ -43,6 +49,9 @@ const defaultConfig: Config = {
   writeURLsIndex: false,
   writeFilesIndex: false,
   plugins: [],
+  minify: true,
+  rss: true,
+  generate404: true,
 };
 
 export const getConfig = async (cwd: string): Promise<Config> => {

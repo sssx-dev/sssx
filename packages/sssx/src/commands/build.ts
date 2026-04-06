@@ -36,8 +36,8 @@ const routes = allRoutes.map((s) => s.permalink);
 // generate sitemap.xml and robots.txt
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
-buildRSS(outdir, config, allRoutes);
-build404(outdir, config);
+if (config.rss !== false) buildRSS(outdir, config, allRoutes);
+if (config.generate404 !== false) build404(outdir, config);
 
 // Plugin: onBuildStart
 const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };

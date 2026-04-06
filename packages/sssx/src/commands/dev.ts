@@ -105,9 +105,50 @@ const handler: RequestHandler = async (req, res) => {
 const DEBUG_PAGE = `__debug`;
 app.get(`/${DEBUG_PAGE}`, async (_req, res) => {
   try {
-    const allRoutes = await getAllRoutes(cwd, config);
-    res.type("json");
-    res.end(JSON.stringify(allRoutes, null, 2));
+    const freshRoutes = await getAllRoutes(cwd, config);
+    const plain = freshRoutes.filter((r) => r.type === "plain");
+    const filesystem = freshRoutes.filter((r) => r.type === "filesystem");
+    const content = freshRoutes.filter((r) => r.type === "content");
+
+    const html = `
+<!doctype html>
+<html>
+<head>
+  <title>SSSX Debug</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #333; }
+    h1 { color: #10b981; }
+    h2 { margin-top: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
+    .route { padding: 0.4rem 0; border-bottom: 1px solid #f3f4f6; display: flex; justify-content: space-between; }
+    .route:hover { background: #f9fafb; }
+    a { color: #3b82f6; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .badge { background: #e5e7eb; padding: 2px 8px; border-radius: 4px; font-size: 12px; color: #6b7280; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+    .stat { background: #f3f4f6; padding: 1rem; border-radius: 8px; text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: bold; color: #10b981; }
+  </style>
+</head>
+<body>
+  <h1>🔍 SSSX Debug</h1>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">${freshRoutes.length}</div>Total Routes</div>
+    <div class="stat"><div class="stat-num">${plain.length}</div>Plain</div>
+    <div class="stat"><div class="stat-num">${filesystem.length}</div>Filesystem</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">${content.length}</div>Content</div>
+  </div>
+  
+  <h2>All Routes</h2>
+  ${freshRoutes.map(r => `<div class="route"><a href="${r.permalink}">${r.permalink}</a> <span class="badge">${r.type}</span></div>`).join("\n  ")}
+  
+  <h2>Raw JSON</h2>
+  <details><summary>Click to expand</summary><pre>${JSON.stringify(freshRoutes, null, 2)}</pre></details>
+</body>
+</html>`;
+    res.type("html");
+    res.end(html);
   } catch (err) {
     console.error("Error loading debug routes:", err);
     res.status(500).send("Error loading routes");

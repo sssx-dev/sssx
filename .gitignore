@@ -24,6 +24,7 @@ yarn-error.log*
 # SSSX output folder
 .sssx
 .sssx-deps.json
+.sssx-deploy.json
 
 # OS generated files #
 ######################

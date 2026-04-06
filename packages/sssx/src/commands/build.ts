@@ -24,6 +24,12 @@ import { formatBuildError } from "../utils/errors.ts";
 import { writeBuildManifest } from "../plugins/buildManifest.ts";
 import { validateConfig, printConfigWarnings } from "../utils/configValidation.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
+import { buildSearchIndex } from "../plugins/search.ts";
+import { filterContentRoutes, printFilterStats } from "../plugins/contentFilters.ts";
+import { collectRedirects, writeRedirectsFile, writeRedirectPages } from "../plugins/redirects.ts";
+import { checkLinks, printBrokenLinks } from "../plugins/linkChecker.ts";
+import { compressOutput, printCompressStats } from "../plugins/compress.ts";
+import { computeDeployDiff } from "../plugins/deployDiff.ts";
 
 const { dim, green, red, bold } = colors;
 
@@ -44,7 +50,12 @@ const configWarnings = validateConfig(config);
 printConfigWarnings(configWarnings);
 
 const plugins = config.plugins || [];
-const allRoutes = await getAllRoutes(cwd, config);
+const allRoutesRaw = await getAllRoutes(cwd, config);
+
+// Filter drafts, scheduled, expired content
+const filterResult = filterContentRoutes(allRoutesRaw, isDev);
+printFilterStats(filterResult);
+const allRoutes = filterResult.included;
 
 // Validate routes
 const routeWarnings = validateRoutes(allRoutes);
@@ -148,6 +159,38 @@ if (failedRoutes.length > 0) {
 
 await reportBuildSize(outdir);
 await writeBuildManifest(outdir, config, allRoutes);
+
+// Search index
+if (config.search !== false) {
+  buildSearchIndex(outdir, config, allRoutes);
+  console.log(dim(`  Search index:   ${allRoutes.length} pages indexed`));
+}
+
+// Redirects
+const redirects = collectRedirects(allRoutes, cwd);
+if (redirects.length > 0) {
+  writeRedirectsFile(outdir, redirects);
+  writeRedirectPages(outdir, redirects);
+  console.log(dim(`  Redirects:      ${redirects.length}`));
+}
+
+// Broken link check
+if (config.checkLinks) {
+  const broken = checkLinks(outdir);
+  printBrokenLinks(broken);
+}
+
+// Pre-compression
+if (config.compress) {
+  const compressStats = compressOutput(outdir);
+  printCompressStats(compressStats);
+}
+
+// Deploy diff
+if (config.deployDiff) {
+  const diff = computeDeployDiff(cwd, outdir);
+  console.log(dim(`  Deploy diff:    ${diff.upload.length} to upload, ${diff.delete.length} to delete, ${diff.unchanged} unchanged`));
+}
 
 // Plugin: onBuildEnd
 await runHook(plugins, "onBuildEnd", buildCtx);

@@ -8,6 +8,7 @@ import { getVersion } from "../utils/version.ts";
 import { generateSEOHead } from "../plugins/seo.ts";
 import { generateJsonLD } from "../plugins/jsonld.ts";
 import { type SSSXPlugin, runTransform, type RouteContext } from "../plugins/types.ts";
+import { generateSearchWidget } from "../plugins/search.ts";
 
 const HTML_FILE = `index.html`;
 
@@ -93,6 +94,11 @@ export const renderSSR = async (opts: RenderOptions) => {
 
   const version = getVersion();
 
+  // Apply CDN prefix to asset paths
+  const cdnPrefix = config.cdnPrefix || "";
+  const finalCssPath = cdnPrefix ? `${cdnPrefix}${cssPath}` : cssPath;
+  const finalJsPath = cdnPrefix ? `${cdnPrefix}${jsPath}` : jsPath;
+
   // RSS link discovery
   if (site) {
     head += `\n<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="${cleanURL(`${site}/rss.xml`)}" />`;
@@ -107,9 +113,9 @@ export const renderSSR = async (opts: RenderOptions) => {
     <meta name="generator" content="SSSX v${version}" />
     <link rel="dns-prefetch" href="${site || "/"}" />
 
-    <link rel="preload" href="${cssPath}" as="style" />
-    ${noJS ? "" : `<link rel="preload" href="${jsPath}" as="script" />`}
-    <link rel="stylesheet" href="${cssPath}">
+    <link rel="preload" href="${finalCssPath}" as="style" />
+    ${noJS ? "" : `<link rel="preload" href="${finalJsPath}" as="script" />`}
+    <link rel="stylesheet" href="${finalCssPath}">
     ${config.baseDir ? `<base href="${config.baseDir}" />` : ""}
 
     ${head}
@@ -117,7 +123,8 @@ export const renderSSR = async (opts: RenderOptions) => {
     <body>
     <div id="app">${output.body}</div>
     ${opts.externalizeProps ? `<script id="__sssx_data" type="application/json">${JSON.stringify(props)}</script>` : ""}
-    ${noJS ? "" : `<script type="module" src="${jsPath}"></script>`}
+    ${noJS ? "" : `<script type="module" src="${finalJsPath}"></script>`}
+    ${config.search !== false ? generateSearchWidget() : ""}
   </body>
 </html>
 `;

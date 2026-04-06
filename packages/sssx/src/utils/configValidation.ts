@@ -19,6 +19,11 @@ const KNOWN_KEYS = new Set([
   "minify",
   "rss",
   "generate404",
+  "search",
+  "cdnPrefix",
+  "compress",
+  "checkLinks",
+  "deployDiff",
 ]);
 
 /**

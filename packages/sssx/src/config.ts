@@ -37,6 +37,16 @@ export type Config = Partial<{
   rss: boolean;
   /** Generate 404 page @default true */
   generate404: boolean;
+  /** Generate search index @default true */
+  search: boolean;
+  /** CDN prefix for assets (e.g., "https://cdn.example.com") */
+  cdnPrefix: string;
+  /** Pre-compress output with gzip/brotli @default false */
+  compress: boolean;
+  /** Check for broken internal links after build @default false */
+  checkLinks: boolean;
+  /** Generate deploy diff manifest @default false */
+  deployDiff: boolean;
 }>;
 
 const defaultConfig: Config = {
@@ -52,6 +62,10 @@ const defaultConfig: Config = {
   minify: true,
   rss: true,
   generate404: true,
+  search: true,
+  compress: false,
+  checkLinks: false,
+  deployDiff: false,
 };
 
 export const getConfig = async (cwd: string): Promise<Config> => {

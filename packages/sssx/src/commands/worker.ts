@@ -27,7 +27,7 @@ const processData = async (routes: RouteInfo[]) => {
   parentPort?.postMessage({ terminate: true, threadId });
 
   //@ts-ignore
-  isDeno ? self.close() : process.exit(1);
+  isDeno ? self.close() : process.exit(0);
 };
 
 type Message = {

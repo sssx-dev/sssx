@@ -159,6 +159,7 @@ sssx info             # Show project info
 sssx clean            # Remove generated files
 sssx init <name>      # Scaffold new project
 sssx serve            # Serve production build locally
+sssx check            # Validate project setup
 sssx --version        # Show version
 ```
 

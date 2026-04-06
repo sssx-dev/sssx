@@ -8,7 +8,7 @@ describe("getVersion", () => {
   });
 
   it("returns current package version", () => {
-    expect(getVersion()).toBe("0.7.0");
+    expect(getVersion()).toBe("0.8.0");
   });
 
   it("caches the version on subsequent calls", () => {

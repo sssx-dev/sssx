@@ -16,6 +16,10 @@ import { args, flags } from "../utils/args.ts";
 import { getVersion } from "../utils/version.ts";
 import colors from "ansi-colors";
 
+// Dev build cache: route → last build timestamp
+const buildCache = new Map<string, number>();
+const SOURCE_TTL = 2000; // rebuild if older than 2 seconds
+
 let port = 8080;
 if (flags.has("port")) {
   port = parseInt(flags.get("port") as string);
@@ -44,6 +48,8 @@ watch(`${cwd}/src`, { recursive: true }, async (_event, name) => {
     } catch (e) {
       // ignore — route scan may fail mid-save
     }
+    // Invalidate build cache on file changes
+    buildCache.clear();
     liveReloadServer.refresh("/");
     if (name) {
       console.log(colors.dim(`  ↻ ${path.relative(cwd, name as string) || "file changed"}`));
@@ -73,7 +79,13 @@ const handler: RequestHandler = async (req, res) => {
     if (url.endsWith("/")) {
       const segment = await routeToFileSystem(cwd, route, allRoutes);
       if (segment) {
-        await buildRoute(route, segment, outdir, cwd, config, isDev, devSite);
+        const lastBuild = buildCache.get(route) || 0;
+        const now = Date.now();
+        // Only rebuild if stale (file watcher will clear cache on changes)
+        if (now - lastBuild > SOURCE_TTL) {
+          await buildRoute(route, segment, outdir, cwd, config, isDev, devSite);
+          buildCache.set(route, now);
+        }
       } else {
         res.status(404).send(`<h1>404 — Route not found</h1><p>No route matched: <code>${url}</code></p>`);
         return;

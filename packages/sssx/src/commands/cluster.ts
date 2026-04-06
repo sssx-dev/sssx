@@ -16,6 +16,7 @@ import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
 import { done } from "../utils/done.ts";
 import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
+import { processContentImages, writeImageMap } from "../plugins/imagePipeline.ts";
 
 const totalCPUs = os.cpus().length;
 const config = await getConfig(cwd);
@@ -107,3 +108,10 @@ buildRobots(outdir, config);
 if (config.rss !== false) buildRSS(outdir, config, allRoutes);
 if (config.generate404 !== false) build404(outdir, config);
 buildHeaders(outdir, config);
+
+// Process images
+const contentDir = `${cwd}/src/content`;
+if (fs.existsSync(contentDir)) {
+  const imageMap = await processContentImages(contentDir, outdir, config);
+  writeImageMap(outdir, imageMap);
+}

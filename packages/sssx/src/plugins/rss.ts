@@ -21,8 +21,8 @@ export const buildRSS = (
   const contentRoutes = routes
     .filter((r) => r.type === "content" && r.param?.date)
     .sort((a, b) => {
-      const da = a.param?.date || "";
-      const db = b.param?.date || "";
+      const da = String(a.param?.date || "");
+      const db = String(b.param?.date || "");
       return db.localeCompare(da); // newest first
     })
     .slice(0, 50); // limit to 50 items

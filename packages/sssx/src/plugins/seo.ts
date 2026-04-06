@@ -68,12 +68,14 @@ export const generateSEOHead = (
     tags.push(`<meta property="og:site_name" content="${config.title || ""}" />`);
   }
 
-  // Article dates
+  // Article dates — normalize to ISO format
   if (meta.date) {
-    tags.push(`<meta property="article:published_time" content="${meta.date}" />`);
+    const d = meta.date instanceof Date ? meta.date.toISOString() : String(meta.date);
+    tags.push(`<meta property="article:published_time" content="${d}" />`);
   }
   if (meta.updated) {
-    tags.push(`<meta property="article:modified_time" content="${meta.updated}" />`);
+    const d = meta.updated instanceof Date ? meta.updated.toISOString() : String(meta.updated);
+    tags.push(`<meta property="article:modified_time" content="${d}" />`);
   }
 
   // Twitter Card

@@ -85,6 +85,9 @@ export const buildRoute = async (
     const esbuildPlugins: EsbuildPlugin[] = [];
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
 
+    let jsPath = "./main.js";
+    let cssPath = "./main.css";
+
     const ssrResult = await generateSSR(
       config,
       base,
@@ -106,10 +109,6 @@ export const buildRoute = async (
     } else if (ssrResult.css) {
       await fsp.writeFile(`${outdir}/main.css`, ssrResult.css, "utf8");
     }
-
-    // In production, use asset manifest for bundle dedup
-    let jsPath = "./main.js";
-    let cssPath = "./main.css";
 
     if (!isDev) {
       // In production, externalize props so client bundles can be deduplicated

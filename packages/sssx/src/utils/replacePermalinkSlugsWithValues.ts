@@ -3,18 +3,25 @@ export const replacePermalinkSlugsWithValues = (
   permalink: string,
   object: Record<string, any>
 ) => {
-  Object.keys(object).map((key) => {
-    const value = String(object[key]);
+  // Only process keys that appear as [key] in the permalink
+  const slugPattern = /\[([^\]]+)\]/g;
+  let match;
 
-    // Prevent path traversal via slug values
-    if (value.includes("..") || value.includes("/") || value.includes("\\")) {
-      throw new Error(
-        `Invalid slug value for "${key}": "${value}" — slug values must not contain path separators or ".."`,
-      );
+  while ((match = slugPattern.exec(permalink)) !== null) {
+    const key = match[1];
+    if (key in object) {
+      const value = String(object[key]);
+
+      // Prevent path traversal via slug values
+      if (value.includes("..") || value.includes("/") || value.includes("\\")) {
+        throw new Error(
+          `Invalid slug value for "[${key}]": "${value}" — slug values must not contain path separators or ".."`,
+        );
+      }
+
+      permalink = permalink.replace(`[${key}]`, value);
     }
-
-    permalink = permalink.replace(`[${key}]`, value);
-  });
+  }
 
   // Warn about unresolved slugs
   const unresolved = permalink.match(/\[([^\]]+)\]/g);

@@ -1,3 +1,5 @@
+import colors from "ansi-colors";
+
 export const done = async () => {
-  console.log("DONE");
+  console.log(colors.green("\n  ✓ Done\n"));
 };

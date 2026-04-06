@@ -14,6 +14,7 @@ import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
 import { done } from "../utils/done.ts";
+import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
 
 const totalCPUs = os.cpus().length;
 const config = await getConfig(cwd);
@@ -27,6 +28,10 @@ if (!fs.existsSync(outdir)) {
 // tracking number of workers
 let numWorkers = 0;
 const allRoutes = await getAllRoutes(cwd, config);
+
+// Validate routes
+const routeWarnings = validateRoutes(allRoutes);
+printValidationWarnings(routeWarnings);
 
 // Don't spawn more workers than routes
 const numCPUs = Math.min(totalCPUs, allRoutes.length || 1);

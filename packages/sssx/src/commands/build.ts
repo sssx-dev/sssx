@@ -14,6 +14,7 @@ import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
 import { done } from "../utils/done.ts";
 import { Timer } from "../utils/timer.ts";
+import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
 
 const { dim, green, red, bold } = colors;
@@ -31,6 +32,11 @@ resetManifest();
 
 const plugins = config.plugins || [];
 const allRoutes = await getAllRoutes(cwd, config);
+
+// Validate routes
+const routeWarnings = validateRoutes(allRoutes);
+printValidationWarnings(routeWarnings);
+
 const routes = allRoutes.map((s) => s.permalink);
 
 // generate sitemap.xml and robots.txt

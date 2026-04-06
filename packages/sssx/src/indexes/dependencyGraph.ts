@@ -164,8 +164,8 @@ export class DependencyGraph {
     return changed;
   }
 
-  /** Build the graph from all routes */
-  buildFromRoutes(routes: RouteInfo[]) {
+  /** Build the graph from all routes, including JSON data and image dependencies */
+  buildFromRoutes(routes: RouteInfo[], jsonFiles: string[] = [], imageFiles: string[] = []) {
     // Register direct dependencies
     for (const route of routes) {
       this.addDependency(route.permalink, route.file);
@@ -186,6 +186,27 @@ export class DependencyGraph {
           : String(p.categories).split(",").map((c: string) => c.trim());
         for (const cat of cats) {
           this.addTaxonomy("categories", cat, route.permalink);
+        }
+      }
+    }
+
+    // Register JSON data file dependencies
+    for (const jsonFile of jsonFiles) {
+      const dir = path.dirname(jsonFile);
+      for (const route of routes) {
+        // JSON in same dir or parent dir affects the route
+        if (route.file.startsWith(dir) || dir.includes(path.dirname(route.file))) {
+          this.addDependency(route.permalink, jsonFile);
+        }
+      }
+    }
+
+    // Register image file dependencies
+    for (const imgFile of imageFiles) {
+      const dir = path.dirname(imgFile);
+      for (const route of routes) {
+        if (route.file.startsWith(dir) || path.dirname(route.file) === dir) {
+          this.addDependency(route.permalink, imgFile);
         }
       }
     }

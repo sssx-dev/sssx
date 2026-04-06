@@ -12,6 +12,8 @@ import { cwd } from "../utils/cwd.ts";
 import { done } from "../utils/done.ts";
 import { Timer } from "../utils/timer.ts";
 import { DependencyGraph } from "../indexes/dependencyGraph.ts";
+import { findJsonDataFiles } from "../routes/loadJsonData.ts";
+import { scanContentImages } from "../plugins/imagePipeline.ts";
 import { hashContent } from "../utils/hashContent.ts";
 import { reportBuildSize } from "../utils/fileSize.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
@@ -35,8 +37,18 @@ const depGraph = new DependencyGraph(cwd);
 
 const allRoutes = await getAllRoutes(cwd, config);
 
-// Build the graph from current routes
-depGraph.buildFromRoutes(allRoutes);
+// Discover JSON and image files for dependency tracking
+const contentDir = `${cwd}/src/content`;
+let jsonFiles: string[] = [];
+let imageFiles: string[] = [];
+if (fs.existsSync(contentDir)) {
+  jsonFiles = await findJsonDataFiles(contentDir);
+  const imgMap = await scanContentImages(contentDir);
+  imageFiles = Object.values(imgMap);
+}
+
+// Build the graph from current routes with all dependencies
+depGraph.buildFromRoutes(allRoutes, jsonFiles, imageFiles);
 
 // Detect changed files
 const changedFiles = depGraph.getChangedFiles();

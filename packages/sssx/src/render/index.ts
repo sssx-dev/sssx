@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import fsp from "node:fs/promises";
 import path from "node:path";
 import { resolveImages } from "../plugins/resolveImages.ts";
 import { copyAssets, copyPublicAssets } from "../utils/assets.ts";
@@ -95,7 +96,7 @@ export const buildRoute = async (
     );
     const ssrOutput = ssrResult.js;
     const tmpPath = `${outdir}/ssr.js`;
-    fs.writeFileSync(tmpPath, ssrOutput, "utf8");
+    await fsp.writeFile(tmpPath, ssrOutput, "utf8");
 
     // Handle CSS — deduplicate via asset manifest in production
     if (ssrResult.css && !isDev) {
@@ -103,7 +104,7 @@ export const buildRoute = async (
       const cssEntry = manifest.register(ssrResult.css, "css");
       cssPath = cssEntry.publicPath;
     } else if (ssrResult.css) {
-      fs.writeFileSync(`${outdir}/main.css`, ssrResult.css, "utf8");
+      await fsp.writeFile(`${outdir}/main.css`, ssrResult.css, "utf8");
     }
 
     // In production, use asset manifest for bundle dedup
@@ -158,8 +159,8 @@ export const buildRoute = async (
     await runHook(sssxPlugins, "onAfterRoute", routeCtx);
 
     // Clean up SSR temp file in production
-    if (!isDev && fs.existsSync(tmpPath)) {
-      fs.unlinkSync(tmpPath);
+    if (!isDev) {
+      fsp.unlink(tmpPath).catch(() => {});
     }
 
     // In dev mode, still generate client per-route

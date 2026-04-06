@@ -19,6 +19,7 @@ import { Timer } from "../utils/timer.ts";
 import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
 import { reportBuildSize } from "../utils/fileSize.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
+import { initEsbuild, disposeEsbuild } from "../render/esbuildContext.ts";
 
 const { dim, green, red, bold } = colors;
 
@@ -32,6 +33,7 @@ if (fs.existsSync(outdir)) {
 fs.mkdirSync(outdir);
 
 resetManifest();
+await initEsbuild();
 
 const plugins = config.plugins || [];
 const allRoutes = await getAllRoutes(cwd, config);
@@ -126,6 +128,7 @@ await runHook(plugins, "onBuildEnd", buildCtx);
 if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
 if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
+await disposeEsbuild();
 await done();
 
 if (failedRoutes.length > 0) {

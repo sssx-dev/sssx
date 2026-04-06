@@ -1,7 +1,5 @@
 {
   "ts-node": {
-    // "experimentalSpecifierResolution": "node",
-    // "transpileOnly": true,
     "esm": true
   },
   "compilerOptions": {
@@ -9,7 +7,6 @@
     "lib": ["ESNext"],
     "module": "ES2022",
     "moduleResolution": "Node",
-    // "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "noEmit": true,
@@ -20,5 +17,6 @@
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js"]
+  "include": ["src/**/*.ts", "src/**/*.js"],
+  "exclude": ["src/**/*.test.ts"]
 }

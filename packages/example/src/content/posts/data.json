@@ -1,0 +1,5 @@
+{
+  "template": "./templates/post.template.svelte",
+  "author": "SSSX Team",
+  "siteName": "SSSX Example Blog"
+}

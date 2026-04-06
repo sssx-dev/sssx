@@ -9,11 +9,11 @@ import { generateClient } from "./generateClient.ts";
 import { generateSSR } from "./generateSSR.ts";
 import { renderSSR } from "./renderSSR.ts";
 import { type RouteInfo } from "../routes/index.ts";
-import { type Plugin } from "esbuild";
+import { type Plugin as EsbuildPlugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 import { AssetManifest } from "./assetManifest.ts";
-import { type SSSXPlugin, runHook, runTransform, type RouteContext, type BuildContext } from "../plugins/types.ts";
+import { type SSSXPlugin, runHook, type RouteContext } from "../plugins/types.ts";
 
 const CLEAR_OUT_FOLDER = true;
 
@@ -39,7 +39,7 @@ export const buildRoute = async (
   config: Config,
   isDev: boolean,
   devSite?: string,
-  plugins: SSSXPlugin[] = []
+  sssxPlugins: SSSXPlugin[] = []
 ) => {
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
@@ -71,15 +71,15 @@ export const buildRoute = async (
       rimraf(outdir);
     }
 
-    let plugins: Plugin[] = [];
-
+    const esbuildPlugins: EsbuildPlugin[] = [];
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
+
     const ssrOutput = await generateSSR(
       config,
       base,
       segment,
       common,
-      [...plugins, resolveImages(outdir, config, true)],
+      [...esbuildPlugins, resolveImages(outdir, config, true)],
       {},
       isDev
     );
@@ -98,25 +98,22 @@ export const buildRoute = async (
         outdir,
         common,
         {},
-        [...plugins, resolveImages(outdir, config, false)],
+        [...esbuildPlugins, resolveImages(outdir, config, false)],
         props,
         isDev,
-        true // return output instead of writing
+        true
       );
 
       if (clientOutput) {
         const manifest = getManifest(rootOutdir);
         const jsEntry = manifest.register(clientOutput, "js");
         jsPath = jsEntry.publicPath;
-
-        // Create a small redirect file so relative paths also work
-        // Routes reference /_assets/main.<hash>.js
       }
     }
 
     // Run plugin before-route hook
     const routeCtx: RouteContext = { config, cwd, outdir: rootOutdir, routes: [], route, segment, props };
-    await runHook(plugins, "onBeforeRoute", routeCtx);
+    await runHook(sssxPlugins, "onBeforeRoute", routeCtx);
 
     await renderSSR({
       js: ssrOutput,
@@ -131,11 +128,11 @@ export const buildRoute = async (
       inputPath: tmpPath,
       jsPath,
       cssPath,
-      plugins,
+      plugins: sssxPlugins,
     });
 
     // Run plugin after-route hook
-    await runHook(plugins, "onAfterRoute", routeCtx);
+    await runHook(sssxPlugins, "onAfterRoute", routeCtx);
 
     // Clean up SSR temp file in production
     if (!isDev && fs.existsSync(tmpPath)) {
@@ -151,7 +148,7 @@ export const buildRoute = async (
         outdir,
         common,
         {},
-        [...plugins, resolveImages(outdir, config, false)],
+        [...esbuildPlugins, resolveImages(outdir, config, false)],
         props,
         isDev,
         false

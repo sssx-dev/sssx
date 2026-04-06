@@ -14,12 +14,15 @@ import { getRoute } from "../utils/getRoute.ts";
 import { cwd } from "../utils/cwd.ts";
 import { args, flags } from "../utils/args.ts";
 import { getVersion } from "../utils/version.ts";
+import { Timer } from "../utils/timer.ts";
 import colors from "ansi-colors";
 import { formatBuildError } from "../utils/errors.ts";
+import { errorOverlay, dev404Page } from "../utils/devOverlay.ts";
 
-// Dev build cache: route → last build timestamp
-const buildCache = new Map<string, number>();
-const SOURCE_TTL = 2000; // rebuild if older than 2 seconds
+const { bold, dim, green, cyan, yellow } = colors;
+
+// ── Config ──────────────────────────────────────────────
+const startupTimer = new Timer();
 
 let port = 8080;
 if (flags.has("port")) {
@@ -29,6 +32,7 @@ if (flags.has("port")) {
 }
 const host = "127.0.0.1";
 const devSite = `http://${host}:${port}`;
+const shouldOpen = flags.has("open") || args.includes("open");
 
 const app = express();
 const config = await getConfig(cwd);
@@ -36,24 +40,29 @@ const outdir = `${cwd}/${config.outDir}`;
 const isDev = true;
 let allRoutes = await getAllRoutes(cwd, config);
 
+const routeLoadTime = startupTimer.format();
+
+// ── Build cache ─────────────────────────────────────────
+const buildCache = new Map<string, number>();
+const SOURCE_TTL = 2000;
+
+// ── Live reload ─────────────────────────────────────────
 const liveReloadServer = livereload.createServer();
 
 let reloadTimeout: ReturnType<typeof setTimeout> | null = null;
 watch(`${cwd}/src`, { recursive: true }, async (_event, name) => {
-  // Throttle reload events
   if (reloadTimeout) clearTimeout(reloadTimeout);
   reloadTimeout = setTimeout(async () => {
-    // Re-scan routes when files are added/removed
     try {
       allRoutes = await getAllRoutes(cwd, config);
-    } catch (e) {
-      // ignore — route scan may fail mid-save
+    } catch {
+      // route scan may fail mid-save
     }
-    // Invalidate build cache on file changes
     buildCache.clear();
     liveReloadServer.refresh("/");
     if (name) {
-      console.log(colors.dim(`  ↻ ${path.relative(cwd, name as string) || "file changed"}`));
+      const rel = path.relative(cwd, name as string) || "file changed";
+      console.log(dim(`  ${yellow("↻")} ${rel}`));
     }
     reloadTimeout = null;
   }, 150);
@@ -61,54 +70,57 @@ watch(`${cwd}/src`, { recursive: true }, async (_event, name) => {
 
 app.use(connectLiveReload());
 
-/**
- * Validates that the resolved path is within the allowed outdir.
- * Prevents path traversal attacks.
- */
+// ── Path safety ─────────────────────────────────────────
 const isPathSafe = (filePath: string, allowedDir: string): boolean => {
   const resolved = path.resolve(filePath);
   const resolvedDir = path.resolve(allowedDir);
   return resolved.startsWith(resolvedDir + path.sep) || resolved === resolvedDir;
 };
 
+// ── Request handler ─────────────────────────────────────
 const handler: RequestHandler = async (req, res) => {
   const { url } = req;
   const route = getRoute(url);
+  const reqTimer = new Timer();
 
   try {
-    // generate build only on main route request
     if (url.endsWith("/")) {
       const segment = await routeToFileSystem(cwd, route, allRoutes);
       if (segment) {
         const lastBuild = buildCache.get(route) || 0;
         const now = Date.now();
-        // Only rebuild if stale (file watcher will clear cache on changes)
         if (now - lastBuild > SOURCE_TTL) {
           await buildRoute(route, segment, outdir, cwd, config, isDev, devSite);
           buildCache.set(route, now);
+          console.log(
+            dim(`  ${green("●")} `) + cyan(url) + dim(` ${reqTimer.format()}`)
+          );
+        } else {
+          console.log(
+            dim(`  ${green("○")} `) + dim(url) + dim(` ${reqTimer.format()} (cached)`)
+          );
         }
       } else {
-        res.status(404).send(`<h1>404 — Route not found</h1><p>No route matched: <code>${url}</code></p>`);
+        // Show dev 404 with route list and search
+        console.log(dim(`  ${yellow("?")} `) + yellow(url) + dim(" 404"));
+        res.status(404).send(dev404Page(url, allRoutes));
         return;
       }
     } else if (url.indexOf(".") === -1) {
-      // redirect /about to /about/
       res.redirect(`${url}/`);
       return;
     }
 
-    // serve the requested file from the filesystem
     const filename = url.endsWith("/") ? `${url}/index.html` : url;
     const fullpath = path.normalize(`${outdir}/${filename}`);
 
-    // Prevent path traversal
     if (!isPathSafe(fullpath, outdir)) {
       res.status(403).send("Forbidden");
       return;
     }
 
     if (!fs.existsSync(fullpath)) {
-      res.status(404).send(`<h1>404 — File not found</h1><p><code>${filename}</code></p>`);
+      res.status(404).send(dev404Page(url, allRoutes));
       return;
     }
 
@@ -117,22 +129,21 @@ const handler: RequestHandler = async (req, res) => {
     const contentType = mime.lookup(ext) || "application/octet-stream";
 
     res.setHeader("Content-Type", contentType);
-
-    // Cache static assets in dev (images, fonts, etc.) but not HTML/JS
-    if (ext && !["html", "js", "mjs"].includes(ext)) {
-      res.setHeader("Cache-Control", "public, max-age=3600");
-    } else {
-      res.setHeader("Cache-Control", "no-cache");
-    }
-
+    res.setHeader(
+      "Cache-Control",
+      ext && !["html", "js", "mjs"].includes(ext)
+        ? "public, max-age=3600"
+        : "no-cache"
+    );
     res.end(content);
   } catch (err) {
     console.error(formatBuildError(err, url));
-    const errMsg = err instanceof Error ? err.message : String(err);
-    res.status(500).send(`<h1>500 — Internal Server Error</h1><pre>${errMsg}</pre>`);
+    // Show styled error overlay in the browser
+    res.status(500).send(errorOverlay(err, url));
   }
 };
 
+// ── Debug page ──────────────────────────────────────────
 const DEBUG_PAGE = `__debug`;
 app.get(`/${DEBUG_PAGE}`, async (_req, res) => {
   try {
@@ -141,8 +152,7 @@ app.get(`/${DEBUG_PAGE}`, async (_req, res) => {
     const filesystem = freshRoutes.filter((r) => r.type === "filesystem");
     const content = freshRoutes.filter((r) => r.type === "content");
 
-    const html = `
-<!doctype html>
+    const html = `<!doctype html>
 <html>
 <head>
   <title>SSSX Debug</title>
@@ -158,34 +168,44 @@ app.get(`/${DEBUG_PAGE}`, async (_req, res) => {
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
     .stat { background: #f3f4f6; padding: 1rem; border-radius: 8px; text-align: center; }
     .stat-num { font-size: 2rem; font-weight: bold; color: #10b981; }
+    input { width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px; margin: 1rem 0; font-size: 0.9rem; }
+    input:focus { outline: none; border-color: #3b82f6; }
   </style>
 </head>
 <body>
   <h1>🔍 SSSX Debug</h1>
   <div class="stats">
-    <div class="stat"><div class="stat-num">${freshRoutes.length}</div>Total Routes</div>
+    <div class="stat"><div class="stat-num">${freshRoutes.length}</div>Total</div>
     <div class="stat"><div class="stat-num">${plain.length}</div>Plain</div>
-    <div class="stat"><div class="stat-num">${filesystem.length}</div>Filesystem</div>
+    <div class="stat"><div class="stat-num">${filesystem.length}</div>Dynamic</div>
   </div>
   <div class="stats">
     <div class="stat"><div class="stat-num">${content.length}</div>Content</div>
   </div>
-  
-  <h2>All Routes</h2>
-  ${freshRoutes.map(r => `<div class="route"><a href="${r.permalink}">${r.permalink}</a> <span class="badge">${r.type}</span></div>`).join("\n  ")}
-  
+  <h2>Routes</h2>
+  <input type="text" placeholder="Filter routes..." oninput="filter(this.value)" autofocus />
+  <div id="routes">
+    ${freshRoutes.map((r) => `<div class="route"><a href="${r.permalink}">${r.permalink}</a> <span class="badge">${r.type}</span></div>`).join("\n    ")}
+  </div>
   <h2>Raw JSON</h2>
   <details><summary>Click to expand</summary><pre>${JSON.stringify(freshRoutes, null, 2)}</pre></details>
+  <script>
+    function filter(q) {
+      document.querySelectorAll('.route').forEach(el => {
+        el.style.display = el.textContent.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
 </body>
 </html>`;
     res.type("html");
     res.end(html);
   } catch (err) {
-    console.error("Error loading debug routes:", err);
-    res.status(500).send("Error loading routes");
+    res.status(500).send(errorOverlay(err, "/__debug"));
   }
 });
 
+// ── Route middleware ─────────────────────────────────────
 app.use(async (req, res, next) => {
   const { url } = req;
   if (url !== `/${DEBUG_PAGE}` && url !== `/${DEBUG_PAGE}/`) {
@@ -195,22 +215,29 @@ app.use(async (req, res, next) => {
   }
 });
 
+// ── Start server ────────────────────────────────────────
 const server = app.listen(port, host, () => {
-  console.log(colors.bold(`\n  SSSX v${getVersion()}`) + colors.dim(" dev server"));
-  console.log(colors.dim(`  Listening on ${devSite}\n`));
-  console.log(colors.dim(`  Routes: ${allRoutes.length} | Debug: ${devSite}/__debug\n`));
-  if (args.pop() === "open") {
+  const startupTime = startupTimer.format();
+  console.log("");
+  console.log(bold(`  SSSX v${getVersion()}`) + dim(" dev server"));
+  console.log("");
+  console.log(`  ${dim("Local:")}    ${cyan(`http://${host}:${port}/`)}`);
+  console.log(`  ${dim("Debug:")}    ${cyan(`http://${host}:${port}/__debug`)}`);
+  console.log(`  ${dim("Routes:")}   ${green(String(allRoutes.length))} ${dim(`(loaded in ${routeLoadTime})`)}`);
+  console.log(`  ${dim("Startup:")}  ${startupTime}`);
+  console.log("");
+  console.log(dim("  Watching src/ for changes...\n"));
+
+  if (shouldOpen) {
     open(devSite);
   }
 });
 
-// Graceful shutdown
+// ── Graceful shutdown ───────────────────────────────────
 const shutdown = () => {
-  console.log("\nShutting down SSSX dev server...");
+  console.log(dim("\n  Shutting down...\n"));
   liveReloadServer.close();
-  server.close(() => {
-    process.exit(0);
-  });
+  server.close(() => process.exit(0));
 };
 
 process.on("SIGINT", shutdown);

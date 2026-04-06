@@ -77,8 +77,14 @@ export const loadJsonData = (
 
   // 4. Locale-specific JSON: <locale>.json next to <locale>.md
   const localeJsonPath = path.join(dir, `${locale}.json`);
-  if (fs.existsSync(localeJsonPath) && localeJsonPath !== fileJsonPath) {
-    result.localeData = safeLoadJson(localeJsonPath);
+  if (fs.existsSync(localeJsonPath)) {
+    // If locale JSON is the same as file JSON, it was already loaded above;
+    // only load separately if they're different files
+    if (localeJsonPath === fileJsonPath) {
+      result.localeData = result.fileData;
+    } else {
+      result.localeData = safeLoadJson(localeJsonPath);
+    }
   }
 
   return result;

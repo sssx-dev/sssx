@@ -7,7 +7,7 @@ import { Timer } from "./utils/timer.ts";
 
 const { bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite, green, dim, bold } =
   colors;
-const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls", "info", "init"];
+const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls", "info", "init", "serve"];
 
 const showHelp = () => {
   console.log(bold(`\n  SSSX v${getVersion()}`) + dim(" — Fast Svelte Static Site Generator\n"));
@@ -30,6 +30,8 @@ const showHelp = () => {
   console.log(`    ${green("info")}       Show project info and version`);
   console.log("");
   console.log(`    ${green("init")} ${dim("<name>")}  Scaffold a new SSSX project`);
+  console.log("");
+  console.log(`    ${green("serve")}      Serve production build locally`);
   console.log("");
   console.log(`  Flags:\n`);
   console.log(`    ${dim("--help, -h")}     Show this help`);

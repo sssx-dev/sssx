@@ -105,8 +105,9 @@ export const renderSSR = async (opts: RenderOptions) => {
     <meta name="generator" content="SSSX v${version}" />
 
     <link rel="preload" href="${cssPath}" as="style" />
-    <link rel="preload" href="${jsPath}" as="script" />
+    ${noJS ? "" : `<link rel="preload" href="${jsPath}" as="script" />`}
     <link rel="stylesheet" href="${cssPath}">
+    ${config.baseDir ? `<base href="${config.baseDir}" />` : ""}
 
     ${head}
     </head>

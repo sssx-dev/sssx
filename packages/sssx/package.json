@@ -1,6 +1,6 @@
 {
   "name": "sssx",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Fast Svelte Static Site X – SSG/SSR focused on SEO for multi-million pages websites",
   "engines": {
     "node": ">=22.x"

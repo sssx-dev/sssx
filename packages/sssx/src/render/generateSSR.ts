@@ -73,5 +73,9 @@ export const generateSSR = async (
   }
 
   const output = result.outputFiles[0].text;
-  return output;
+
+  // Extract CSS if available (outputFiles[1] is CSS when css: "external")
+  const css = result.outputFiles.length > 1 ? result.outputFiles[1].text : undefined;
+
+  return { js: output, css };
 };

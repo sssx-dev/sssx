@@ -84,7 +84,7 @@ export const buildRoute = async (
     const esbuildPlugins: EsbuildPlugin[] = [];
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
 
-    const ssrOutput = await generateSSR(
+    const ssrResult = await generateSSR(
       config,
       base,
       segment,
@@ -93,14 +93,25 @@ export const buildRoute = async (
       {},
       isDev
     );
+    const ssrOutput = ssrResult.js;
     const tmpPath = `${outdir}/ssr.js`;
     fs.writeFileSync(tmpPath, ssrOutput, "utf8");
+
+    // Handle CSS — deduplicate via asset manifest in production
+    if (ssrResult.css && !isDev) {
+      const manifest = getManifest(rootOutdir);
+      const cssEntry = manifest.register(ssrResult.css, "css");
+      cssPath = cssEntry.publicPath;
+    } else if (ssrResult.css) {
+      fs.writeFileSync(`${outdir}/main.css`, ssrResult.css, "utf8");
+    }
 
     // In production, use asset manifest for bundle dedup
     let jsPath = "./main.js";
     let cssPath = "./main.css";
 
     if (!isDev) {
+      // In production, externalize props so client bundles can be deduplicated
       const clientOutput = await generateClient(
         config,
         base,
@@ -111,7 +122,8 @@ export const buildRoute = async (
         [...esbuildPlugins, resolveImages(outdir, config, false)],
         props,
         isDev,
-        true
+        true,
+        true // externalizeProps
       );
 
       if (clientOutput) {
@@ -139,6 +151,7 @@ export const buildRoute = async (
       jsPath,
       cssPath,
       plugins: sssxPlugins,
+      externalizeProps: !isDev,
     });
 
     // Run plugin after-route hook

@@ -28,6 +28,8 @@ export interface RenderOptions {
   cssPath?: string;
   /** SSSX plugins for transform hooks */
   plugins?: SSSXPlugin[];
+  /** Externalize props into a script tag instead of inlining in JS */
+  externalizeProps?: boolean;
 }
 
 export const renderSSR = async (opts: RenderOptions) => {
@@ -113,6 +115,7 @@ export const renderSSR = async (opts: RenderOptions) => {
     </head>
     <body>
     <div id="app">${output.body}</div>
+    ${opts.externalizeProps ? `<script id="__sssx_data" type="application/json">${JSON.stringify(props)}</script>` : ""}
     ${noJS ? "" : `<script type="module" src="${jsPath}"></script>`}
   </body>
 </html>

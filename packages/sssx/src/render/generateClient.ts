@@ -21,7 +21,8 @@ export const generateClient = async (
   newPlugins: Plugin[] = [],
   props: Record<string, any> = {},
   isDev: boolean,
-  returnOutput: boolean = false
+  returnOutput: boolean = false,
+  externalizeProps: boolean = false
 ): Promise<string | undefined> => {
   const compilerOptions: CompileOptions = {
     ...defaultCompilerOptions,
@@ -32,7 +33,7 @@ export const generateClient = async (
     compilerOptions.dev = isDev;
   }
 
-  const contents = generateEntryPoint(false, compilerOptions, segment, props);
+  const contents = generateEntryPoint(false, compilerOptions, segment, props, externalizeProps);
 
   const stdin: esbuild.StdinOptions = {
     contents,

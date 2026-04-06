@@ -6,9 +6,9 @@ import { cmd } from "./utils/args.ts";
 const {bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite} = colors;
 const ALLOWED_COMMANDS = ["dev", "build", "cluster", "clean", "urls"];
 
-if (!ALLOWED_COMMANDS.includes(cmd)) {
+const showHelp = () => {
   console.log(`Usage:`);
-  console.log(`\t$ sssx <input>`);
+  console.log(`\t$ sssx <command>`);
   console.log("");
   console.log(`\t${bgGreen("dev")} – run in development mode`);
   console.log(
@@ -37,7 +37,14 @@ if (!ALLOWED_COMMANDS.includes(cmd)) {
   );
   console.log("");
   console.log(`\t${bgWhite("clean")} – cleans existing files`);
+};
+
+if (!ALLOWED_COMMANDS.includes(cmd) || cmd === "--help" || cmd === "-h") {
+  showHelp();
 } else {
   const path = import.meta.resolve(`./commands/${cmd}.ts`)
-  import(path).catch(err => console.error(err));
+  import(path).catch(err => {
+    console.error(`Error running command "${cmd}":`, err);
+    process.exitCode = 1;
+  });
 }

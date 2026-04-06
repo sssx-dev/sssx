@@ -184,6 +184,17 @@ const config: Config = {
 export default config;
 ```
 
+## Documentation
+
+- [Getting Started](docs/getting-started.md)
+- [Configuration](docs/configuration.md)
+- [Routing](docs/routing.md) — plain, dynamic, content, pagination, taxonomy
+- [SEO](docs/seo.md) — auto OG, Twitter, JSON-LD, sitemaps, RSS
+- [Plugins](docs/plugins.md) — lifecycle hooks, transforms
+- [Images](docs/images.md) — pipeline, components, content-hashing
+- [Differential Builds](docs/differential-builds.md)
+- [Deployment](docs/deployment.md) — Netlify, Vercel, Cloudflare, Docker
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and guidelines. PRs are welcome!

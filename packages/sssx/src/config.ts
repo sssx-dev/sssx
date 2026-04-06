@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import type { Pluggable, Plugin, PluggableList } from "unified";
+import type { SSSXPlugin } from "./plugins/types.ts";
 
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
 
@@ -25,6 +26,8 @@ export type Config = Partial<{
   writeURLsIndex: boolean;
   /** dump all files into `sssx.files.ts` */
   writeFilesIndex: boolean;
+  /** SSSX plugins for build lifecycle hooks */
+  plugins: SSSXPlugin[];
 }>;
 
 const defaultConfig: Config = {
@@ -36,6 +39,7 @@ const defaultConfig: Config = {
   rehypePlugins: [],
   writeURLsIndex: false,
   writeFilesIndex: false,
+  plugins: [],
 };
 
 export const getConfig = async (cwd: string): Promise<Config> => {

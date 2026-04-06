@@ -20,6 +20,7 @@ import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
 import { reportBuildSize } from "../utils/fileSize.ts";
 import { runHook, type BuildContext } from "../plugins/types.ts";
 import { initEsbuild, disposeEsbuild } from "../render/esbuildContext.ts";
+import { writeBuildManifest } from "../plugins/buildManifest.ts";
 
 const { dim, green, red, bold } = colors;
 
@@ -120,6 +121,7 @@ if (failedRoutes.length > 0) {
 }
 
 await reportBuildSize(outdir);
+await writeBuildManifest(outdir, config, allRoutes);
 
 // Plugin: onBuildEnd
 await runHook(plugins, "onBuildEnd", buildCtx);

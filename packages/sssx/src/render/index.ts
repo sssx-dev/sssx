@@ -59,7 +59,7 @@ export const buildRoute = async (
     if (!isRoot) outdir += route;
 
     if (segment.file.endsWith(".md")) {
-      const html = await markdown(segment.file, config);
+      const html = await markdown(segment.file, config, imageMap);
       const srcDir = path.dirname(segment.file);
       copyAssets(srcDir, outdir);
       props.html = html;

@@ -16,4 +16,7 @@ export { processContentImages, resolveContentImage, getImagesForRoute } from "./
 export type { JsonDataResult } from "./routes/loadJsonData.ts";
 export { loadJsonData, mergeJsonData } from "./routes/loadJsonData.ts";
 export { DependencyGraph } from "./indexes/dependencyGraph.ts";
+export { paginate, taxonomyPages } from "./routes/pagination.ts";
+export type { PaginatedPage, PaginationOptions, TaxonomyPage } from "./routes/pagination.ts";
+export { rehypeRewriteImages } from "./plugins/rehypeImages.ts";
 export { getVersion } from "./utils/version.ts";

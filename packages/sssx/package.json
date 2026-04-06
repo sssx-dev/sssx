@@ -73,6 +73,7 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "unified": "^11.0.4",
+    "unist-util-visit": "^5.0.0",
     "unified-stream": "^3.0.0",
     "vfile-reporter": "^8.1.0"
   },

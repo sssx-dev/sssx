@@ -5,6 +5,7 @@ import { type RouteInfo } from "../routes/index.ts";
 import { cleanURL } from "../utils/cleanURL.ts";
 import { render } from "svelte/server";
 import { getVersion } from "../utils/version.ts";
+import { generateSEOHead } from "../plugins/seo.ts";
 
 const HTML_FILE = `index.html`;
 
@@ -56,6 +57,7 @@ export const renderSSR = async (opts: RenderOptions) => {
   const lang = config.defaultLocale!.split("-")[0];
   const site = devSite ? devSite : config.site;
 
+  // Alternate hreflang links
   if (segment.permalinks) {
     Object.keys(segment.permalinks).map((locale: string) => {
       const permalink = segment.permalinks![locale];
@@ -70,25 +72,8 @@ export const renderSSR = async (opts: RenderOptions) => {
     });
   }
 
-  // Canonical URL
-  if (site && segment.permalink) {
-    const canonical = cleanURL(`${site}${segment.permalink}`);
-    head += `\n<link rel="canonical" href="${canonical}" />`;
-  }
-
-  // Open Graph basics from segment params
-  if (segment.param) {
-    const p = segment.param;
-    if (p.title) head += `\n<meta property="og:title" content="${p.title}" />`;
-    if (p.description) {
-      head += `\n<meta property="og:description" content="${p.description}" />`;
-      head += `\n<meta name="description" content="${p.description}" />`;
-    }
-    if (p.keywords) head += `\n<meta name="keywords" content="${p.keywords}" />`;
-    if (p.image) head += `\n<meta property="og:image" content="${p.image}" />`;
-    if (p.date) head += `\n<meta property="article:published_time" content="${p.date}" />`;
-    if (p.updated) head += `\n<meta property="article:modified_time" content="${p.updated}" />`;
-  }
+  // Comprehensive SEO meta tags (canonical, OG, Twitter, etc.)
+  head += `\n` + generateSEOHead(segment, config, site);
 
   const version = getVersion();
 

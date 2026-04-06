@@ -70,7 +70,11 @@ This framework was created to address several things that are lacking in current
 - ♻️ Client bundle deduplication via content hash — identical routes share JS bundles.
 - 📁 JSON data files alongside markdown — locale-aware `.json` merged into props.
 - 📊 Differential builds — `sssx diff` only rebuilds changed pages + affected tags/pagination.
-- 🖼️ Image pipeline — content-hashed copies, image map for templates, per-route `_images`.
+- 🖼️ Image pipeline — content-hashed copies, image map, markdown image rewriting.
+- 📄 Pagination helper — `paginate()` and `taxonomyPages()` for blog listings.
+- 🎨 Svelte components — `<SEO>`, `<JsonLD>`, `<Image>` for pages.
+- 🔒 Security headers — CSP, Permissions-Policy, X-Frame-Options auto-generated.
+- 📦 Build manifest — `build-manifest.json` for CI/CD and deployment tools.
 - 🏠 Host anywhere. It's just HTML files with bunch of CSS and JS files.
 - ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
 - 😎 Development Experience is our priority!

@@ -91,6 +91,11 @@ export const renderSSR = async (opts: RenderOptions) => {
 
   const version = getVersion();
 
+  // RSS link discovery
+  if (site) {
+    head += `\n<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="${cleanURL(`${site}/rss.xml`)}" />`;
+  }
+
   const html = `
 <!doctype html>
 <html lang="${lang}">
@@ -99,6 +104,8 @@ export const renderSSR = async (opts: RenderOptions) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content="SSSX v${version}" />
 
+    <link rel="preload" href="${cssPath}" as="style" />
+    <link rel="preload" href="${jsPath}" as="script" />
     <link rel="stylesheet" href="${cssPath}">
 
     ${head}

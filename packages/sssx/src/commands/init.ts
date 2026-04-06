@@ -2,58 +2,62 @@ import fs from "node:fs";
 import path from "node:path";
 import colors from "ansi-colors";
 import { cwd } from "../utils/cwd.ts";
-import { args } from "../utils/args.ts";
+import { args, flags } from "../utils/args.ts";
 import { getVersion } from "../utils/version.ts";
+import { blogTemplate } from "../templates/blog.ts";
+import { docsTemplate } from "../templates/docs.ts";
+import { portfolioTemplate } from "../templates/portfolio.ts";
 
-const { bold, dim, green } = colors;
+const { bold, dim, green, cyan, yellow } = colors;
 
 const projectName = args[0] || "my-sssx-site";
+const templateName = (flags.get("template") as string) || "blog";
 const projectDir = path.join(cwd, projectName);
+const year = new Date().getFullYear().toString();
+const date = new Date().toISOString().split("T")[0];
+
+const templates: Record<string, any> = {
+  blog: blogTemplate,
+  docs: docsTemplate,
+  portfolio: portfolioTemplate,
+};
+
+const template = templates[templateName];
+
+if (!template) {
+  console.error(colors.red(`\n  Unknown template: "${templateName}"`));
+  console.log(dim(`  Available templates: ${Object.keys(templates).join(", ")}\n`));
+  process.exit(1);
+}
 
 if (fs.existsSync(projectDir)) {
   console.error(colors.red(`\n  Directory "${projectName}" already exists.\n`));
   process.exit(1);
 }
 
-console.log(bold(`\n  Creating SSSX project: ${projectName}\n`));
+console.log(bold(`\n  Creating ${cyan(templateName)} project: ${projectName}\n`));
 
-// Create directory structure
-const dirs = [
-  "",
-  "src",
-  "src/pages",
-  "src/content",
-  "src/lib",
-  "src/templates",
-  "src/assets",
-  "public",
-];
+/** Replace {{placeholders}} in template strings */
+const fill = (s: string) =>
+  s.replace(/\{\{name\}\}/g, projectName)
+    .replace(/\{\{year\}\}/g, year)
+    .replace(/\{\{date\}\}/g, date);
 
-for (const dir of dirs) {
-  fs.mkdirSync(path.join(projectDir, dir), { recursive: true });
-  console.log(dim(`  ${green("+")} ${projectName}/${dir || ""}`));
-}
-
-// sssx.config.ts
-fs.writeFileSync(
-  path.join(projectDir, "sssx.config.ts"),
-  `import type { Config } from "sssx";
-
-const config: Config = {
-  title: "${projectName}",
-  site: "https://example.com",
-  assets: "public",
+/** Create a file, logging it */
+const writeFile = (rel: string, content: string) => {
+  const full = path.join(projectDir, rel);
+  const dir = path.dirname(full);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(full, fill(content), "utf8");
+  console.log(dim(`  ${green("+")} ${rel}`));
 };
 
-export default config;
-`,
-  "utf8"
-);
-console.log(dim(`  ${green("+")} sssx.config.ts`));
+// Common structure
+fs.mkdirSync(path.join(projectDir, "public"), { recursive: true });
 
 // package.json
-fs.writeFileSync(
-  path.join(projectDir, "package.json"),
+writeFile(
+  "package.json",
   JSON.stringify(
     {
       name: projectName,
@@ -62,7 +66,9 @@ fs.writeFileSync(
       scripts: {
         dev: "sssx dev open",
         build: "sssx build",
+        diff: "sssx diff",
         cluster: "sssx cluster",
+        serve: "sssx serve",
         clean: "sssx clean",
       },
       dependencies: {
@@ -71,87 +77,53 @@ fs.writeFileSync(
     },
     null,
     2
-  ) + "\n",
-  "utf8"
+  ) + "\n"
 );
-console.log(dim(`  ${green("+")} package.json`));
-
-// src/+layout.svelte
-fs.writeFileSync(
-  path.join(projectDir, "src/+layout.svelte"),
-  `<script lang="ts">
-</script>
-
-<slot />
-
-<style>
-  :global(body) {
-    font-family: system-ui, -apple-system, sans-serif;
-    margin: 0;
-    padding: 2rem;
-    color: #333;
-  }
-</style>
-`,
-  "utf8"
-);
-console.log(dim(`  ${green("+")} src/+layout.svelte`));
-
-// src/pages/+page.svelte
-fs.writeFileSync(
-  path.join(projectDir, "src/pages/+page.svelte"),
-  `<script lang="ts">
-  export let data: any = {};
-</script>
-
-<svelte:head>
-  <title>${projectName}</title>
-</svelte:head>
-
-<main>
-  <h1>Welcome to ${projectName}</h1>
-  <p>Built with <a href="https://sssx.dev">SSSX</a> — the static site generator for millions of pages.</p>
-</main>
-`,
-  "utf8"
-);
-console.log(dim(`  ${green("+")} src/pages/+page.svelte`));
-
-// src/pages/about/+page.svelte
-fs.mkdirSync(path.join(projectDir, "src/pages/about"), { recursive: true });
-fs.writeFileSync(
-  path.join(projectDir, "src/pages/about/+page.svelte"),
-  `<script lang="ts">
-  export let data: any = {};
-</script>
-
-<svelte:head>
-  <title>About — ${projectName}</title>
-</svelte:head>
-
-<main>
-  <h1>About</h1>
-  <p>This is the about page.</p>
-  <a href="/">← Back home</a>
-</main>
-`,
-  "utf8"
-);
-console.log(dim(`  ${green("+")} src/pages/about/+page.svelte`));
 
 // .gitignore
-fs.writeFileSync(
-  path.join(projectDir, ".gitignore"),
-  `node_modules
-.sssx
-*.tsbuildinfo
-.DS_Store
-`,
-  "utf8"
+writeFile(
+  ".gitignore",
+  `node_modules\n.sssx\n.sssx-deps.json\n*.tsbuildinfo\n.DS_Store\n`
 );
-console.log(dim(`  ${green("+")} .gitignore`));
 
-console.log(bold(`\n  ✓ Project created!\n`));
+// Config
+writeFile("sssx.config.ts", template.config);
+
+// Layout
+writeFile("src/+layout.svelte", template.layout);
+
+// Pages
+writeFile("src/pages/+page.svelte", template.indexPage);
+
+if (template.aboutPage) {
+  writeFile("src/pages/about/+page.svelte", template.aboutPage);
+}
+
+// Template-specific files
+if (templateName === "blog") {
+  writeFile("src/templates/post.svelte", template.postTemplate);
+  writeFile("src/content/posts/data.json", template.dataJson);
+  writeFile("src/content/posts/hello-world.md", template.samplePost);
+}
+
+if (templateName === "docs" && template.gettingStartedPage) {
+  writeFile("src/pages/getting-started/+page.svelte", template.gettingStartedPage);
+  writeFile("src/pages/configuration/+page.svelte", `<script lang="ts">
+  export let data: any = {};
+</script>
+
+<svelte:head>
+  <title>Configuration — ${projectName}</title>
+</svelte:head>
+
+<h1>Configuration</h1>
+<p>Edit <code>sssx.config.ts</code> to configure your site.</p>
+`);
+}
+
+console.log(bold(`\n  ✓ Project created!`));
+console.log(dim(`    Template: ${cyan(templateName)}`));
+console.log("");
 console.log(`  Next steps:\n`);
 console.log(dim(`    cd ${projectName}`));
 console.log(dim(`    npm install`));

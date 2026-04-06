@@ -31,7 +31,7 @@ const showHelp = () => {
   console.log("");
   console.log(`    ${green("info")}       Show project info and version`);
   console.log("");
-  console.log(`    ${green("init")} ${dim("<name>")}  Scaffold a new SSSX project`);
+  console.log(`    ${green("init")} ${dim("<name>")}  Scaffold a new project (--template blog|docs|portfolio)`);
   console.log("");
   console.log(`    ${green("serve")}      Serve production build locally`);
   console.log("");

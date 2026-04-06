@@ -6,6 +6,7 @@ import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
 import { buildRobots } from "../plugins/robots.ts";
 import { buildRSS } from "../plugins/rss.ts";
+import { build404 } from "../plugins/notFound.ts";
 import { getRoute } from "../utils/getRoute.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
@@ -36,6 +37,7 @@ const routes = allRoutes.map((s) => s.permalink);
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
 buildRSS(outdir, config, allRoutes);
+build404(outdir, config);
 
 // Plugin: onBuildStart
 const buildCtx: BuildContext = { config, cwd, outdir, routes: allRoutes };

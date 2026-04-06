@@ -9,6 +9,7 @@ import { getAllRoutes } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
 import { buildRobots } from "../plugins/robots.ts";
 import { buildRSS } from "../plugins/rss.ts";
+import { build404 } from "../plugins/notFound.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
@@ -98,3 +99,4 @@ for (let i = 0; i < numCPUs; i++) {
 await buildSitemap(outdir, config, allRoutes);
 buildRobots(outdir, config);
 buildRSS(outdir, config, allRoutes);
+build404(outdir, config);

@@ -84,7 +84,7 @@ export const buildRoute = async (
       isDev
     );
     const tmpPath = `${outdir}/ssr.js`;
-    fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
+    fs.writeFileSync(tmpPath, ssrOutput, "utf8");
 
     // In production, use asset manifest for bundle dedup
     let jsPath = "./main.js";
@@ -136,6 +136,11 @@ export const buildRoute = async (
 
     // Run plugin after-route hook
     await runHook(plugins, "onAfterRoute", routeCtx);
+
+    // Clean up SSR temp file in production
+    if (!isDev && fs.existsSync(tmpPath)) {
+      fs.unlinkSync(tmpPath);
+    }
 
     // In dev mode, still generate client per-route
     if (isDev) {

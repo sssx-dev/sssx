@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import type { Pluggable, Plugin, PluggableList } from "unified";
 
 const SSSX_CONFIG_FILE = `sssx.config.ts`;
@@ -38,8 +39,22 @@ const defaultConfig: Config = {
 };
 
 export const getConfig = async (cwd: string): Promise<Config> => {
-  const projectConfig = (await import(`${cwd}/${SSSX_CONFIG_FILE}`)).default;
-  const config = { ...defaultConfig, ...projectConfig };
+  const configPath = `${cwd}/${SSSX_CONFIG_FILE}`;
 
-  return config;
+  if (!fs.existsSync(configPath)) {
+    console.warn(
+      `Warning: No ${SSSX_CONFIG_FILE} found in ${cwd}. Using default configuration.`
+    );
+    return { ...defaultConfig };
+  }
+
+  try {
+    const projectConfig = (await import(configPath)).default;
+    const config = { ...defaultConfig, ...projectConfig };
+    return config;
+  } catch (err) {
+    throw new Error(
+      `Failed to load ${SSSX_CONFIG_FILE} from ${cwd}: ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
 };

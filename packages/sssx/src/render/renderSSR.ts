@@ -22,37 +22,20 @@ export const renderSSR = async (
   const dataUri =
     "data:text/javascript;charset=utf-8," + encodeURIComponent(js);
 
-  // const filename = "main_ssr_file_set_in_renderSSR";
-  // const App = (await import(dataUri)).default;
   const App = (await import(inputPath ? inputPath : dataUri)).default;
-  // TODO: uncomment before publishing
-  // App({ head: { out: "" } }, { data: [], out: {} });
   const output = render(App, { props });
-  // const output = { head: "", css: { code: "" }, html: "" };
 
   let head = "";
   head += output.head + `\n`;
-
-  // TODO: find a way to uncomment CSS
-  // if (includeCSS && output.css.code) {
-  //   head += `<style>${output.css.code}</style>\n`;
-  // }
 
   if (!head.includes("<title>")) {
     head = `<title>${config.title}</title>\n${head}`;
   }
 
-  // <link rel="preload" href="./main.css" as="style" />
-  // <link rel="preload" href="./main.js" as="script" />
-
   const lang = config.defaultLocale!.split("-")[0];
-
-  // console.log(segment)
 
   const site = devSite ? devSite : config.site;
 
-  // so far only works for the content routes
-  // TODO: add this for other types too
   if (segment.permalinks)
     Object.keys(segment.permalinks).map((locale: string) => {
       const permalink = segment.permalinks![locale];
@@ -60,14 +43,12 @@ export const renderSSR = async (
       const href = cleanURL(
         `${site}${permalink}`.replace(`${config.defaultLocale!}/`, "")
       );
-      // console.log({locale, href, hreflang})
       head += `\n<link rel="alternate" hreflang="${hreflang}" href="${href}" />`;
       if (locale === config.defaultLocale) {
         head += `\n<link rel="alternate" hreflang="x-default" href="${href}" />`;
       }
     });
 
-  // ${noJS ? "" : '<script type="module" src="./main.js"></script>'}
   const html = `
 <!doctype html>
 <html lang="${lang}">
@@ -82,13 +63,9 @@ export const renderSSR = async (
     <body>
     <div id="app">${output.body}</div>
     ${noJS ? "" : '<script type="module" src="./main.js"></script>'}
-    ${noJS ? "" : "<script>onload = (event) => import('./main.js');</script>"}
   </body>
 </html>
 `;
-
-  // TODO: find a way to uncomment CSS
-  // fs.writeFileSync(`${outdir}/main.css`, output.css.code, "utf8");
 
   fs.writeFileSync(
     `${outdir}/${HTML_FILE}`,

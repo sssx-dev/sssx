@@ -36,12 +36,30 @@ if (inputRouteIndex >= 0) {
   length = startIndex + 1;
 }
 
+let failedRoutes: Array<{ url: string; error: unknown }> = [];
+
 for (let i = startIndex; i < length; i++) {
   const url = routes[i];
   console.log(i, `\t`, url);
-  const route = getRoute(url);
-  const segment = await routeToFileSystem(cwd, route, allRoutes);
-  await buildRoute(route, segment!, outdir, cwd, config, isDev);
+  try {
+    const route = getRoute(url);
+    const segment = await routeToFileSystem(cwd, route, allRoutes);
+    if (!segment) {
+      console.warn(`Warning: No segment found for route "${url}", skipping.`);
+      continue;
+    }
+    await buildRoute(route, segment, outdir, cwd, config, isDev);
+  } catch (err) {
+    console.error(`Error building route "${url}":`, err);
+    failedRoutes.push({ url, error: err });
+  }
+}
+
+if (failedRoutes.length > 0) {
+  console.error(`\n${failedRoutes.length} route(s) failed to build:`);
+  for (const { url, error } of failedRoutes) {
+    console.error(`  - ${url}: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 
 // order here is important
@@ -49,3 +67,7 @@ if (config.writeURLsIndex) await writeURLsIndex(cwd, routes);
 if (config.writeFilesIndex) await writeFilesIndex(cwd, config);
 
 await done();
+
+if (failedRoutes.length > 0) {
+  process.exitCode = 1;
+}

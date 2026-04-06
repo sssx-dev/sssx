@@ -7,8 +7,8 @@ describe("getVersion", () => {
     expect(version).toMatch(/^\d+\.\d+\.\d+/);
   });
 
-  it("returns 0.3.0 for current version", () => {
-    expect(getVersion()).toBe("0.3.0");
+  it("returns current package version", () => {
+    expect(getVersion()).toBe("0.4.0");
   });
 
   it("caches the version on subsequent calls", () => {

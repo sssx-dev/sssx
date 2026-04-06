@@ -12,7 +12,7 @@ import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { createProgressBar } from "../utils/createProgressBar.ts";
 import { done } from "../utils/done.ts";
 
-const numCPUs = os.cpus().length;
+const totalCPUs = os.cpus().length;
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
 const workerPath = import.meta.resolve("./worker.ts").replace("file://", "");
@@ -25,7 +25,9 @@ if (!fs.existsSync(outdir)) {
 let numWorkers = 0;
 const allRoutes = await getAllRoutes(cwd, config);
 
-const ROUTES_BATCH = Math.round(allRoutes.length / numCPUs);
+// Don't spawn more workers than routes
+const numCPUs = Math.min(totalCPUs, allRoutes.length || 1);
+const ROUTES_BATCH = Math.max(1, Math.ceil(allRoutes.length / numCPUs));
 const bar1 = createProgressBar();
 bar1.start(allRoutes.length, 0, { url: "", total: 0 });
 let jobsIndex = 0;
@@ -60,7 +62,7 @@ type Message = {
 };
 
 // Create workers
-for (var i = 0; i < numCPUs; i++) {
+for (let i = 0; i < numCPUs; i++) {
   const worker = new Worker(workerPath, {
     execArgv: execArgv(),
     //@ts-ignore

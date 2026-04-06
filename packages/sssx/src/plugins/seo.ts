@@ -70,11 +70,15 @@ export const generateSEOHead = (
 
   // Article dates — normalize to ISO format
   if (meta.date) {
-    const d = meta.date instanceof Date ? meta.date.toISOString() : String(meta.date);
+    const d = typeof meta.date === "object" && meta.date && "toISOString" in meta.date
+      ? (meta.date as Date).toISOString()
+      : String(meta.date);
     tags.push(`<meta property="article:published_time" content="${d}" />`);
   }
   if (meta.updated) {
-    const d = meta.updated instanceof Date ? meta.updated.toISOString() : String(meta.updated);
+    const d = typeof meta.updated === "object" && meta.updated && "toISOString" in meta.updated
+      ? (meta.updated as Date).toISOString()
+      : String(meta.updated);
     tags.push(`<meta property="article:modified_time" content="${d}" />`);
   }
 

@@ -19,16 +19,30 @@
   ],
   "author": "Eugene Hauptmann <eugene@sssx.dev>",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "dev": "npx tsx ./src/cli.ts",
+    "build": "tsc -p tsconfig.build.json && cp -r src/components dist/components",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "cp ../../README.md README.md"
+    "prepublishOnly": "npm run build && cp ../../README.md README.md"
   },
   "bin": {
     "sssx": "./src/cli.ts"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components/*": "./dist/components/*"
   },
   "repository": {
     "type": "git",

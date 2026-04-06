@@ -52,16 +52,15 @@ export interface RouteContext extends BuildContext {
 /**
  * Run a lifecycle hook for all plugins.
  */
-export const runHook = async <K extends keyof SSSXPlugin>(
+export const runHook = async (
   plugins: SSSXPlugin[],
-  hook: K,
-  ...args: SSSXPlugin[K] extends (...a: infer P) => any ? P : never[]
+  hook: keyof SSSXPlugin,
+  ctx: BuildContext | RouteContext
 ): Promise<void> => {
   for (const plugin of plugins) {
-    const fn = plugin[hook];
+    const fn = plugin[hook] as ((ctx: any) => Promise<void> | void) | undefined;
     if (typeof fn === "function") {
-      // @ts-ignore
-      await fn(...args);
+      await fn(ctx);
     }
   }
 };

@@ -68,6 +68,9 @@ This framework was created to address several things that are lacking in current
 - 🐦 Open Graph and Twitter Card meta tags from frontmatter.
 - 🖼️ Image utilities: responsive images, `<picture>` elements, content-hashed copies.
 - ♻️ Client bundle deduplication via content hash — identical routes share JS bundles.
+- 📁 JSON data files alongside markdown — locale-aware `.json` merged into props.
+- 📊 Differential builds — `sssx diff` only rebuilds changed pages + affected tags/pagination.
+- 🖼️ Image pipeline — content-hashed copies, image map for templates, per-route `_images`.
 - 🏠 Host anywhere. It's just HTML files with bunch of CSS and JS files.
 - ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
 - 😎 Development Experience is our priority!
@@ -144,6 +147,7 @@ sssx dev              # Development server with live reload
 sssx dev --port 3000  # Custom port
 sssx build            # Production build
 sssx build /about/    # Build single URL
+sssx diff             # Differential build — only changed + affected pages
 sssx cluster          # Build using all CPU cores
 sssx urls             # List all routes
 sssx urls --json      # List routes as JSON

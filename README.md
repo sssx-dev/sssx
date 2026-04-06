@@ -61,6 +61,13 @@ This framework was created to address several things that are lacking in current
 - 📦 Small size of JavaScript overhead, thanks to Svelte.
 - 💪 ESM first, no more enormous CommonJS bundles, thanks to Esbuild.
 - 🕸️ Out of box SEO features: metatags, i18n, web vitals, robots, sitemap, etc.
+- 🧩 Plugin system with lifecycle hooks (`onBuildStart`, `onAfterRoute`, `transformHTML`, etc.)
+- 🎨 Theme system for reusable layouts and components.
+- 📡 Auto-generated RSS feed, robots.txt, and 404 page.
+- 🔗 JSON-LD structured data (Article/WebPage schema) on every page.
+- 🐦 Open Graph and Twitter Card meta tags from frontmatter.
+- 🖼️ Image utilities: responsive images, `<picture>` elements, content-hashed copies.
+- ♻️ Client bundle deduplication via content hash — identical routes share JS bundles.
 - 🏠 Host anywhere. It's just HTML files with bunch of CSS and JS files.
 - ⚡️ You can generate one URL or millions. No need to rebuild whole website each time.
 - 😎 Development Experience is our priority!
@@ -94,10 +101,19 @@ This repository is structured as a monorepo and uses workspaces.
 
 ## Getting started
 
-To run an example project use the following:
+Create a new project:
 
 ```shell
-cd apps/example-blog
+npx sssx init my-site
+cd my-site
+npm install
+npx sssx dev open
+```
+
+Or run the example project:
+
+```shell
+cd packages/example
 npm install
 npx sssx dev open
 ```
@@ -121,13 +137,47 @@ cd packages/example
 ../sssx/src/cli.ts dev open
 ```
 
-### Helper URL
+### CLI
 
-[/\_\_debug](http://127.0.0.1:8080/__debug/) you can access `__debug` page to see all existing routes. It only works in `dev` mode.
+```shell
+sssx dev              # Development server with live reload
+sssx dev --port 3000  # Custom port
+sssx build            # Production build
+sssx build /about/    # Build single URL
+sssx cluster          # Build using all CPU cores
+sssx urls             # List all routes
+sssx urls --json      # List routes as JSON
+sssx info             # Show project info
+sssx clean            # Remove generated files
+sssx init <name>      # Scaffold new project
+sssx --version        # Show version
+```
+
+### Debug Page
+
+[/\_\_debug](http://127.0.0.1:8080/__debug/) — rich HTML page showing all routes with stats, badges, and clickable links. Dev mode only.
+
+### Configuration
+
+```ts
+// sssx.config.ts
+import type { Config } from "sssx";
+
+const config: Config = {
+  title: "My Site",
+  site: "https://example.com",
+  minify: true,        // Minify JS in production
+  rss: true,           // Auto-generate RSS feed
+  generate404: true,   // Auto-generate 404 page
+  plugins: [],         // SSSX plugins
+};
+
+export default config;
+```
 
 ## Contributing
 
-PRs are welcome!
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and guidelines. PRs are welcome!
 
 ## License
 

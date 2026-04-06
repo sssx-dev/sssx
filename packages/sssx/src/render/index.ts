@@ -12,8 +12,23 @@ import { type RouteInfo } from "../routes/index.ts";
 import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
+import { AssetManifest } from "./assetManifest.ts";
 
 const CLEAR_OUT_FOLDER = true;
+
+/** Shared asset manifest — created once per build, reused across routes */
+let _manifest: AssetManifest | null = null;
+
+export const getManifest = (outdir: string): AssetManifest => {
+  if (!_manifest) {
+    _manifest = new AssetManifest(outdir);
+  }
+  return _manifest;
+};
+
+export const resetManifest = () => {
+  _manifest = null;
+};
 
 export const buildRoute = async (
   route: string,
@@ -26,6 +41,7 @@ export const buildRoute = async (
 ) => {
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
+  const rootOutdir = outdir;
 
   if (segment) {
     let props = segment.param;
@@ -67,29 +83,65 @@ export const buildRoute = async (
     );
     const tmpPath = `${outdir}/ssr.js`;
     fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
-    await renderSSR(
-      ssrOutput,
+
+    // In production, use asset manifest for bundle dedup
+    let jsPath = "./main.js";
+    let cssPath = "./main.css";
+
+    if (!isDev) {
+      const clientOutput = await generateClient(
+        config,
+        base,
+        segment,
+        outdir,
+        common,
+        {},
+        [...plugins, resolveImages(outdir, config, false)],
+        props,
+        isDev,
+        true // return output instead of writing
+      );
+
+      if (clientOutput) {
+        const manifest = getManifest(rootOutdir);
+        const jsEntry = manifest.register(clientOutput, "js");
+        jsPath = jsEntry.publicPath;
+
+        // Create a small redirect file so relative paths also work
+        // Routes reference /_assets/main.<hash>.js
+      }
+    }
+
+    await renderSSR({
+      js: ssrOutput,
       outdir,
       props,
       segment,
       config,
       devSite,
-      false,
-      true,
-      true,
-      tmpPath
-    );
-    await generateClient(
-      config,
-      base,
-      segment,
-      outdir,
-      common,
-      {},
-      [...plugins, resolveImages(outdir, config, false)],
-      props,
-      isDev
-    );
+      noJS: false,
+      prettify: true,
+      includeCSS: true,
+      inputPath: tmpPath,
+      jsPath,
+      cssPath,
+    });
+
+    // In dev mode, still generate client per-route
+    if (isDev) {
+      await generateClient(
+        config,
+        base,
+        segment,
+        outdir,
+        common,
+        {},
+        [...plugins, resolveImages(outdir, config, false)],
+        props,
+        isDev,
+        false
+      );
+    }
   }
 
   // copy public folder

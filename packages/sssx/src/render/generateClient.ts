@@ -6,7 +6,6 @@ import { type Config } from "../config.ts";
 import { type RouteInfo } from "../routes/index.ts";
 
 const CLIENT_OUT_FILE = "main.js";
-const MINIFY = false;
 
 const defaultCompilerOptions: CompileOptions = {
   accessors: true,
@@ -21,8 +20,9 @@ export const generateClient = async (
   compilerClientOptions: Partial<CompileOptions> = {},
   newPlugins: Plugin[] = [],
   props: Record<string, any> = {},
-  isDev: boolean
-) => {
+  isDev: boolean,
+  returnOutput: boolean = false
+): Promise<string | undefined> => {
   const compilerOptions: CompileOptions = {
     ...defaultCompilerOptions,
     ...compilerClientOptions,
@@ -37,7 +37,7 @@ export const generateClient = async (
   const stdin: esbuild.StdinOptions = {
     contents,
     loader: "ts",
-    resolveDir: basedir, //".",
+    resolveDir: basedir,
     sourcefile: "main.ts",
   };
 
@@ -48,12 +48,31 @@ export const generateClient = async (
 
   const outfile = [outdir, CLIENT_OUT_FILE].join("/");
 
-  const result = await esbuild.build({
+  if (returnOutput) {
+    // Build in memory for hashing/dedup
+    const result = await esbuild.build({
+      ...buildOptions,
+      stdin,
+      outfile,
+      splitting: false,
+      minify: !isDev,
+      plugins,
+      write: false,
+    });
+
+    const output = result.outputFiles?.[0]?.text;
+    return output;
+  }
+
+  // Write directly to filesystem (dev mode)
+  await esbuild.build({
     ...buildOptions,
     stdin,
     outfile,
     splitting: false,
-    minify: MINIFY,
+    minify: false,
     plugins,
   });
+
+  return undefined;
 };

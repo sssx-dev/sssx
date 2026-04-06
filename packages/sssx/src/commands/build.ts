@@ -1,5 +1,6 @@
 import fs from "node:fs";
-import { buildRoute } from "../render/index.ts";
+import colors from "ansi-colors";
+import { buildRoute, getManifest, resetManifest } from "../render/index.ts";
 import { getConfig } from "../config.ts";
 import { getAllRoutes, routeToFileSystem } from "../routes/index.ts";
 import { buildSitemap } from "../plugins/sitemap.ts";
@@ -9,6 +10,9 @@ import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { cwd } from "../utils/cwd.ts";
 import { args } from "../utils/args.ts";
 import { done } from "../utils/done.ts";
+import { Timer } from "../utils/timer.ts";
+
+const { dim, green, red, bold } = colors;
 
 const config = await getConfig(cwd);
 const outdir = `${cwd}/${config.outDir}`;
@@ -18,6 +22,8 @@ if (fs.existsSync(outdir)) {
   fs.rmSync(outdir, { recursive: true, force: true });
 }
 fs.mkdirSync(outdir);
+
+resetManifest();
 
 const allRoutes = await getAllRoutes(cwd, config);
 const routes = allRoutes.map((s) => s.permalink);
@@ -37,28 +43,43 @@ if (inputRouteIndex >= 0) {
 }
 
 let failedRoutes: Array<{ url: string; error: unknown }> = [];
+let builtCount = 0;
 
 for (let i = startIndex; i < length; i++) {
   const url = routes[i];
-  console.log(i, `\t`, url);
+  const routeTimer = new Timer();
   try {
     const route = getRoute(url);
     const segment = await routeToFileSystem(cwd, route, allRoutes);
     if (!segment) {
-      console.warn(`Warning: No segment found for route "${url}", skipping.`);
+      console.warn(dim(`  ⚠ No segment for "${url}", skipping.`));
       continue;
     }
     await buildRoute(route, segment, outdir, cwd, config, isDev);
+    builtCount++;
+    console.log(dim(`  ${green("✓")} ${url}`) + dim(` (${routeTimer.format()})`));
   } catch (err) {
-    console.error(`Error building route "${url}":`, err);
+    console.error(red(`  ✗ ${url}: ${err instanceof Error ? err.message : String(err)}`));
     failedRoutes.push({ url, error: err });
   }
 }
 
+// Write asset manifest
+const manifest = getManifest(outdir);
+manifest.writeManifest();
+const stats = manifest.stats();
+
+console.log("");
+console.log(bold(`  Build Summary`));
+console.log(dim(`  Routes built:   ${green(String(builtCount))}`));
+if (stats.uniqueAssets > 0) {
+  console.log(dim(`  Unique bundles: ${stats.uniqueAssets} (${stats.saved} deduplicated)`));
+}
+
 if (failedRoutes.length > 0) {
-  console.error(`\n${failedRoutes.length} route(s) failed to build:`);
+  console.error(red(`  Failed:         ${failedRoutes.length}`));
   for (const { url, error } of failedRoutes) {
-    console.error(`  - ${url}: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(red(`    - ${url}: ${error instanceof Error ? error.message : String(error)}`));
   }
 }
 

@@ -79,7 +79,7 @@ export const buildSitemap = async (
   let index = 0;
   for (let i = 0; i < routes.length; i += MAX_URLS_PER_SITEMAP) {
     const urls = routes
-      .slice(i, i + Math.min(routes.length, MAX_URLS_PER_SITEMAP))
+      .slice(i, i + MAX_URLS_PER_SITEMAP)
       .map((r) => r.permalink);
 
     const sitemap = singleSitemap(config, urls);

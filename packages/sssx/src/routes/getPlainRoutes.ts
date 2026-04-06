@@ -26,7 +26,6 @@ export const getPlainRoutes = async (srcDir: string, config: Config) => {
       route = checkSlashes(route);
 
       return {
-        // TODO: is there a nicer way to do this, instead re-attaching the path again
         file: `${srcDir}${file}`,
         svelte: PAGE_SVELTE,
         route: `./pages${route}`,

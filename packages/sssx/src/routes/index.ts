@@ -6,8 +6,6 @@ import { type RouteInfo } from "./types.ts";
 
 export type { RouteInfo } from "./types.ts";
 
-// TODO: design a better architecture that would allow for streaming millions of pages
-
 export const getAllRoutes = async (cwd: string, config: Config) => {
   const srcDir = `${cwd}/src/pages`;
   const [all, plain, content] = await Promise.all([
@@ -20,8 +18,6 @@ export const getAllRoutes = async (cwd: string, config: Config) => {
   return array;
 };
 
-// TODO: turn this into a proper matching logic
-// https://kit.svelte.dev/docs/advanced-routing
 export const routeToFileSystem = async (
   cwd: string,
   route: string,

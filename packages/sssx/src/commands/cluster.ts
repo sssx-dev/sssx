@@ -74,7 +74,6 @@ for (let i = 0; i < numCPUs; i++) {
   numWorkers++;
 
   worker.on("message", async (data: Message) => {
-    // console.log(data);
     if (data.ready) {
       worker.postMessage({ routes: getRoutesBatch(data.threadId) });
     } else if (data.err) {

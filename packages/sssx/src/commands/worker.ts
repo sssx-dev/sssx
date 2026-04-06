@@ -19,8 +19,8 @@ const processData = async (routes: RouteInfo[]) => {
       await buildRoute(route, segment!, outdir, cwd, config, isDev);
       parentPort?.postMessage({ url, threadId });
     } catch (err) {
-      console.log("build error route issue", { segment, routes });
-      parentPort?.postMessage({ err });
+      console.error(`Build error for route "${segment.permalink}":`, err);
+      parentPort?.postMessage({ err: err instanceof Error ? err.message : String(err) });
     }
   }
 
@@ -35,7 +35,6 @@ type Message = {
 };
 
 parentPort?.on("message", async (data: Message) => {
-  //   console.log("onMessage", data);
   if (data.routes) await processData(data.routes);
 });
 

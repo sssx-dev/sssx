@@ -55,8 +55,6 @@ const loadRoute = async (
       permalink = permalink.split(config.defaultLocale)[1];
     }
 
-  // console.log({ permalink, locales });
-
   // because of how we will compile this later inside `generateEntryPoint.ts`
   route = "/";
   let svelte = undefined;

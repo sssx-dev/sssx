@@ -13,7 +13,6 @@ import { type Plugin } from "esbuild";
 import { markdown } from "../utils/markdown.ts";
 import type { RouteModule } from "../routes/types.ts";
 
-// TODO: change back to true before publish
 const CLEAR_OUT_FOLDER = true;
 
 export const buildRoute = async (
@@ -28,23 +27,15 @@ export const buildRoute = async (
   const base = `${cwd}/src/`;
   const isRoot = route === "/";
 
-  // match route coming from dev server like /some/slug/ into a segment
-  // that gives address of the route in the file system like /some/(group)/[slug]/+page.svelte
-  // console.log({ segment });
-
   if (segment) {
     let props = segment.param;
 
     if (segment.type === "filesystem" && !segment.module) {
-      // load modules again, if not loaded from before
-      // like when this is executed in the worker
+      // Load module when not loaded (e.g. in worker context)
       const module: RouteModule = await import(segment.file);
       props = module.request(segment.param);
     }
 
-    // console.log({ props });
-
-    // creating this inside outdir
     if (!isRoot) outdir += route;
 
     if (segment.file.endsWith(".md")) {
@@ -64,7 +55,6 @@ export const buildRoute = async (
 
     let plugins: Plugin[] = [];
 
-    // make it silent in a production build
     const common = getCommonBuildOptions(isDev ? "info" : "silent");
     const ssrOutput = await generateSSR(
       config,
@@ -77,7 +67,6 @@ export const buildRoute = async (
     );
     const tmpPath = `${outdir}/ssr.js`;
     fs.writeFileSync(`${outdir}/ssr.js`, ssrOutput, "utf8");
-    // await renderSSR(ssrOutput, outdir, props, segment, config, devSite);
     await renderSSR(
       ssrOutput,
       outdir,

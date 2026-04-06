@@ -16,7 +16,6 @@ const getPath = (args: OnResolveArgs | OnLoadArgs) => {
   return { path: argsPath, isGlobal };
 };
 
-// TOOD: remember to generate ambient types for svelte here
 export const resolveImages = (
   outdir: string,
   config: Config,
@@ -26,7 +25,6 @@ export const resolveImages = (
   setup(build) {
     const namespace = "images-namespace";
     build.onResolve({ filter: imagesRegExp }, async (args) => {
-      // console.log(`onResolve`, args);
       const { path: argsPath, isGlobal } = getPath(args);
 
       const srcDir = path.dirname(args.importer);
@@ -51,8 +49,6 @@ export const resolveImages = (
 
         const newArgsPath = path.normalize(`/${config.globalDir}/${filename}`);
 
-        // console.log({ globalDst, argsPath, newArgsPath });
-
         fs.copyFileSync(src, globalDst);
 
         return {
@@ -75,7 +71,6 @@ export const resolveImages = (
     });
 
     build.onLoad({ filter: /.*/, namespace }, (args) => {
-      // console.log(`onLoad`, args);
       const { path: argsPath } = getPath(args);
 
       const contents = argsPath.replace("../", "./");

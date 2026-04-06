@@ -49,7 +49,6 @@ export const copyAssets = async (
     if (!ignore) {
       const src = file.replace(srcDir, "");
       const dst = path.normalize(`${outdir}${src}`);
-      // console.log({ file, dst });
       fs.cpSync(file, dst);
     }
   });

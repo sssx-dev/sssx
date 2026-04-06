@@ -33,21 +33,31 @@ describe("replacePermalinkSlugsWithValues", () => {
     ).toBe("/page/42/");
   });
 
-  it("throws on path traversal in values", () => {
+  it("throws on path traversal in slug values", () => {
     expect(() =>
       replacePermalinkSlugsWithValues("/foo/[slug]/", { slug: "../etc" })
     ).toThrow("path separators");
   });
 
-  it("throws on slashes in values", () => {
+  it("throws on slashes in slug values", () => {
     expect(() =>
       replacePermalinkSlugsWithValues("/foo/[slug]/", { slug: "a/b" })
     ).toThrow("path separators");
   });
 
-  it("throws on backslashes in values", () => {
+  it("throws on backslashes in slug values", () => {
     expect(() =>
       replacePermalinkSlugsWithValues("/foo/[slug]/", { slug: "a\\b" })
     ).toThrow("path separators");
+  });
+
+  it("ignores non-slug keys even with path characters", () => {
+    // 'template' is not a [template] slug in the permalink, so it should be ignored
+    expect(
+      replacePermalinkSlugsWithValues("/foo/[slug]/", {
+        slug: "bar",
+        template: "./templates/post.svelte",
+      })
+    ).toBe("/foo/bar/");
   });
 });

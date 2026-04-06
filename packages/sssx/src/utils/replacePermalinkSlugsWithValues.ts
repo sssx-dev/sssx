@@ -3,12 +3,11 @@ export const replacePermalinkSlugsWithValues = (
   permalink: string,
   object: Record<string, any>
 ) => {
-  // Only process keys that appear as [key] in the permalink
-  const slugPattern = /\[([^\]]+)\]/g;
-  let match;
+  // Find all [key] patterns in the permalink first, then replace
+  const slugMatches = permalink.match(/\[([^\]]+)\]/g) || [];
 
-  while ((match = slugPattern.exec(permalink)) !== null) {
-    const key = match[1];
+  for (const match of slugMatches) {
+    const key = match.slice(1, -1); // strip [ and ]
     if (key in object) {
       const value = String(object[key]);
 

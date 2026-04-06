@@ -7,7 +7,7 @@ import { Timer } from "./utils/timer.ts";
 
 const { bgGreen, bgBlue, bgMagenta, bgCyan, bgWhite, green, dim, bold } =
   colors;
-const ALLOWED_COMMANDS = ["dev", "build", "diff", "cluster", "clean", "urls", "info", "init", "serve"];
+const ALLOWED_COMMANDS = ["dev", "build", "diff", "cluster", "clean", "urls", "info", "init", "serve", "check"];
 
 const showHelp = () => {
   console.log(bold(`\n  SSSX v${getVersion()}`) + dim(" — Fast Svelte Static Site Generator\n"));
@@ -35,11 +35,15 @@ const showHelp = () => {
   console.log("");
   console.log(`    ${green("serve")}      Serve production build locally`);
   console.log("");
+  console.log(`    ${green("check")}      Validate project (config, routes, templates, deps)`);
+  console.log("");
   console.log(`  Flags:\n`);
   console.log(`    ${dim("--help, -h")}     Show this help`);
   console.log(`    ${dim("--version, -v")}  Show version`);
   console.log(`    ${dim("--port <n>")}     Dev server port (default: 8080)`);
-  console.log(`    ${dim("--verbose")}      Verbose output`);
+  console.log(`    ${dim("--verbose")}      Verbose output (show each route in build)`);
+  console.log(`    ${dim("--open")}         Open browser (dev server)`);
+  console.log(`    ${dim("--template <t>")} Template for init (blog|docs|portfolio)`);
   console.log("");
 };
 

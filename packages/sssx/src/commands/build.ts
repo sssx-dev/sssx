@@ -13,7 +13,7 @@ import { getRoute } from "../utils/getRoute.ts";
 import { writeURLsIndex } from "../indexes/writeURLsIndex.ts";
 import { writeFilesIndex } from "../indexes/writeFilesIndex.ts";
 import { cwd } from "../utils/cwd.ts";
-import { args } from "../utils/args.ts";
+import { args, flags } from "../utils/args.ts";
 import { done } from "../utils/done.ts";
 import { Timer } from "../utils/timer.ts";
 import { validateRoutes, printValidationWarnings } from "../routes/validate.ts";
@@ -22,6 +22,8 @@ import { runHook, type BuildContext } from "../plugins/types.ts";
 import { initEsbuild, disposeEsbuild } from "../render/esbuildContext.ts";
 import { formatBuildError } from "../utils/errors.ts";
 import { writeBuildManifest } from "../plugins/buildManifest.ts";
+import { validateConfig, printConfigWarnings } from "../utils/configValidation.ts";
+import { createProgressBar } from "../utils/createProgressBar.ts";
 
 const { dim, green, red, bold } = colors;
 
@@ -36,6 +38,10 @@ fs.mkdirSync(outdir);
 
 resetManifest();
 await initEsbuild();
+
+// Validate config
+const configWarnings = validateConfig(config);
+printConfigWarnings(configWarnings);
 
 const plugins = config.plugins || [];
 const allRoutes = await getAllRoutes(cwd, config);
@@ -83,6 +89,14 @@ if (inputRouteIndex >= 0) {
 let failedRoutes: Array<{ url: string; error: unknown }> = [];
 let builtCount = 0;
 
+const totalToBuild = length - startIndex;
+const useProgressBar = totalToBuild > 20 && !flags.has("verbose");
+const bar = useProgressBar ? createProgressBar() : null;
+
+if (bar) {
+  bar.start(totalToBuild, 0, { url: "", total: 0 });
+}
+
 for (let i = startIndex; i < length; i++) {
   const url = routes[i];
   const routeTimer = new Timer();
@@ -90,16 +104,27 @@ for (let i = startIndex; i < length; i++) {
     const route = getRoute(url);
     const segment = await routeToFileSystem(cwd, route, allRoutes);
     if (!segment) {
-      console.warn(dim(`  ⚠ No segment for "${url}", skipping.`));
+      if (!bar) console.warn(dim(`  ⚠ No segment for "${url}", skipping.`));
       continue;
     }
     await buildRoute(route, segment, outdir, cwd, config, isDev, undefined, plugins);
     builtCount++;
-    console.log(dim(`  ${green("✓")} ${url}`) + dim(` (${routeTimer.format()})`));
+    if (bar) {
+      bar.update(builtCount, { url, total: builtCount });
+    } else {
+      console.log(dim(`  ${green("✓")} ${url}`) + dim(` (${routeTimer.format()})`));
+    }
   } catch (err) {
+    if (bar) bar.stop();
     console.error(formatBuildError(err, url));
+    if (bar) bar.start(totalToBuild, builtCount, { url: "", total: builtCount });
     failedRoutes.push({ url, error: err });
   }
+}
+
+if (bar) {
+  bar.update(totalToBuild);
+  bar.stop();
 }
 
 // Write asset manifest
